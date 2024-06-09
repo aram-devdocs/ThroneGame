@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Controllers;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Entities
 {
@@ -49,6 +50,7 @@ namespace ThroneGame.Entities
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             AnimationController.Draw(spriteBatch, Position);
+            TextureUtils.DebugBorder(spriteBatch, (int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
         }
     }
 }
