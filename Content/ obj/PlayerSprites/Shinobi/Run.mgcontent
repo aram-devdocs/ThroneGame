@@ -3,7 +3,7 @@
   <SourceFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Run.png</SourceFile>
   <SourceTime>2023-09-04T20:19:20-06:00</SourceTime>
   <DestFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/ ../bin/Debug/net6.0/Content/PlayerSprites/Shinobi/Run.xnb</DestFile>
-  <DestTime>2024-06-08T20:24:13.8124149-06:00</DestTime>
+  <DestTime>2024-06-08T23:22:15.9130927-06:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T05:44:56-06:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -5,6 +5,7 @@
   <Config />
   <SourceFiles>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Backgrounds/1.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Maps/Nature_environment_01.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_1.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_2.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_3.png</File>
@@ -29,6 +30,7 @@
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
-    <File>Tiles/1.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

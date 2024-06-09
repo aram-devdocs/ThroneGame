@@ -25,6 +25,19 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/1.png
 
+
+#begin Maps/Nature_environment_01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/Nature_environment_01.png
+
 #begin PlayerSprites/Shinobi/Attack_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -155,5 +168,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tiles/1.png;Tiles/1.png
+/build:Tiles/1.png
 
