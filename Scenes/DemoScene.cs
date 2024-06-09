@@ -22,7 +22,7 @@ namespace ThroneGame.Scenes
             _tiles = new List<ITile>();
             _movementController = new MovementController();
             _physicsController = new PhysicsController();
-            _cameraController = new CameraController(game.GraphicsDevice.Viewport);
+            _cameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
         }
 
         public override void LoadContent()
