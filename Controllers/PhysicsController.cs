@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ThroneGame.Entities;
 using ThroneGame.Tiles;
 
@@ -45,17 +46,16 @@ namespace ThroneGame.Controllers
             Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Check for collisions
-            foreach (var tile in _tiles)
+            Parallel.ForEach(_tiles, tile =>
             {
                 if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
                 {
                     // Adjust position and velocity based on collision
-                    // newPosition = HandleCollision(entity, tile);
+                    // newPosition = HandleCollision(entity, tile); // TODO: Fix the way we handle collisions between two entities
                     entity.Velocity = new Vector2(entity.Velocity.X, 0);
                     entity.IsOnGround = true;
-                    break;
                 }
-            }
+            });
 
             // Apply Gravity
             if (!entity.IsOnGround) entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;

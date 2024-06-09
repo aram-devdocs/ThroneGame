@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ThroneGame.Controllers;
 using ThroneGame.Entities;
 using ThroneGame.Tiles;
@@ -81,11 +82,11 @@ namespace ThroneGame.Scenes
             // Draw tiles and player with camera transformation
             spriteBatch.Begin(transformMatrix: _cameraController.GetViewMatrix());
 
-            // Draw tiles
-            foreach (var tile in _tiles)
+            // Draw tiles using multiple threads
+            Parallel.ForEach(_tiles, tile =>
             {
                 tile.Draw(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y);
-            }
+            });
 
             // Draw player
             _player.Draw(spriteBatch);
