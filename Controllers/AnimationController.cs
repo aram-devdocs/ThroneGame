@@ -61,14 +61,14 @@ namespace ThroneGame.Controllers
 
             if (_animations.ContainsKey(state))
             {
-                _currentState = state;
-                UpdateSourceRectangle();
 
                 if (state != _currentState)
                 {
                     _currentFrame = 0;
                     _timeCounter = 0;
                 }
+                _currentState = state;
+                UpdateSourceRectangle();
             }
         }
         public void Update(GameTime gameTime)

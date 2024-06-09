@@ -26,22 +26,24 @@ namespace ThroneGame.Entities
             // Update state based on velocity
             if (Velocity.Y < 0 || Velocity.Y > 0)
             {
+                // Jumping state
                 AnimationController.SetState("jump");
             }
             else if (Velocity.X < 0 || Velocity.X > 0)
             {
+                // Walking or running state
                 AnimationController.SetState((Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) ? "run" : "walk");
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                // Dead state
+                AnimationController.SetState("dead");
             }
             else
             {
                 AnimationController.SetState("idle");
             }
 
-            // if Keydown is S, set state to dead
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                AnimationController.SetState("dead");
-            }
 
             base.Update(gameTime);
         }
