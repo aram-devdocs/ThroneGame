@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using ThroneGame.Tiles;
 
 namespace ThroneGame.Entities
 {
@@ -10,7 +12,7 @@ namespace ThroneGame.Entities
         {
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, List<ITile> tiles)
         {
             // Update state based on velocity
             if (Velocity.Y < 0 || Velocity.Y > 0)
@@ -26,7 +28,8 @@ namespace ThroneGame.Entities
                 State = "idle";
             }
 
-            base.Update(gameTime);
+
+            base.Update(gameTime, tiles);
         }
     }
 }

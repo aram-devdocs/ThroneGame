@@ -12,16 +12,12 @@ namespace ThroneGame.Scenes
         private Game1 _game;
         private List<ITile> _tiles;
         private PlayerEntity _player;
-        private MovementController _movementController;
-        private PhysicsController _physicsController;
         private CameraController _cameraController;
 
         public DemoScene(Game1 game)
         {
             _game = game;
             _tiles = new List<ITile>();
-            _movementController = new MovementController();
-            _physicsController = new PhysicsController();
             _cameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
         }
 
@@ -55,9 +51,7 @@ namespace ThroneGame.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            _movementController.HandleMovement(_player, gameTime);
-            _physicsController.ApplyPhysics(_player, _tiles, gameTime);
-            _player.Update(gameTime);
+            _player.Update(gameTime, _tiles);
             _cameraController.Update(gameTime, _player.Position);
         }
 

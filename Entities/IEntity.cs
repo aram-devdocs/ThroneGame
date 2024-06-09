@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ThroneGame.Controllers;
+using ThroneGame.Tiles;
 
 namespace ThroneGame.Entities
 {
@@ -15,7 +18,10 @@ namespace ThroneGame.Entities
         Rectangle SourceRectangle { get; set; }
         string State { get; set; }
 
-        void Update(GameTime gameTime);
+        MovementController MovementController { get; set; }
+        PhysicsController PhysicsController { get; set; }
+
+        void Update(GameTime gameTime, List<ITile> tiles);
         void Draw(SpriteBatch spriteBatch);
     }
 }
