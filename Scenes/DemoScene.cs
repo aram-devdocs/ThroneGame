@@ -81,7 +81,7 @@ namespace ThroneGame.Scenes
 
 
             // Load player texture and create player
-            _player = new PlayerEntity(new Vector2(100, 0), _game.Content); // Assuming 6 frames for idle animation
+            _player = new PlayerEntity(new Vector2(300, 200), _game.Content); // Assuming 6 frames for idle animation
 
 
 
@@ -129,7 +129,7 @@ namespace ThroneGame.Scenes
 
 
             // Draw the tile render target
-            spriteBatch.Draw(_tileRenderTarget, Vector2.Zero, Color.White);
+            spriteBatch.Draw(_mapRenderTarget, Vector2.Zero, Color.White);
 
 
             // Draw the map

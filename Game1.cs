@@ -23,7 +23,11 @@ namespace ThroneGame
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Initialize the screen size here
+            _graphics.PreferredBackBufferWidth = 1280; // Set the desired width
+            _graphics.PreferredBackBufferHeight = 720; // Set the desired height
+            _graphics.ApplyChanges();
+
 
             base.Initialize();
         }
