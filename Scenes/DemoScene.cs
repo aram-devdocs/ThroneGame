@@ -14,6 +14,7 @@ namespace ThroneGame.Scenes
         private PlayerEntity _player;
         private MovementController _movementController;
         private PhysicsController _physicsController;
+        private CameraController _cameraController;
 
         public DemoScene(Game1 game)
         {
@@ -21,6 +22,7 @@ namespace ThroneGame.Scenes
             _tiles = new List<ITile>();
             _movementController = new MovementController();
             _physicsController = new PhysicsController();
+            _cameraController = new CameraController(game.GraphicsDevice.Viewport);
         }
 
         public override void LoadContent()
@@ -56,11 +58,18 @@ namespace ThroneGame.Scenes
             _movementController.HandleMovement(_player, gameTime);
             _physicsController.ApplyPhysics(_player, _tiles, gameTime);
             _player.Update(gameTime);
+            _cameraController.Update(gameTime, _player.Position);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+
+            // Draw background
+            spriteBatch.Draw(BackgroundImage, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height), Color.White);
+            spriteBatch.End();
+
+            // Draw tiles and player with camera transformation
+            spriteBatch.Begin(transformMatrix: _cameraController.GetViewMatrix());
 
             // Draw tiles
             foreach (var tile in _tiles)
@@ -70,6 +79,8 @@ namespace ThroneGame.Scenes
 
             // Draw player
             _player.Draw(spriteBatch);
+
+
         }
     }
 }
