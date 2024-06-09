@@ -57,12 +57,8 @@ namespace ThroneGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
-
-            // TODO: Add your drawing code here
             _sceneManager.Draw(_spriteBatch);
 
-            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

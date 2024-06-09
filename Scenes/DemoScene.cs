@@ -81,7 +81,7 @@ namespace ThroneGame.Scenes
 
 
             // Load player texture and create player
-            _player = new PlayerEntity(new Vector2(300, 200), _game.Content); // Assuming 6 frames for idle animation
+            _player = new PlayerEntity(new Vector2(300, 200), _game.Content);
 
 
 
@@ -111,32 +111,27 @@ namespace ThroneGame.Scenes
         public override void Draw(SpriteBatch spriteBatch)
         {
 
+
+
+
             // Draw background
+            spriteBatch.Begin();
+
             spriteBatch.Draw(BackgroundImage, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height), Color.White);
             spriteBatch.End();
 
+
+
+
+            // TODO - Why are we beginning and ending the spritebatch multiple times? It only works this way to draw the background each time always in the viewport, but there must be a better way to do this.
             // Draw tiles and player with camera transformation
             spriteBatch.Begin(transformMatrix: _cameraController.GetViewMatrix());
-
-
-            // TODO - do we need this anymore?
-            // Draw tiles using multiple threads
-            Parallel.ForEach(_tiles, tile =>
-            {
-                tile.Draw(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y);
-            });
-
-
-
-            // Draw the tile render target
-            spriteBatch.Draw(_mapRenderTarget, Vector2.Zero, Color.White);
-
-
             // Draw the map
-            // _demoMap.Draw(spriteBatch);
-
+            spriteBatch.Draw(_mapRenderTarget, Vector2.Zero, Color.White);
             // Draw player
             _player.Draw(spriteBatch);
+
+            spriteBatch.End();
 
 
         }
