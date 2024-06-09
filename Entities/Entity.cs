@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,17 +13,23 @@ namespace ThroneGame.Entities
         public int FrameWidth { get; set; }
         public int FrameHeight { get; set; }
         public double FrameTime { get; set; }
+        public bool Looping { get; set; }
 
-        public Animation(Texture2D texture, int frameCount, double frameTime)
+        public Animation(Texture2D texture, int frameCount, double frameTime, bool looping = true)
         {
             AnimationTexture = texture;
             FrameCount = frameCount;
             FrameWidth = texture.Width / frameCount;
             FrameHeight = texture.Height;
             FrameTime = frameTime;
+            Looping = looping;
+        }
+
+        public void SetLooping(bool looping)
+        {
+            Looping = looping;
         }
     }
-
     public abstract class Entity : IEntity
     {
         public Vector2 Position { get; set; }
@@ -66,9 +73,9 @@ namespace ThroneGame.Entities
             _animations = new Dictionary<string, Animation>();
         }
 
-        public void AddAnimation(string state, Texture2D texture, int frameCount, double frameTime)
+        public void AddAnimation(string state, Texture2D texture, int frameCount, double frameTime, bool looping = true)
         {
-            var animation = new Animation(texture, frameCount, frameTime);
+            var animation = new Animation(texture, frameCount, frameTime, looping);
             _animations[state] = animation;
 
             if (_currentState == null)
@@ -76,6 +83,7 @@ namespace ThroneGame.Entities
                 SetState(state);
             }
         }
+
 
         public void SetState(string state)
         {
@@ -91,6 +99,7 @@ namespace ThroneGame.Entities
             }
         }
 
+
         public virtual void Update(GameTime gameTime)
         {
             // Handle movement
@@ -100,7 +109,14 @@ namespace ThroneGame.Entities
             TimeCounter += gameTime.ElapsedGameTime.TotalSeconds;
             if (TimeCounter >= FrameTime)
             {
-                CurrentFrame = (CurrentFrame + 1) % FrameCount;
+                if (_animations[_currentState].Looping)
+                {
+                    CurrentFrame = (CurrentFrame + 1) % FrameCount;
+                }
+                else
+                {
+                    CurrentFrame = Math.Min(CurrentFrame + 1, FrameCount - 1);
+                }
                 SourceRectangle = new Rectangle(CurrentFrame * FrameWidth, 0, FrameWidth, FrameHeight);
                 TimeCounter -= FrameTime;
             }
