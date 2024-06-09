@@ -12,11 +12,11 @@ namespace ThroneGame.Entities
             : base(position)
         {
             // Load textures and add animations
-            AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"), 6, 0.1);
-            AddAnimation("run", content.Load<Texture2D>("PlayerSprites/Shinobi/Run"), 8, 0.1);
-            AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Shinobi/Jump"), 12, 0.1, false);
-            AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
-            AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
+            AnimationController.AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"), 6, 0.1);
+            AnimationController.AddAnimation("run", content.Load<Texture2D>("PlayerSprites/Shinobi/Run"), 8, 0.1);
+            AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Shinobi/Jump"), 12, 0.1, false);
+            AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
+            AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
         }
 
 
@@ -26,24 +26,21 @@ namespace ThroneGame.Entities
             // Update state based on velocity
             if (Velocity.Y < 0 || Velocity.Y > 0)
             {
-                SetState("jump");
+                AnimationController.SetState("jump");
             }
             else if (Velocity.X < 0 || Velocity.X > 0)
             {
-
-                SetState((Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) ? "run" : "walk");
-
-
+                AnimationController.SetState((Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) ? "run" : "walk");
             }
             else
             {
-                SetState("idle");
+                AnimationController.SetState("idle");
             }
 
             // if Keydown is S, set state to dead
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                SetState("dead");
+                AnimationController.SetState("dead");
             }
 
             base.Update(gameTime);
