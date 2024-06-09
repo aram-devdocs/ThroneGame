@@ -50,8 +50,7 @@ namespace ThroneGame.Scenes
             // Add more tiles as needed
 
             // Load player texture and create player
-            var playerTexture = _game.Content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"); // Example: using the Idle sprite sheet
-            _player = new PlayerEntity(playerTexture, new Vector2(100, 100), playerTexture.Width / 6, playerTexture.Height, 6); // Assuming 6 frames for idle animation
+            _player = new PlayerEntity(new Vector2(100, 100), _game.Content); // Assuming 6 frames for idle animation
 
 
 

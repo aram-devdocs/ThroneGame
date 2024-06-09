@@ -14,11 +14,13 @@ namespace ThroneGame.Controllers
             KeyboardState state = Keyboard.GetState();
             if (state.IsKeyDown(Keys.A))
             {
-                entity.Velocity = new Vector2(-Speed, entity.Velocity.Y);
+                entity.Velocity = new Vector2(state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift) ? -Speed * 2 : -Speed, entity.Velocity.Y);
+                entity.IsFacingRight = false;
             }
             else if (state.IsKeyDown(Keys.D))
             {
-                entity.Velocity = new Vector2(Speed, entity.Velocity.Y);
+                entity.Velocity = new Vector2(state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift) ? Speed * 2 : Speed, entity.Velocity.Y);
+                entity.IsFacingRight = true;
             }
             else
             {

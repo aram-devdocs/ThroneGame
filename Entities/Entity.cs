@@ -1,9 +1,28 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Controllers;
 
 namespace ThroneGame.Entities
 {
+    public class Animation
+    {
+        public Texture2D AnimationTexture { get; set; }
+        public int FrameCount { get; set; }
+        public int FrameWidth { get; set; }
+        public int FrameHeight { get; set; }
+        public double FrameTime { get; set; }
+
+        public Animation(Texture2D texture, int frameCount, double frameTime)
+        {
+            AnimationTexture = texture;
+            FrameCount = frameCount;
+            FrameWidth = texture.Width / frameCount;
+            FrameHeight = texture.Height;
+            FrameTime = frameTime;
+        }
+    }
+
     public abstract class Entity : IEntity
     {
         public Vector2 Position { get; set; }
@@ -15,6 +34,8 @@ namespace ThroneGame.Entities
         public Texture2D Texture { get; set; }
         public Rectangle SourceRectangle { get; set; }
         public string State { get; set; }
+
+        public bool IsFacingRight { get; set; }
         public int FrameCount { get; set; }
         public int CurrentFrame { get; set; }
         public double FrameTime { get; set; }
@@ -22,23 +43,52 @@ namespace ThroneGame.Entities
 
         public MovementController MovementController { get; set; }
 
-        public Entity(Texture2D texture, Vector2 position, int frameWidth, int frameHeight, int frameCount)
+        private Dictionary<string, Animation> _animations;
+        private string _currentState;
+
+        public Entity(Vector2 position)
         {
-            Texture = texture;
             Position = position;
             Velocity = Vector2.Zero;
             IsCollidable = true;
             IsOnGround = false;
-            FrameWidth = frameWidth;
-            FrameHeight = frameHeight;
-            FrameCount = frameCount;
+            FrameWidth = 0;
+            FrameHeight = 0;
+            FrameCount = 0;
             CurrentFrame = 0;
             FrameTime = 0.1; // Change frame every 0.1 seconds
             TimeCounter = 0;
-            State = "idle";
+            State = "run";
+            IsFacingRight = true;
             SourceRectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 
             MovementController = new MovementController();
+            _animations = new Dictionary<string, Animation>();
+        }
+
+        public void AddAnimation(string state, Texture2D texture, int frameCount, double frameTime)
+        {
+            var animation = new Animation(texture, frameCount, frameTime);
+            _animations[state] = animation;
+
+            if (_currentState == null)
+            {
+                SetState(state);
+            }
+        }
+
+        public void SetState(string state)
+        {
+            if (_animations.ContainsKey(state))
+            {
+                _currentState = state;
+                var animation = _animations[state];
+                Texture = animation.AnimationTexture;
+                FrameWidth = animation.FrameWidth;
+                FrameHeight = animation.FrameHeight;
+                FrameCount = animation.FrameCount;
+                FrameTime = animation.FrameTime;
+            }
         }
 
         public virtual void Update(GameTime gameTime)
@@ -60,7 +110,8 @@ namespace ThroneGame.Entities
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, SourceRectangle, Color.White);
+            var effects = IsFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(Texture, Position, SourceRectangle, Color.White, 0, Vector2.Zero, 1, effects, 0);
         }
     }
 }

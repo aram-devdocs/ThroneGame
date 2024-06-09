@@ -38,8 +38,7 @@ namespace ThroneGame.Controllers
 
         private void ApplyPhysics(IEntity entity, GameTime gameTime)
         {
-            // Apply gravity
-            entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            // Set Is On Ground
             entity.IsOnGround = false;
 
             // Update entity position
@@ -51,12 +50,16 @@ namespace ThroneGame.Controllers
                 if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
                 {
                     // Adjust position and velocity based on collision
-                    newPosition = HandleCollision(entity, tile);
+                    // newPosition = HandleCollision(entity, tile);
                     entity.Velocity = new Vector2(entity.Velocity.X, 0);
                     entity.IsOnGround = true;
                     break;
                 }
             }
+
+            // Apply Gravity
+            if (!entity.IsOnGround) entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
             entity.Position = newPosition;
         }

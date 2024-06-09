@@ -12,6 +12,9 @@ namespace ThroneGame.Entities
         bool IsOnGround { get; set; }
         int FrameWidth { get; set; }
         int FrameHeight { get; set; }
+
+        bool IsFacingRight { get; set; } 
+
         Texture2D Texture { get; set; }
         Rectangle SourceRectangle { get; set; }
         string State { get; set; }
