@@ -18,7 +18,12 @@ namespace ThroneGame.Scenes
 
         private PhysicsController _physicsController;
 
+
+        private RenderTarget2D _mapRenderTarget;
         private DemoMap _demoMap;
+
+        private bool _tilesDirty = true; // Flag to indicate if tiles need to be redrawn
+
 
         public DemoScene(Game1 game)
         {
@@ -29,43 +34,58 @@ namespace ThroneGame.Scenes
 
         }
 
+        public void UpdateTiles()
+        {
+            if (_tilesDirty)
+            {
+                _game.GraphicsDevice.SetRenderTarget(_mapRenderTarget);
+                _game.GraphicsDevice.Clear(Color.Transparent);
+                using (var spriteBatch = new SpriteBatch(_game.GraphicsDevice))
+                {
+                    spriteBatch.Begin();
+                    _demoMap.Draw(spriteBatch);
+                    spriteBatch.End();
+                }
+                _game.GraphicsDevice.SetRenderTarget(null);
+
+                _tilesDirty = false; // Reset the dirty flag
+            }
+        }
+
+
+
+
         public override void LoadContent()
         {
             BackgroundImage = _game.Content.Load<Texture2D>("Backgrounds/1");
+
+
+            // Initialize render target
+            _mapRenderTarget = new RenderTarget2D(_game.GraphicsDevice, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
 
             // Create and load the demo map
             _demoMap = new DemoMap("Content/Maps/DemoMap.json");
             _demoMap.LoadMapContent(_game.GraphicsDevice, _game.Content);
 
-            // Load tile textures
-            var tileTexture = _game.Content.Load<Texture2D>("Tiles/1");
+            // Draw tiles to the render target
+            _game.GraphicsDevice.SetRenderTarget(_mapRenderTarget);
+            _game.GraphicsDevice.Clear(Color.Transparent);
+            using (var spriteBatch = new SpriteBatch(_game.GraphicsDevice))
+            {
+                spriteBatch.Begin();
+                _demoMap.Draw(spriteBatch);
+                spriteBatch.End();
+            }
+            _game.GraphicsDevice.SetRenderTarget(null);
 
-            // Create tiles with positions
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(0, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(32, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(64, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(96, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(128, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(160, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(192, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(224, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(256, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(288, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(320, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(352, 350)));
-            _tiles.Add(new Tile(tileTexture, true, new Vector2(384, 350)));
-            // Add more tiles as needed
+
 
             // Load player texture and create player
             _player = new PlayerEntity(new Vector2(100, 0), _game.Content); // Assuming 6 frames for idle animation
 
 
 
-            // Add tiles and player to physics controller
-            foreach (var tile in _tiles)
-            {
-                _physicsController.AddTile(tile);
-            }
+            // Add tiles in map and player to physics controller. TODO: Add entities to physics controller
 
             // Add map tiles to physics controller
             foreach (var tile in _demoMap.Tiles)
@@ -73,8 +93,9 @@ namespace ThroneGame.Scenes
                 _physicsController.AddTile(tile);
             }
 
-
             _physicsController.AddEntity(_player);
+
+
         }
 
         public override void Update(GameTime gameTime)
@@ -82,6 +103,8 @@ namespace ThroneGame.Scenes
             _player.Update(gameTime);
             _physicsController.Update(gameTime);
             _cameraController.Update(gameTime, _player.Position);
+
+            UpdateTiles();
 
         }
 
@@ -103,8 +126,14 @@ namespace ThroneGame.Scenes
                 tile.Draw(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y);
             });
 
+
+
+            // Draw the tile render target
+            spriteBatch.Draw(_tileRenderTarget, Vector2.Zero, Color.White);
+
+
             // Draw the map
-            _demoMap.Draw(spriteBatch);
+            // _demoMap.Draw(spriteBatch);
 
             // Draw player
             _player.Draw(spriteBatch);
