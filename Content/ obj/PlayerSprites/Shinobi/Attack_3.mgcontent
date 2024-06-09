@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Tiles/1.png</SourceFile>
-  <SourceTime>2020-08-19T11:35:34-06:00</SourceTime>
-  <DestFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/ ../bin/Debug/net6.0/Content/Tiles/1.xnb</DestFile>
-  <DestTime>2024-06-08T20:24:13.8272004-06:00</DestTime>
+  <SourceFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_3.png</SourceFile>
+  <SourceTime>2023-09-04T20:22:50-06:00</SourceTime>
+  <DestFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/ ../bin/Debug/net6.0/Content/PlayerSprites/Shinobi/Attack_3.xnb</DestFile>
+  <DestTime>2024-06-08T20:24:13.7781735-06:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T05:44:56-06:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

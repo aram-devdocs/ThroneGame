@@ -1,6 +1,8 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using ThroneGame.Controllers;
+using ThroneGame.Entities;
 using ThroneGame.Tiles;
 
 namespace ThroneGame.Scenes
@@ -9,11 +11,16 @@ namespace ThroneGame.Scenes
     {
         private Game1 _game;
         private List<ITile> _tiles;
+        private PlayerEntity _player;
+        private MovementController _movementController;
+        private PhysicsController _physicsController;
 
         public DemoScene(Game1 game)
         {
             _game = game;
             _tiles = new List<ITile>();
+            _movementController = new MovementController();
+            _physicsController = new PhysicsController();
         }
 
         public override void LoadContent()
@@ -23,14 +30,32 @@ namespace ThroneGame.Scenes
             // Load tile textures
             var tileTexture = _game.Content.Load<Texture2D>("Tiles/1");
 
-            // Create tiles
-            _tiles.Add(new Tile(tileTexture, true));
+            // Create tiles with positions
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(0, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(32, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(64, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(96, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(128, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(160, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(192, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(224, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(256, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(288, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(320, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(352, 350)));
+            _tiles.Add(new Tile(tileTexture, true, new Vector2(384, 350)));
             // Add more tiles as needed
+
+            // Load player texture and create player
+            var playerTexture = _game.Content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"); // Example: using the Idle sprite sheet
+            _player = new PlayerEntity(playerTexture, new Vector2(100, 100), playerTexture.Width / 6, playerTexture.Height, 6); // Assuming 6 frames for idle animation
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Update logic for the scene
+            _movementController.HandleMovement(_player, gameTime);
+            _physicsController.ApplyPhysics(_player, _tiles, gameTime);
+            _player.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -40,11 +65,11 @@ namespace ThroneGame.Scenes
             // Draw tiles
             foreach (var tile in _tiles)
             {
-                // Example: drawing tiles at fixed positions (0, 0), (32, 0), etc.
-                tile.Draw(spriteBatch, 0, 0);
-                tile.Draw(spriteBatch, 32, 0);
-                // Add more tile positions as needed
+                tile.Draw(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y);
             }
+
+            // Draw player
+            _player.Draw(spriteBatch);
         }
     }
 }
