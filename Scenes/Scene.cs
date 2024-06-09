@@ -5,27 +5,18 @@ namespace ThroneGame.Scenes
 {
     public abstract class Scene : IScene
     {
-        protected Game1 game;
+        public Texture2D BackgroundImage { get; set; }
 
-        public Scene(Game1 game)
+        public abstract void LoadContent();
+        public abstract void Update(GameTime gameTime);
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
-            this.game = game;
-        }
-
-        public virtual void Initialize()
-        {
-        }
-
-        public virtual void LoadContent()
-        {
-        }
-
-        public virtual void Update(GameTime gameTime)
-        {
-        }
-
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
+            if (BackgroundImage != null)
+            {
+                // Draw the background image to fit the screen size
+                var viewport = spriteBatch.GraphicsDevice.Viewport;
+                spriteBatch.Draw(BackgroundImage, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+            }
         }
     }
 }

@@ -5,33 +5,27 @@ namespace ThroneGame.Scenes
 {
     public class DemoScene : Scene
     {
-        private Texture2D texture;
+        private Game1 _game;
 
-        public DemoScene(Game1 game) : base(game)
+        public DemoScene(Game1 game)
         {
-        }
-
-        public override void Initialize()
-        {
-            // Initialize scene-specific components here
+            _game = game;
         }
 
         public override void LoadContent()
         {
-            // Load scene-specific content here
-            texture = game.Content.Load<Texture2D>("Background/1"); // Example texture
+            BackgroundImage = _game.Content.Load<Texture2D>("Backgrounds/1");
         }
 
         public override void Update(GameTime gameTime)
         {
-            // Update scene-specific logic here
+            // Update logic for the scene
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-            spriteBatch.Draw(texture, new Vector2(100, 100), Color.White);
-            spriteBatch.End();
+            base.Draw(spriteBatch);
+            // Additional drawing logic for the scene, if any
         }
     }
 }

@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Background/1.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Backgrounds/1.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

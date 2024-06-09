@@ -11,19 +11,19 @@ namespace ThroneGame
         private SpriteBatch _spriteBatch;
         private SceneManager _sceneManager;
 
+        public static GraphicsDeviceManager Graphics;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Graphics = _graphics;
         }
 
         protected override void Initialize()
         {
-            // Initialize the scene manager and add scenes
-            _sceneManager = new SceneManager(this);
-            _sceneManager.AddScene("Demo", new DemoScene(this));
-            _sceneManager.SetScene("Demo");
+            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
@@ -31,6 +31,11 @@ namespace ThroneGame
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _sceneManager = new SceneManager();
+            var demoScene = new DemoScene(this); // Pass only the Game1 instance
+            _sceneManager.AddScene("DemoScene", demoScene);
+            _sceneManager.SetCurrentScene("DemoScene");
         }
 
         protected override void Update(GameTime gameTime)
@@ -38,6 +43,7 @@ namespace ThroneGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // TODO: Add your update logic here
             _sceneManager.Update(gameTime);
 
             base.Update(gameTime);
@@ -47,7 +53,12 @@ namespace ThroneGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _sceneManager.Draw(gameTime, _spriteBatch);
+            _spriteBatch.Begin();
+
+            // TODO: Add your drawing code here
+            _sceneManager.Draw(_spriteBatch);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

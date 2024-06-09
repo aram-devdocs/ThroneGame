@@ -5,9 +5,9 @@ namespace ThroneGame.Scenes
 {
     public interface IScene
     {
-        void Initialize();
+        Texture2D BackgroundImage { get; set; }
         void LoadContent();
         void Update(GameTime gameTime);
-        void Draw(GameTime gameTime, SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch);
     }
 }
