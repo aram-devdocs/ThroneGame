@@ -9,5 +9,7 @@ namespace ThroneGame.Scenes
         void LoadContent();
         void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch);
+
+        void Reset(Game1 game1s);
     }
 }

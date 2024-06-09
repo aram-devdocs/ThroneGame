@@ -37,5 +37,12 @@ namespace ThroneGame.Scenes
         {
             _currentScene?.Draw(spriteBatch);
         }
+
+        public void ResetCurrentScene(Game1 game1)
+        {
+            _currentScene?.Reset(game1);
+        }
+
+
     }
 }

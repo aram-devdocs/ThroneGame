@@ -9,6 +9,13 @@ namespace ThroneGame.Scenes
 
         public abstract void LoadContent();
         public abstract void Update(GameTime gameTime);
+
+        public virtual void Reset(Game1 game1)
+        {
+            // Load the content again
+            LoadContent();
+            game1.ResetElapsedTime();
+        }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (BackgroundImage != null)
