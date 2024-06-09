@@ -1,0 +1,87 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Bb]uilds-[Dd]evelopment/
+[Bb]uilds-[Ss]taging/
+[Bb]uilds-[Pp]roduction/
+[Uu]nityGenerated/
+[Oo]bj-[Dd]evelopment/
+[Oo]bj-[Ss]taging/
+[Oo]bj-[Pp]roduction/
+
+# Rider generated folders
+.idea/
+*.sln.iml
+
+# User-specific files
+*.userprefs
+*.usertasks
+*.userassemblyinfo
+
+# Build cache
+[Bb]uild[Cc]ache/
+
+# Unity3D generated meta files
+*.pidb.meta
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+.fseventsd
