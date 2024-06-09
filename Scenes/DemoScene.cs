@@ -14,11 +14,16 @@ namespace ThroneGame.Scenes
         private PlayerEntity _player;
         private CameraController _cameraController;
 
+        private PhysicsController _physicsController;
+
+
         public DemoScene(Game1 game)
         {
             _game = game;
             _tiles = new List<ITile>();
             _cameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
+            _physicsController = new PhysicsController();
+
         }
 
         public override void LoadContent()
@@ -47,11 +52,23 @@ namespace ThroneGame.Scenes
             // Load player texture and create player
             var playerTexture = _game.Content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"); // Example: using the Idle sprite sheet
             _player = new PlayerEntity(playerTexture, new Vector2(100, 100), playerTexture.Width / 6, playerTexture.Height, 6); // Assuming 6 frames for idle animation
+
+
+
+            // Add tiles and player to physics controller
+            foreach (var tile in _tiles)
+            {
+                _physicsController.AddTile(tile);
+            }
+
+
+            _physicsController.AddEntity(_player);
         }
 
         public override void Update(GameTime gameTime)
         {
-            _player.Update(gameTime, _tiles);
+            _player.Update(gameTime);
+            _physicsController.Update(gameTime);
             _cameraController.Update(gameTime, _player.Position);
         }
 

@@ -1,8 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using ThroneGame.Controllers;
-using ThroneGame.Tiles;
 
 namespace ThroneGame.Entities
 {
@@ -23,7 +21,6 @@ namespace ThroneGame.Entities
         public double TimeCounter { get; set; }
 
         public MovementController MovementController { get; set; }
-        public PhysicsController PhysicsController { get; set; }
 
         public Entity(Texture2D texture, Vector2 position, int frameWidth, int frameHeight, int frameCount)
         {
@@ -42,16 +39,12 @@ namespace ThroneGame.Entities
             SourceRectangle = new Rectangle(0, 0, FrameWidth, FrameHeight);
 
             MovementController = new MovementController();
-            PhysicsController = new PhysicsController();
         }
 
-        public virtual void Update(GameTime gameTime, List<ITile> tiles)
+        public virtual void Update(GameTime gameTime)
         {
             // Handle movement
             MovementController?.HandleMovement(this, gameTime);
-
-            // Handle physics
-            PhysicsController?.ApplyPhysics(this, tiles, gameTime);
 
             // Update animation frame
             TimeCounter += gameTime.ElapsedGameTime.TotalSeconds;

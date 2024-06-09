@@ -9,7 +9,34 @@ namespace ThroneGame.Controllers
     {
         private const float Gravity = 500f;
 
-        public void ApplyPhysics(IEntity entity, List<ITile> tiles, GameTime gameTime)
+        private List<IEntity> _entities;
+        private List<ITile> _tiles;
+
+        public PhysicsController()
+        {
+            _entities = new List<IEntity>();
+            _tiles = new List<ITile>();
+        }
+
+        public void AddEntity(IEntity entity)
+        {
+            _entities.Add(entity);
+        }
+
+        public void AddTile(ITile tile)
+        {
+            _tiles.Add(tile);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (var entity in _entities)
+            {
+                ApplyPhysics(entity, gameTime);
+            }
+        }
+
+        private void ApplyPhysics(IEntity entity, GameTime gameTime)
         {
             // Apply gravity
             entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -19,7 +46,7 @@ namespace ThroneGame.Controllers
             Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Check for collisions
-            foreach (var tile in tiles)
+            foreach (var tile in _tiles)
             {
                 if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
                 {
