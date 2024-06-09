@@ -7,9 +7,9 @@ namespace ThroneGame.Maps
     {
         private string _jsonFilePath;
 
-        public DemoMap(string jsonFilePath)
+        public DemoMap()
         {
-            _jsonFilePath = jsonFilePath;
+            _jsonFilePath = "Content/Maps/DemoMap.json";
         }
 
         protected override void LoadTilesetTexture(ContentManager content)

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using ThroneGame.Controllers;
 using ThroneGame.Entities;
 using ThroneGame.Maps;
@@ -12,7 +12,6 @@ namespace ThroneGame.Scenes
     public class DemoScene : Scene
     {
         private Game1 _game;
-        private List<ITile> _tiles;
         private PlayerEntity _player;
         private CameraController _cameraController;
 
@@ -28,7 +27,6 @@ namespace ThroneGame.Scenes
         public DemoScene(Game1 game)
         {
             _game = game;
-            _tiles = new List<ITile>();
             _cameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
             _physicsController = new PhysicsController();
 
@@ -64,7 +62,7 @@ namespace ThroneGame.Scenes
             _mapRenderTarget = new RenderTarget2D(_game.GraphicsDevice, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height);
 
             // Create and load the demo map
-            _demoMap = new DemoMap("Content/Maps/DemoMap.json");
+            _demoMap = new DemoMap();
             _demoMap.LoadMapContent(_game.GraphicsDevice, _game.Content);
 
             // Draw tiles to the render target
