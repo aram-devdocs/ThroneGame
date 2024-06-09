@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ThroneGame")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b69b75d67568e66724cdabf7aa144cba90fe06b9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ef91add6fae71eafff5c15e1a0d1cc2d9478916d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ThroneGame")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ThroneGame")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
