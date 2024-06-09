@@ -10,6 +10,6 @@ namespace ThroneGame.Scenes
         void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch);
 
-        void Reset(Game1 game1s);
+        void Reset(Game1 game1, GameTime gameTime);
     }
 }
