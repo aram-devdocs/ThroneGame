@@ -55,20 +55,19 @@ namespace ThroneGame.Controllers
             Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Check for collisions
-            // List<ITile> nearbyTiles = GetNearbyTiles(entity);
+            List<ITile> nearbyTiles = GetNearbyTiles(entity);
 
-            Parallel.ForEach(_tileGrid, kvp =>
+
+            foreach (var tile in nearbyTiles)
             {
-                foreach (var tile in kvp.Value)
+                if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
                 {
-                    if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
-                    {
-                        // Adjust position and velocity based on collision
-                        entity.Velocity = new Vector2(entity.Velocity.X, 0);
-                        entity.IsOnGround = true;
-                    }
+                    // Adjust position and velocity based on collision
+                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                    entity.IsOnGround = true;
                 }
-            });
+            }
+
 
             // Apply Gravity
             if (!entity.IsOnGround) entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -99,7 +98,7 @@ namespace ThroneGame.Controllers
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    Point cell = new Point(entityCell.X + x, entityCell.Y + y);
+                    Point cell = new Point(entityCell.X + x, entityCell.Y + y + entity.FrameHeight / CellSize);
                     if (_tileGrid.ContainsKey(cell))
                     {
                         nearbyTiles.AddRange(_tileGrid[cell]);
