@@ -1,22 +1,25 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ThroneGame.Entities;
 using ThroneGame.Tiles;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Controllers
 {
     public class PhysicsController
     {
         private const float Gravity = 500f;
+        private const int CellSize = 64; // Size of each cell in the grid
 
         private List<IEntity> _entities;
-        private List<ITile> _tiles;
+        private Dictionary<Point, List<ITile>> _tileGrid;
 
-        public PhysicsController()
+
+        public PhysicsController(SpriteBatch spriteBatch)
         {
             _entities = new List<IEntity>();
-            _tiles = new List<ITile>();
+            _tileGrid = new Dictionary<Point, List<ITile>>();
         }
 
         public void AddEntity(IEntity entity)
@@ -26,7 +29,12 @@ namespace ThroneGame.Controllers
 
         public void AddTile(ITile tile)
         {
-            _tiles.Add(tile);
+            Point cell = GetCell(tile.Position);
+            if (!_tileGrid.ContainsKey(cell))
+            {
+                _tileGrid[cell] = new List<ITile>();
+            }
+            _tileGrid[cell].Add(tile);
         }
 
         public void Update(GameTime gameTime)
@@ -44,38 +52,57 @@ namespace ThroneGame.Controllers
 
             // Update entity position
             Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            // TextureUtils.DebugPosition(_spriteBatch, (int)newPosition.X, (int)newPosition.Y);
 
             // Check for collisions
-            Parallel.ForEach(_tiles, tile =>
+            List<ITile> nearbyTiles = GetNearbyTiles(entity);
+            foreach (var tile in nearbyTiles)
             {
                 if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
                 {
                     // Adjust position and velocity based on collision
-                    // newPosition = HandleCollision(entity, tile); // TODO: Fix the way we handle collisions between two entities
                     entity.Velocity = new Vector2(entity.Velocity.X, 0);
                     entity.IsOnGround = true;
                 }
-            });
+            }
 
             // Apply Gravity
             if (!entity.IsOnGround) entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
 
             entity.Position = newPosition;
         }
 
         private bool IsColliding(Vector2 position, IEntity entity, ITile tile)
         {
-            Rectangle entityRect = new Rectangle((int)position.X, (int)position.Y, entity.FrameWidth, entity.FrameHeight);
+            Rectangle entityRect = new Rectangle((int)position.X, (int)position.Y, entity.FrameWidth, entity.FrameHeight * 2);
             Rectangle tileRect = new Rectangle((int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
 
             return entityRect.Intersects(tileRect);
         }
 
-        private Vector2 HandleCollision(IEntity entity, ITile tile)
+        private Point GetCell(Vector2 position)
         {
-            // Simple collision handling - place the entity on top of the tile
-            return new Vector2(entity.Position.X, tile.Position.Y - entity.FrameHeight);
+            int cellX = (int)(position.X / CellSize);
+            int cellY = (int)(position.Y / CellSize);
+            return new Point(cellX, cellY);
+        }
+
+        private List<ITile> GetNearbyTiles(IEntity entity)
+        {
+            List<ITile> nearbyTiles = new List<ITile>();
+            Point entityCell = GetCell(entity.Position);
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    Point cell = new Point(entityCell.X + x, entityCell.Y + y);
+                    if (_tileGrid.ContainsKey(cell))
+                    {
+                        nearbyTiles.AddRange(_tileGrid[cell]);
+                    }
+                }
+            }
+            return nearbyTiles;
         }
     }
 }

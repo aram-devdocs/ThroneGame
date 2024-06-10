@@ -28,7 +28,7 @@ namespace ThroneGame.Scenes
         {
             _game = game;
             _cameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
-            _physicsController = new PhysicsController();
+            _physicsController = new PhysicsController(new SpriteBatch(game.GraphicsDevice));
 
         }
 
