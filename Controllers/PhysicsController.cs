@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ThroneGame.Entities;
 using ThroneGame.Tiles;
 using ThroneGame.Utils;
@@ -45,7 +44,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-
         private void ApplyPhysics(IEntity entity, GameTime gameTime)
         {
             // Set Is On Ground
@@ -56,8 +54,6 @@ namespace ThroneGame.Controllers
 
             // Check for collisions
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
-
-
             foreach (var tile in nearbyTiles)
             {
                 if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
@@ -68,10 +64,11 @@ namespace ThroneGame.Controllers
                 }
             }
 
-
             // Apply Gravity
-            if (!entity.IsOnGround) entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            if (!entity.IsOnGround)
+            {
+                entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
             entity.Position = newPosition;
         }
@@ -83,6 +80,9 @@ namespace ThroneGame.Controllers
 
             return entityRect.Intersects(tileRect);
         }
+
+
+
         private Point GetCell(Vector2 position)
         {
             int cellX = (int)(position.X / CellSize);
@@ -93,18 +93,21 @@ namespace ThroneGame.Controllers
         private List<ITile> GetNearbyTiles(IEntity entity)
         {
             List<ITile> nearbyTiles = new List<ITile>();
-            Point entityCell = GetCell(entity.Position);
-            for (int x = -1; x <= 1; x++)
+            Point topLeftCell = GetCell(entity.Position);
+            Point bottomRightCell = GetCell(entity.Position + new Vector2(entity.FrameWidth, entity.FrameHeight));
+
+            for (int x = topLeftCell.X - 1; x <= bottomRightCell.X + 1; x++)
             {
-                for (int y = -1; y <= 1; y++)
+                for (int y = topLeftCell.Y - 1; y <= bottomRightCell.Y + 1; y++)
                 {
-                    Point cell = new Point(entityCell.X + x, entityCell.Y + y + entity.FrameHeight / CellSize);
+                    Point cell = new Point(x, y);
                     if (_tileGrid.ContainsKey(cell))
                     {
                         nearbyTiles.AddRange(_tileGrid[cell]);
                     }
                 }
             }
+
             return nearbyTiles;
         }
 
@@ -128,9 +131,6 @@ namespace ThroneGame.Controllers
             //         // TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
             //     }
             // }
-
-
-
         }
     }
 }
