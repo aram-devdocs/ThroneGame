@@ -113,24 +113,23 @@ namespace ThroneGame.Controllers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var entity in _entities)
+
+            bool debug = true;
+
+            if (debug)
             {
-                TextureUtils.DebugBorder(spriteBatch, (int)entity.Position.X, (int)entity.Position.Y, entity.FrameWidth, entity.FrameHeight);
-                List<ITile> nearbyTiles = GetNearbyTiles(entity);
-                foreach (var tile in nearbyTiles)
+
+                foreach (var entity in _entities)
                 {
-                    TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
+                    TextureUtils.DebugBorder(spriteBatch, (int)entity.Position.X, (int)entity.Position.Y, entity.FrameWidth, entity.FrameHeight);
+                    List<ITile> nearbyTiles = GetNearbyTiles(entity);
+                    foreach (var tile in nearbyTiles)
+                    {
+                        TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
+                    }
                 }
             }
 
-            // Draw collision boxes for tiles
-            // foreach (var kvp in _tileGrid)
-            // {
-            //     foreach (var tile in kvp.Value)
-            //     {
-            //         // TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
-            //     }
-            // }
         }
     }
 }
