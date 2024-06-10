@@ -54,5 +54,10 @@ namespace ThroneGame.Entities
         {
             AnimationController.Draw(spriteBatch, Position);
         }
+
+        public void Destroy()
+        {
+            // TODO: Implement
+        }
     }
 }

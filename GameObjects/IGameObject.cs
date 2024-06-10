@@ -8,6 +8,7 @@ namespace ThroneGame
 
         void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch);
+        void Destroy();
 
         bool IsCollidable { get; set; }
 

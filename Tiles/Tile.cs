@@ -47,5 +47,10 @@ namespace ThroneGame.Tiles
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
 
         }
+
+        public void Destroy()
+        {
+            // TODO: Implement
+        }
     }
 }

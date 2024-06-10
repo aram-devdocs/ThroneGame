@@ -9,6 +9,7 @@ digraph {
 	Tile -> Utils
 	PhysicsController -> Entities
 	PhysicsController -> Tiles
+	PhysicsController -> Utils
 	MovementController -> Entities
 	Entity -> Controllers
 	Entity -> Utils
