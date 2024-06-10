@@ -10,12 +10,10 @@ namespace ThroneGame.Controllers
     public class PhysicsController
     {
         private const float Gravity = 500f;
-        private const int CellSize = 16; // Size of each cell in the grid
+        private const int CellSize = 32; // Adjusted cell size for optimization
 
         private List<IEntity> _entities;
         private Dictionary<Point, List<ITile>> _tileGrid;
-
-
 
         public PhysicsController()
         {
@@ -115,13 +113,11 @@ namespace ThroneGame.Controllers
             // Draw collision boxes for tiles
             foreach (var kvp in _tileGrid)
             {
-                Point cell = kvp.Key;
                 foreach (var tile in kvp.Value)
                 {
-                    TextureUtils.DebugBorder(spriteBatch, cell.X * CellSize, cell.Y * CellSize, CellSize, CellSize);
+                    TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
                 }
             }
         }
-
     }
 }
