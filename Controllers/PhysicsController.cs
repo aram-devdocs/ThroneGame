@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ThroneGame.Entities;
 using ThroneGame.Tiles;
 using ThroneGame.Utils;
@@ -44,6 +45,7 @@ namespace ThroneGame.Controllers
             }
         }
 
+
         private void ApplyPhysics(IEntity entity, GameTime gameTime)
         {
             // Set Is On Ground
@@ -53,19 +55,24 @@ namespace ThroneGame.Controllers
             Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Check for collisions
-            List<ITile> nearbyTiles = GetNearbyTiles(entity);
-            foreach (var tile in nearbyTiles)
+            // List<ITile> nearbyTiles = GetNearbyTiles(entity);
+
+            Parallel.ForEach(_tileGrid, kvp =>
             {
-                if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
+                foreach (var tile in kvp.Value)
                 {
-                    // Adjust position and velocity based on collision
-                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
-                    entity.IsOnGround = true;
+                    if (tile.IsCollidable && IsColliding(newPosition, entity, tile))
+                    {
+                        // Adjust position and velocity based on collision
+                        entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                        entity.IsOnGround = true;
+                    }
                 }
-            }
+            });
 
             // Apply Gravity
             if (!entity.IsOnGround) entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 
             entity.Position = newPosition;
         }
@@ -77,7 +84,6 @@ namespace ThroneGame.Controllers
 
             return entityRect.Intersects(tileRect);
         }
-
         private Point GetCell(Vector2 position)
         {
             int cellX = (int)(position.X / CellSize);
