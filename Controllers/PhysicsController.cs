@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ThroneGame.Entities;
 using ThroneGame.Tiles;
 using ThroneGame.Utils;
@@ -97,17 +98,21 @@ namespace ThroneGame.Controllers
             Point topLeftCell = GetCell(entity.Position);
             Point bottomRightCell = GetCell(entity.Position + new Vector2(entity.FrameWidth, entity.FrameHeight));
 
-            for (int x = topLeftCell.X - 1; x <= bottomRightCell.X + 1; x++)
+            // Use threading for parallel processing
+            Parallel.For(topLeftCell.X - 1, bottomRightCell.X + 2, x =>
             {
                 for (int y = topLeftCell.Y - 1; y <= bottomRightCell.Y + 1; y++)
                 {
                     Point cell = new Point(x, y);
                     if (_tileGrid.ContainsKey(cell))
                     {
-                        nearbyTiles.AddRange(_tileGrid[cell]);
+                        lock (nearbyTiles)
+                        {
+                            nearbyTiles.AddRange(_tileGrid[cell]);
+                        }
                     }
                 }
-            }
+            });
 
             return nearbyTiles;
         }
