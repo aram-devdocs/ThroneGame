@@ -29,6 +29,14 @@ namespace ThroneGame.Utils
             redBorderTexture.Dispose();
         }
 
-
+        public static void DebugPosition(SpriteBatch spriteBatch, int x, int y)
+        {
+            //   create a white dot at the position, then draw a red border around it to make it more visible
+            Texture2D whiteDot = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            whiteDot.SetData(new Color[] { Color.White });
+            spriteBatch.Draw(whiteDot, new Rectangle(x, y, 1, 1), Color.White);
+            DebugBorder(spriteBatch, x, y, 1, 1);
+            whiteDot.Dispose();
+        }
     }
 }

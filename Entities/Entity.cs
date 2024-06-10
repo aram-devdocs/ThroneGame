@@ -50,7 +50,6 @@ namespace ThroneGame.Entities
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             AnimationController.Draw(spriteBatch, Position);
-            TextureUtils.DebugBorder(spriteBatch, (int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
         }
     }
 }

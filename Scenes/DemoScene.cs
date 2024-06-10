@@ -28,7 +28,7 @@ namespace ThroneGame.Scenes
         {
             _game = game;
             _cameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
-            _physicsController = new PhysicsController(new SpriteBatch(game.GraphicsDevice));
+            _physicsController = new PhysicsController();
 
         }
 
@@ -128,6 +128,9 @@ namespace ThroneGame.Scenes
             spriteBatch.Draw(_mapRenderTarget, Vector2.Zero, Color.White);
             // Draw player
             _player.Draw(spriteBatch);
+
+            // Debug physics controller
+           _physicsController.Draw(spriteBatch);
 
             spriteBatch.End();
 

@@ -10,13 +10,14 @@ namespace ThroneGame.Controllers
     public class PhysicsController
     {
         private const float Gravity = 500f;
-        private const int CellSize = 64; // Size of each cell in the grid
+        private const int CellSize = 16; // Size of each cell in the grid
 
         private List<IEntity> _entities;
         private Dictionary<Point, List<ITile>> _tileGrid;
 
 
-        public PhysicsController(SpriteBatch spriteBatch)
+
+        public PhysicsController()
         {
             _entities = new List<IEntity>();
             _tileGrid = new Dictionary<Point, List<ITile>>();
@@ -52,7 +53,6 @@ namespace ThroneGame.Controllers
 
             // Update entity position
             Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            // TextureUtils.DebugPosition(_spriteBatch, (int)newPosition.X, (int)newPosition.Y);
 
             // Check for collisions
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
@@ -74,7 +74,7 @@ namespace ThroneGame.Controllers
 
         private bool IsColliding(Vector2 position, IEntity entity, ITile tile)
         {
-            Rectangle entityRect = new Rectangle((int)position.X, (int)position.Y, entity.FrameWidth, entity.FrameHeight * 2);
+            Rectangle entityRect = new Rectangle((int)position.X, (int)position.Y, entity.FrameWidth, entity.FrameHeight);
             Rectangle tileRect = new Rectangle((int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
 
             return entityRect.Intersects(tileRect);
@@ -104,5 +104,24 @@ namespace ThroneGame.Controllers
             }
             return nearbyTiles;
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (var entity in _entities)
+            {
+                TextureUtils.DebugBorder(spriteBatch, (int)entity.Position.X, (int)entity.Position.Y, entity.FrameWidth, entity.FrameHeight);
+            }
+
+            // Draw collision boxes for tiles
+            foreach (var kvp in _tileGrid)
+            {
+                Point cell = kvp.Key;
+                foreach (var tile in kvp.Value)
+                {
+                    TextureUtils.DebugBorder(spriteBatch, cell.X * CellSize, cell.Y * CellSize, CellSize, CellSize);
+                }
+            }
+        }
+
     }
 }

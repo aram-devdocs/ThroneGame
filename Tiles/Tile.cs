@@ -36,7 +36,7 @@ namespace ThroneGame.Tiles
         public void Draw(SpriteBatch spriteBatch, int x, int y)
         {
             spriteBatch.Draw(_texture, new Rectangle(x, y, Width, Height), _sourceRectangle, Color.White);
-            TextureUtils.DebugBorder(spriteBatch, x, y, Width, Height);
+
         }
     }
 }
