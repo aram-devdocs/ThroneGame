@@ -113,16 +113,24 @@ namespace ThroneGame.Controllers
             foreach (var entity in _entities)
             {
                 TextureUtils.DebugBorder(spriteBatch, (int)entity.Position.X, (int)entity.Position.Y, entity.FrameWidth, entity.FrameHeight);
-            }
-
-            // Draw collision boxes for tiles
-            foreach (var kvp in _tileGrid)
-            {
-                foreach (var tile in kvp.Value)
+                List<ITile> nearbyTiles = GetNearbyTiles(entity);
+                foreach (var tile in nearbyTiles)
                 {
                     TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
                 }
             }
+
+            // Draw collision boxes for tiles
+            // foreach (var kvp in _tileGrid)
+            // {
+            //     foreach (var tile in kvp.Value)
+            //     {
+            //         // TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
+            //     }
+            // }
+
+
+
         }
     }
 }
