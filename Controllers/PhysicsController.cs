@@ -75,10 +75,11 @@ namespace ThroneGame.Controllers
 
         private bool IsColliding(Vector2 position, IEntity entity, ITile tile)
         {
-            Rectangle entityRect = new Rectangle((int)position.X, (int)position.Y, entity.FrameWidth, entity.FrameHeight);
-            Rectangle tileRect = new Rectangle((int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
+            // Use the bounds from entities and tiles to check for collision
+            Rectangle entityBounds = entity.Bounds;
+            Rectangle tileBounds = tile.Bounds;
 
-            return entityRect.Intersects(tileRect);
+            return entityBounds.Intersects(tileBounds);
         }
 
 
