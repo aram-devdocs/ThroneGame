@@ -12,6 +12,7 @@ namespace ThroneGame.Tiles
         public int Height { get; set; }
         private Texture2D _texture;
         private Rectangle _sourceRectangle;
+        public Rectangle Bounds { get; set; }
 
         public Tile(Texture2D texture, bool isCollidable, Vector2 position, int width = 64, int height = 64)
         {
@@ -21,6 +22,7 @@ namespace ThroneGame.Tiles
             Width = width;
             Height = height;
             _sourceRectangle = new Rectangle(0, 0, width, height);
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
         public Tile(Texture2D texture, Rectangle sourceRectangle, bool isCollidable, Vector2 position, int width, int height)
@@ -33,9 +35,16 @@ namespace ThroneGame.Tiles
             Height = height;
         }
 
-        public void Draw(SpriteBatch spriteBatch, int x, int y)
+        public void Update(GameTime gameTime)
         {
-            spriteBatch.Draw(_texture, new Rectangle(x, y, Width, Height), _sourceRectangle, Color.White);
+            // Do nothing as tiles are static
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            // spriteBatch.Draw(_texture, new Rectangle(x, y, Width, Height), _sourceRectangle, Color.White);
+            spriteBatch.Draw(_texture, Position, _sourceRectangle, Color.White);
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
 
         }
     }

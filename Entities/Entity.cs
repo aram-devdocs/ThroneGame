@@ -17,6 +17,7 @@ namespace ThroneGame.Entities
 
         public int FrameWidth => AnimationController.FrameWidth;
         public int FrameHeight => AnimationController.FrameHeight;
+        public Rectangle Bounds { get; set; }
         public bool IsFacingRight
         {
             get => AnimationController.IsFacingRight;
@@ -45,6 +46,8 @@ namespace ThroneGame.Entities
             AnimationController.Update(gameTime);
 
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

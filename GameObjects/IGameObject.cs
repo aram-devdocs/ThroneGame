@@ -1,0 +1,21 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace ThroneGame
+{
+    public interface IGameObject
+    {
+
+        void Update(GameTime gameTime);
+        void Draw(SpriteBatch spriteBatch);
+
+        bool IsCollidable { get; set; }
+
+
+        Rectangle Bounds { get; set; }
+
+        Vector2 Position { get; set; }
+
+
+    }
+}

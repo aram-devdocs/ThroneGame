@@ -72,7 +72,7 @@ namespace ThroneGame.Maps
         {
             foreach (var tile in Tiles)
             {
-                tile.Draw(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y);
+                tile.Draw(spriteBatch);
             }
         }
 

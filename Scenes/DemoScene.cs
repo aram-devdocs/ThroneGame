@@ -130,7 +130,7 @@ namespace ThroneGame.Scenes
             _player.Draw(spriteBatch);
 
             // Debug physics controller
-           _physicsController.Draw(spriteBatch);
+            _physicsController.Draw(spriteBatch);
 
             spriteBatch.End();
 
