@@ -1,0 +1,15 @@
+// First-Party Dependency Graph
+digraph {
+	Game1 -> Scenes
+	Map -> Tiles
+	DemoScene -> Controllers
+	DemoScene -> Entities
+	DemoScene -> Maps
+	DemoScene -> Tiles
+	Tile -> Utils
+	PhysicsController -> Entities
+	PhysicsController -> Tiles
+	MovementController -> Entities
+	Entity -> Controllers
+	Entity -> Utils
+}
