@@ -66,11 +66,14 @@ namespace ThroneGame.Maps
         /// Draws the map using the specified sprite batch.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Rectangle visibleArea)
         {
             foreach (var tile in Tiles)
             {
-                tile.Draw(spriteBatch);
+                if (tile.Bounds.Intersects(visibleArea))
+                {
+                    tile.Draw(spriteBatch);
+                }
             }
         }
 

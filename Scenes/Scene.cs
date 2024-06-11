@@ -164,7 +164,8 @@ namespace ThroneGame.Scenes
             using (var spriteBatch = new SpriteBatch(Game.GraphicsDevice))
             {
                 spriteBatch.Begin();
-                Map.Draw(spriteBatch);
+                var visibleArea = CameraController.GetVisibleArea();
+                Map.Draw(spriteBatch, visibleArea);
                 spriteBatch.End();
             }
             Game.GraphicsDevice.SetRenderTarget(null);

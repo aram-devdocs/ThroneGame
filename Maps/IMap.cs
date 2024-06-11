@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Tiles;
@@ -21,7 +22,7 @@ namespace ThroneGame.Maps
         /// Draws the map using the specified sprite batch.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch, Rectangle visibleArea);
 
         /// <summary>
         /// Gets or sets the file path to the JSON file containing the map data.

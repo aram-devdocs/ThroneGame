@@ -86,5 +86,21 @@ namespace ThroneGame.Controllers
                 _position.Y = playerPosition.Y - _viewport.Height * (1 - _padding);
             }
         }
+
+
+
+
+        /// <summary>
+        /// Gets the visible area of the camera in world coordinates.
+        /// </summary>
+        /// <returns>The visible area of the camera in world coordinates.</returns>
+
+        public Rectangle GetVisibleArea()
+        {
+            Matrix inverseViewMatrix = Matrix.Invert(GetViewMatrix());
+            Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverseViewMatrix);
+            Vector2 bottomRight = Vector2.Transform(new Vector2(_viewport.Width, _viewport.Height), inverseViewMatrix);
+            return new Rectangle((int)topLeft.X, (int)topLeft.Y, (int)(bottomRight.X - topLeft.X), (int)(bottomRight.Y - topLeft.Y));
+        }
     }
 }
