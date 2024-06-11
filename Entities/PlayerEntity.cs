@@ -17,6 +17,8 @@ namespace ThroneGame.Entities
             AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Shinobi/Jump"), 12, 0.1, false);
             AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
             AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
+            AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
+
 
             // this.Bounds should be reduced by 10% on horizontal axis, and 20% on vertical axis, using current Bounds values as reference
             HorizontalBoundsPadding = -80f;
@@ -38,16 +40,18 @@ namespace ThroneGame.Entities
                 // Walking or running state
                 AnimationController.SetState((Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) ? "run" : "walk");
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                // Dead state
-                AnimationController.SetState("dead");
-            }
             else
             {
                 AnimationController.SetState("idle");
             }
 
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                // Dead state
+                AnimationController.SetState("crouch");
+            }
 
             base.Update(gameTime);
         }
