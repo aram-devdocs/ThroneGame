@@ -17,6 +17,9 @@ namespace ThroneGame.Controllers
         private const float slideBoost = 400f;
         private const float minimumSlideBoostStartSpeed = 90f;
         private const float slideBoostAccelerationRate = 40.2f;
+
+        private const float crouchDiveMaxSpeed = 200f;
+        private const float crouchDiveAccelerationRate = 20f;
         private bool isSlideBoostFinished;
 
         public void HandleMovement(IEntity entity, GameTime gameTime)
@@ -28,7 +31,7 @@ namespace ThroneGame.Controllers
 
             try
             {
-                if (state.IsKeyDown(Keys.S) && entity.IsOnGround)
+                if (state.IsKeyDown(Keys.S))
                 {
                     HandleCrouch(entity, state);
                 }
@@ -52,6 +55,15 @@ namespace ThroneGame.Controllers
         private void HandleCrouch(IEntity entity, KeyboardState state)
 
         {
+
+            if (!entity.IsOnGround) {
+                // crouch dive
+                System.Console.WriteLine("crouch dive" + entity.Velocity.Y);
+                if (entity.Velocity.Y < crouchDiveMaxSpeed)
+                {
+                    entity.Velocity = new Vector2(entity.Velocity.X, Math.Min(crouchDiveMaxSpeed, entity.Velocity.Y + crouchDiveAccelerationRate));
+                }
+            }
             bool isSprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             if (!isSlideBoostFinished && isSprinting && Math.Abs(entity.Velocity.X) > minimumSlideBoostStartSpeed)
             {
