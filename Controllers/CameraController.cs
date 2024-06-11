@@ -49,7 +49,6 @@ namespace ThroneGame.Controllers
         public void Update(GameTime gameTime, Vector2 playerPosition)
         {
 
-            System.Console.WriteLine("CameraController Update:" + IsDirty);
             IsDirty = false;
             UpdateHorizontalPosition(playerPosition);
             UpdateVerticalPosition(playerPosition);
