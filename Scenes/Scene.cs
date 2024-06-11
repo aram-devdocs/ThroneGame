@@ -84,7 +84,6 @@ namespace ThroneGame.Scenes
             Map.LoadContent(Game.GraphicsDevice, Game.Content);
 
             // Draw tiles to the render target
-            UpdateTiles();
 
             // Add map tiles to physics controller
             foreach (var tile in Map.Tiles)
@@ -105,7 +104,6 @@ namespace ThroneGame.Scenes
             PhysicsController.Update(gameTime);
             Player.Update(gameTime);
             CameraController.Update(gameTime, Player.Position);
-            UpdateTiles();
         }
 
         /// <summary>
@@ -184,22 +182,10 @@ namespace ThroneGame.Scenes
             }
         }
 
-        /// <summary>
-        /// Updates the tiles by rendering them to the map render target.
-        /// </summary>
-        private void UpdateTiles()
-        {
-            Game.GraphicsDevice.Clear(Color.Transparent);
-            using (var spriteBatch = new SpriteBatch(Game.GraphicsDevice))
-            {
-                spriteBatch.Begin();
-                var visibleArea = CameraController.GetVisibleArea();
-                Map.Draw(spriteBatch, visibleArea);
-                spriteBatch.End();
-            }
-            Game.GraphicsDevice.SetRenderTarget(null);
-        }
 
+        /// <summary>
+        /// Updates the list of visible tiles in the scene.
+        /// </summary>
         public void UpdateVisibleTiles()
         {
             var visibleArea = CameraController.GetVisibleArea();
