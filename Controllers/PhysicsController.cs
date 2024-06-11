@@ -120,7 +120,7 @@ namespace ThroneGame.Controllers
         public void Draw(SpriteBatch spriteBatch)
         {
 
-            bool debug = true;
+            bool debug = false;
 
             if (debug)
             {
