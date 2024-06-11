@@ -8,7 +8,7 @@ namespace ThroneGame.Maps
 
         public DemoMap(ContentManager content)
         {
-            this._jsonFilePath = "Content/Maps/DemoMap.json";
+            this.JsonFilePath = "Content/Maps/DemoMap.json";
             // Load the tileset texture
             this.TilesetTexture = content.Load<Texture2D>("Maps/Nature_environment_01");
         }

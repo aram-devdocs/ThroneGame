@@ -5,13 +5,28 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ThroneGame.Entities
 {
+    /// <summary>
+    /// Represents the player entity in the game.
+    /// </summary>
     public class PlayerEntity : Entity
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlayerEntity"/> class with the specified position and content manager.
+        /// </summary>
+        /// <param name="position">The initial position of the player.</param>
+        /// <param name="content">The content manager used for loading textures.</param>
         public PlayerEntity(Vector2 position, ContentManager content)
             : base(position)
         {
-            // Load textures and add animations
+            LoadAnimations(content);
+        }
+
+        /// <summary>
+        /// Loads the animations for the player entity.
+        /// </summary>
+        /// <param name="content">The content manager used for loading textures.</param>
+        private void LoadAnimations(ContentManager content)
+        {
             AnimationController.AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"), 6, 0.1);
             AnimationController.AddAnimation("run", content.Load<Texture2D>("PlayerSprites/Shinobi/Run"), 8, 0.1);
             AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Shinobi/Jump"), 12, 0.1, false);
@@ -20,35 +35,40 @@ namespace ThroneGame.Entities
             AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
         }
 
-
+        /// <summary>
+        /// Updates the player entity's state based on its velocity and input.
+        /// </summary>
+        /// <param name="gameTime">The game time information.</param>
         public override void Update(GameTime gameTime)
         {
+            UpdateAnimationState();
+            base.Update(gameTime);
+        }
 
-            // Update state based on velocity
-            if (Velocity.Y < 0 || Velocity.Y > 0)
+        /// <summary>
+        /// Updates the animation state of the player entity based on its velocity and input.
+        /// </summary>
+        private void UpdateAnimationState()
+        {
+            var keyboardState = Keyboard.GetState();
+
+            if (Velocity.Y != 0)
             {
-                // Jumping state
                 AnimationController.SetState("jump");
             }
-            else if (Velocity.X < 0 || Velocity.X > 0)
+            else if (Velocity.X != 0)
             {
-                // Walking or running state
-                AnimationController.SetState((Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) ? "run" : "walk");
+                AnimationController.SetState(keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift) ? "run" : "walk");
             }
             else
             {
                 AnimationController.SetState("idle");
             }
 
-
-
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            if (keyboardState.IsKeyDown(Keys.S))
             {
-                // Dead state
                 AnimationController.SetState("crouch");
             }
-
-            base.Update(gameTime);
         }
     }
 }
