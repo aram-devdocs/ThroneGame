@@ -37,7 +37,7 @@ namespace ThroneGame.Entities
         /// <summary>
         /// Gets the animation controller for the entity.
         /// </summary>
-        public AnimationController AnimationController { get; }
+        public AnimationController AnimationController { get; set; }
 
         /// <summary>
         /// Gets the width of the current animation frame.

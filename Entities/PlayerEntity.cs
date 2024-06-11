@@ -33,6 +33,8 @@ namespace ThroneGame.Entities
             AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
             AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
             AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
+            AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/Shinobi/Attack_1"), 5, 0.1, false);
+
         }
 
         /// <summary>
@@ -41,17 +43,35 @@ namespace ThroneGame.Entities
         /// <param name="gameTime">The game time information.</param>
         public override void Update(GameTime gameTime)
         {
-            UpdateAnimationState();
+            UpdateAnimationState(gameTime);
             base.Update(gameTime);
         }
 
         /// <summary>
         /// Updates the animation state of the player entity based on its velocity and input.
         /// </summary>
-        private void UpdateAnimationState()
+        private void UpdateAnimationState(GameTime gameTime)
         {
             var keyboardState = Keyboard.GetState();
 
+
+
+
+
+            // if (AnimationController.IsAttacking) return;
+
+            // Handle combat
+            // Right or left key is pressed
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.Left))
+            {
+                AnimationController.SetState("attack1");
+                AnimationController.IsAttacking = true;
+                // AnimationController.AttackEndTime = takes 1 second
+                AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + 1;
+            }
+
+
+            // Handle movement
             if (Velocity.Y != 0)
             {
                 AnimationController.SetState("jump");
@@ -69,6 +89,9 @@ namespace ThroneGame.Entities
             {
                 AnimationController.SetState("crouch");
             }
+
+
+
         }
     }
 }

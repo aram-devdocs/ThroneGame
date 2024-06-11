@@ -15,7 +15,7 @@ namespace ThroneGame.Maps
         public DemoMap(ContentManager content)
         {
             LoadTilesetTexture(content);
-            JsonFilePath = "Content/Maps/DemoMap.json";
+            JsonFilePath = "Content/Maps/DemoMapWide.json";
         }
 
         /// <summary>

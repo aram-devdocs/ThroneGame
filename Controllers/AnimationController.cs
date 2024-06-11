@@ -17,6 +17,8 @@ namespace ThroneGame.Controllers
         public double FrameDuration { get; }
         public bool IsLooping { get; }
 
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Animation"/> class.
         /// </summary>
@@ -32,6 +34,7 @@ namespace ThroneGame.Controllers
             FrameHeight = texture.Height;
             FrameDuration = frameDuration;
             IsLooping = isLooping;
+
         }
     }
 
@@ -61,6 +64,10 @@ namespace ThroneGame.Controllers
         /// </summary>
         public int FrameHeight => _animations.ContainsKey(_currentState) ? _animations[_currentState].FrameHeight : 0;
 
+
+        public bool IsAttacking { get; set; }
+        public double AttackEndTime { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationController"/> class.
         /// </summary>
@@ -81,9 +88,12 @@ namespace ThroneGame.Controllers
         /// <param name="frameDuration">The duration of each frame in seconds.</param>
         /// <param name="isLooping">Whether the animation should loop.</param>
         public void AddAnimation(string state, Texture2D texture, int frameCount, double frameDuration, bool isLooping = true)
+
         {
             var animation = new Animation(texture, frameCount, frameDuration, isLooping);
             _animations[state] = animation;
+
+
 
             if (_currentState == null)
             {
@@ -129,6 +139,12 @@ namespace ThroneGame.Controllers
                 }
                 UpdateSourceRectangle();
                 _timeCounter -= animation.FrameDuration;
+            }
+
+            if (IsAttacking && _timeCounter >= AttackEndTime)
+            {
+                //  Set is attacking to false
+                IsAttacking = false;
             }
         }
 
