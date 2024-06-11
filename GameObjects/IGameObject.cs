@@ -15,6 +15,9 @@ namespace ThroneGame
 
         Rectangle Bounds { get; set; }
 
+        float HorizontalBoundsPadding { get; set; }
+        float VerticalBoundsPadding { get; set; }
+
         Vector2 Position { get; set; }
 
 

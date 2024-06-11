@@ -10,5 +10,6 @@ namespace ThroneGame.Entities
         int FrameWidth { get; }
         int FrameHeight { get; }
         bool IsFacingRight { get; set; }
+
     }
 }

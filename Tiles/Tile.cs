@@ -14,6 +14,9 @@ namespace ThroneGame.Tiles
         private Rectangle _sourceRectangle;
         public Rectangle Bounds { get; set; }
 
+        public float HorizontalBoundsPadding { get; set; }
+        public float VerticalBoundsPadding { get; set; }
+
         public Tile(Texture2D texture, bool isCollidable, Vector2 position, int width = 64, int height = 64)
         {
             _texture = texture;
@@ -22,7 +25,10 @@ namespace ThroneGame.Tiles
             Width = width;
             Height = height;
             _sourceRectangle = new Rectangle(0, 0, width, height);
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            HorizontalBoundsPadding = 1;
+            VerticalBoundsPadding = 1;
+            // Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            Bounds = new Rectangle((int)(Position.X * HorizontalBoundsPadding), (int)(Position.Y * VerticalBoundsPadding), Width, Height);
         }
 
         public Tile(Texture2D texture, Rectangle sourceRectangle, bool isCollidable, Vector2 position, int width, int height)
@@ -44,7 +50,8 @@ namespace ThroneGame.Tiles
         {
             // spriteBatch.Draw(_texture, new Rectangle(x, y, Width, Height), _sourceRectangle, Color.White);
             spriteBatch.Draw(_texture, Position, _sourceRectangle, Color.White);
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            // TODO - Clean up vertical bounds padding
+            Bounds = new Rectangle((int)(Position.X - (HorizontalBoundsPadding / 2)), (int)(Position.Y - (VerticalBoundsPadding / 2)), (int)(Width + HorizontalBoundsPadding), (int)(Height + VerticalBoundsPadding));
 
         }
 

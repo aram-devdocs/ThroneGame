@@ -11,6 +11,8 @@ namespace ThroneGame.Entities
         public Vector2 Velocity { get; set; }
         public bool IsCollidable { get; set; }
         public bool IsOnGround { get; set; }
+        public float HorizontalBoundsPadding { get; set; }
+        public float VerticalBoundsPadding { get; set; }
 
 
         public AnimationController AnimationController { get; private set; }
@@ -32,6 +34,8 @@ namespace ThroneGame.Entities
             Velocity = Vector2.Zero;
             IsCollidable = true;
             IsOnGround = false;
+            HorizontalBoundsPadding = 1;
+            VerticalBoundsPadding = 1;
 
             MovementController = new MovementController();
             AnimationController = new AnimationController();
@@ -47,7 +51,9 @@ namespace ThroneGame.Entities
 
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
+
+            // TODO - Clean up vertical bounds padding
+            Bounds = new Rectangle((int)(Position.X - (HorizontalBoundsPadding / 2)), (int)(Position.Y - (VerticalBoundsPadding / 2)), (int)(FrameWidth + HorizontalBoundsPadding), (int)(FrameHeight + VerticalBoundsPadding)); 
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
