@@ -84,8 +84,8 @@ namespace ThroneGame.Scenes
         }
         public virtual void Update(GameTime gameTime)
         {
-            this.Player.Update(gameTime);
             this.PhysicsController.Update(gameTime);
+            this.Player.Update(gameTime);
             this.CameraController.Update(gameTime, this.Player.Position);
 
             UpdateTiles();

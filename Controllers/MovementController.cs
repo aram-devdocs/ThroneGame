@@ -56,9 +56,9 @@ namespace ThroneGame.Controllers
 
         {
 
-            if (!entity.IsOnGround) {
+            if (!entity.IsOnGround)
+            {
                 // crouch dive
-                System.Console.WriteLine("crouch dive" + entity.Velocity.Y);
                 if (entity.Velocity.Y < crouchDiveMaxSpeed)
                 {
                     entity.Velocity = new Vector2(entity.Velocity.X, Math.Min(crouchDiveMaxSpeed, entity.Velocity.Y + crouchDiveAccelerationRate));
@@ -161,6 +161,7 @@ namespace ThroneGame.Controllers
         private void HandleJump(IEntity entity)
         {
             entity.Velocity = new Vector2(entity.Velocity.X, -jumpStrength);
+            entity.IsOnGround = false;
         }
     }
 }
