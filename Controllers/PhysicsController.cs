@@ -127,11 +127,11 @@ namespace ThroneGame.Controllers
 
                 foreach (var entity in _entities)
                 {
-                    TextureUtils.DebugBorder(spriteBatch, (int)entity.Position.X, (int)entity.Position.Y, entity.FrameWidth, entity.FrameHeight);
+                    TextureUtils.DebugBorder(spriteBatch, entity.Bounds.X, entity.Bounds.Y, entity.Bounds.Width, entity.Bounds.Height);
                     List<ITile> nearbyTiles = GetNearbyTiles(entity);
                     foreach (var tile in nearbyTiles)
                     {
-                        TextureUtils.DebugBorder(spriteBatch, (int)tile.Position.X, (int)tile.Position.Y, tile.Width, tile.Height);
+                        TextureUtils.DebugBorder(spriteBatch, tile.Bounds.X, tile.Bounds.Y, tile.Bounds.Width, tile.Bounds.Height);
                     }
                 }
             }
