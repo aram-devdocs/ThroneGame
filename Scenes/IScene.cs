@@ -78,5 +78,12 @@ namespace ThroneGame.Scenes
         /// <param name="game1">The game instance.</param>
         /// <param name="gameTime">The game time information.</param>
         void Reset(Game1 game1, GameTime gameTime);
+
+
+
+        /// <summary>
+        /// Updates the list of visible tiles in the scene.
+        /// </summary>
+        void UpdateVisibleTiles();
     }
 }

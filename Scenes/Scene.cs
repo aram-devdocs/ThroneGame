@@ -200,7 +200,7 @@ namespace ThroneGame.Scenes
             Game.GraphicsDevice.SetRenderTarget(null);
         }
 
-        private void UpdateVisibleTiles()
+        public void UpdateVisibleTiles()
         {
             var visibleArea = CameraController.GetVisibleArea();
             VisibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(visibleArea)).ToList();
