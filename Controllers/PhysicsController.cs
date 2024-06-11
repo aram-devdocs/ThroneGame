@@ -93,10 +93,14 @@ namespace ThroneGame.Controllers
 
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
 
-            // Handle Y-axis collision first
-            HandleCollisionY(entity, ref newPosition, nearbyTiles);
-            // Handle X-axis collision next
-            HandleCollisionX(entity, ref newPosition, nearbyTiles);
+            // Handle collisions with tiles
+            foreach (var tile in nearbyTiles)
+            {
+                if (tile.IsCollidable)
+                {
+                    HandleCollision(entity, ref newPosition, tile);
+                }
+            }
 
             if (!entity.IsOnGround)
             {
@@ -118,72 +122,50 @@ namespace ThroneGame.Controllers
         }
 
         /// <summary>
-        /// Adjusts an entity's position and velocity based on collision with tiles along the Y-axis.
+        /// Adjusts an entity's position and velocity based on collision with a tile.
         /// </summary>
         /// <param name="entity">The entity to adjust.</param>
         /// <param name="newPosition">The new position of the entity.</param>
-        /// <param name="tiles">The tiles to check for collision.</param>
-        private void HandleCollisionY(IEntity entity, ref Vector2 newPosition, List<ITile> tiles)
+        /// <param name="tile">The tile that the entity collided with.</param>
+        private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
         {
-            foreach (var tile in tiles)
-            {
-                if (!tile.IsCollidable) continue;
+            Rectangle entityBounds = entity.Bounds;
+            Rectangle tileBounds = tile.Bounds;
 
-                Rectangle entityBounds = entity.Bounds;
-                Rectangle tileBounds = tile.Bounds;
-                if (IsColliding(entityBounds, tileBounds))
+            if (IsColliding(entityBounds, tileBounds))
+            {
+                Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
+
+                if (intersection.Width < intersection.Height)
                 {
-                    Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
-                    if (intersection.Height < intersection.Width)
+                    // Collision on left or right
+                    if (entityBounds.Center.X < tileBounds.Center.X)
                     {
-                        if (entityBounds.Center.Y < tileBounds.Center.Y)
-                        {
-                            // Collision on top
-                            newPosition.Y = tileBounds.Top - entityBounds.Height;
-                            entity.IsOnGround = true;
-                        }
-                        else
-                        {
-                            // Collision on the bottom
-                            newPosition.Y = tileBounds.Bottom;
-                        }
-                        entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                        // Collision on the left
+                        newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
                     }
+                    else
+                    {
+                        // Collision on the right
+                        newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
+                    }
+                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Adjusts an entity's position and velocity based on collision with tiles along the X-axis.
-        /// </summary>
-        /// <param name="entity">The entity to adjust.</param>
-        /// <param name="newPosition">The new position of the entity.</param>
-        /// <param name="tiles">The tiles to check for collision.</param>
-        private void HandleCollisionX(IEntity entity, ref Vector2 newPosition, List<ITile> tiles)
-        {
-            foreach (var tile in tiles)
-            {
-                if (!tile.IsCollidable) continue;
-
-                Rectangle entityBounds = entity.Bounds;
-                Rectangle tileBounds = tile.Bounds;
-                if (IsColliding(entityBounds, tileBounds))
+                else
                 {
-                    Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
-                    if (intersection.Width < intersection.Height)
+                    // Collision on top or bottom
+                    if (entityBounds.Center.Y < tileBounds.Center.Y)
                     {
-                        if (entityBounds.Center.X < tileBounds.Center.X)
-                        {
-                            // Collision on the left
-                            newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
-                        }
-                        else
-                        {
-                            // Collision on the right
-                            newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
-                        }
-                        entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                        // Collision on top
+                        newPosition.Y = tileBounds.Top - entityBounds.Height;
+                        entity.IsOnGround = true;
                     }
+                    else
+                    {
+                        // Collision on the bottom
+                        newPosition.Y = tileBounds.Bottom;
+                    }
+                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
                 }
             }
         }
