@@ -54,10 +54,10 @@ namespace ThroneGame.Controllers
         /// <param name="gameTime">Time elapsed since the last update.</param>
         public void Update(GameTime gameTime)
         {
-            foreach (var entity in _entities)
+            Parallel.ForEach(_entities, entity =>
             {
                 ApplyPhysics(entity, gameTime);
-            }
+            });
         }
 
         /// <summary>
@@ -94,13 +94,13 @@ namespace ThroneGame.Controllers
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
 
             // Handle collisions with tiles
-            foreach (var tile in nearbyTiles)
+            Parallel.ForEach(nearbyTiles, tile =>
             {
                 if (tile.IsCollidable)
                 {
                     HandleCollision(entity, ref newPosition, tile);
                 }
-            }
+            });
 
             if (!entity.IsOnGround)
             {
