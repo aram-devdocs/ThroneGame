@@ -3,16 +3,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ThroneGame.Maps
 {
+    /// <summary>
+    /// Represents a demo map in the game.
+    /// </summary>
     public class DemoMap : Map
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DemoMap"/> class with the specified content manager.
+        /// </summary>
+        /// <param name="content">The content manager used for loading textures.</param>
         public DemoMap(ContentManager content)
         {
-            this.JsonFilePath = "Content/Maps/DemoMap.json";
-            // Load the tileset texture
-            this.TilesetTexture = content.Load<Texture2D>("Maps/Nature_environment_01");
+            LoadTilesetTexture(content);
+            JsonFilePath = "Content/Maps/DemoMap.json";
         }
 
-
+        /// <summary>
+        /// Loads the tileset texture for the demo map.
+        /// </summary>
+        /// <param name="content">The content manager used for loading the texture.</param>
+        private void LoadTilesetTexture(ContentManager content)
+        {
+            TilesetTexture = content.Load<Texture2D>("Maps/Nature_environment_01");
+        }
     }
 }
