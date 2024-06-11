@@ -11,7 +11,7 @@ namespace ThroneGame.Controllers
         private const float speed = 100f;
         private const float speedUpRate = 9f;
         private const float slowDownRate = 12f;
-        private const float sprintAccelerationRate = 1.2f;
+        private const float sprintAccelerationRate = 2f;
         private const float sprintMultiplier = 2f;
         private const float jumpStrength = 200f;
         private const float slideBoost = 400f;
@@ -29,14 +29,14 @@ namespace ThroneGame.Controllers
             {
                 if (state.IsKeyDown(Keys.S) && entity.IsOnGround)
                 {
-                    HandleCrouch(entity);
+                    HandleCrouch(entity, state);
                 }
                 else
                 {
                     HandleHorizontalMovement(state, entity, maxSpeed, accelerationRate);
                 }
 
-                if (state.IsKeyDown(Keys.Space) && entity.IsOnGround)
+                if (state.IsKeyDown(Keys.Space) && entity.IsOnGround &&  !state.IsKeyDown(Keys.S))
                 {
                     HandleJump(entity);
                 }
@@ -48,15 +48,17 @@ namespace ThroneGame.Controllers
             }
         }
 
-        private void HandleCrouch(IEntity entity)
+        private void HandleCrouch(IEntity entity, KeyboardState state)
+
         {
-            if (!isSlideBoostFinished)
+            bool isSprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
+            if (!isSlideBoostFinished && isSprinting)
             {
                 if (entity.IsFacingRight)
                 {
                     BoostSlideRight(entity);
                 }
-                else
+                else if (!entity.IsFacingRight)
                 {
                     BoostSlideLeft(entity);
                 }
