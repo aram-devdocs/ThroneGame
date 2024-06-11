@@ -6,28 +6,35 @@ using ThroneGame.Entities;
 
 namespace ThroneGame.Controllers
 {
+    /// <summary>
+    /// Controls the movement behavior of entities within the game.
+    /// </summary>
     public class MovementController
     {
-        private const float speed = 100f;
-        private const float speedUpRate = 9f;
-        private const float slowDownRate = 12f;
-        private const float sprintAccelerationRate = 2f;
-        private const float sprintMultiplier = 2f;
-        private const float jumpStrength = 200f;
-        private const float slideBoost = 400f;
-        private const float minimumSlideBoostStartSpeed = 90f;
-        private const float slideBoostAccelerationRate = 40.2f;
-
-        private const float crouchDiveMaxSpeed = 200f;
-        private const float crouchDiveAccelerationRate = 20f;
+        private const float Speed = 100f;
+        private const float SpeedUpRate = 9f;
+        private const float SlowDownRate = 12f;
+        private const float SprintAccelerationRate = 2f;
+        private const float SprintMultiplier = 2f;
+        private const float JumpStrength = 300f;
+        private const float SlideBoost = 400f;
+        private const float MinimumSlideBoostStartSpeed = 90f;
+        private const float SlideBoostAccelerationRate = 40.2f;
+        private const float CrouchDiveMaxSpeed = 200f;
+        private const float CrouchDiveAccelerationRate = 20f;
         private bool isSlideBoostFinished;
 
+        /// <summary>
+        /// Handles the movement of the given entity based on keyboard input and game state.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
+        /// <param name="gameTime">The game time information.</param>
         public void HandleMovement(IEntity entity, GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
             bool sprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-            float maxSpeed = sprinting ? speed * sprintMultiplier : speed;
-            float accelerationRate = speedUpRate * (sprinting ? sprintAccelerationRate : 1f);
+            float maxSpeed = sprinting ? Speed * SprintMultiplier : Speed;
+            float accelerationRate = SpeedUpRate * (sprinting ? SprintAccelerationRate : 1f);
 
             try
             {
@@ -52,26 +59,26 @@ namespace ThroneGame.Controllers
             }
         }
 
+        /// <summary>
+        /// Handles crouching and related actions such as slide boosts and crouch dives.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
+        /// <param name="state">The current keyboard state.</param>
         private void HandleCrouch(IEntity entity, KeyboardState state)
-
         {
-
             if (!entity.IsOnGround)
             {
-                // crouch dive
-                if (entity.Velocity.Y < crouchDiveMaxSpeed)
-                {
-                    entity.Velocity = new Vector2(entity.Velocity.X, Math.Min(crouchDiveMaxSpeed, entity.Velocity.Y + crouchDiveAccelerationRate));
-                }
+                HandleCrouchDive(entity);
             }
+
             bool isSprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-            if (!isSlideBoostFinished && isSprinting && Math.Abs(entity.Velocity.X) > minimumSlideBoostStartSpeed)
+            if (!isSlideBoostFinished && isSprinting && Math.Abs(entity.Velocity.X) > MinimumSlideBoostStartSpeed)
             {
                 if (entity.IsFacingRight)
                 {
                     BoostSlideRight(entity);
                 }
-                else if (!entity.IsFacingRight)
+                else
                 {
                     BoostSlideLeft(entity);
                 }
@@ -82,22 +89,47 @@ namespace ThroneGame.Controllers
             }
         }
 
-        private void HandleHorizontalMovement(KeyboardState state, IEntity entity, float maxSpeed, float accelerationRate)
+        /// <summary>
+        /// Handles the crouch dive action.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
+        private void HandleCrouchDive(IEntity entity)
         {
-            switch (state.GetPressedKeys())
+            if (entity.Velocity.Y < CrouchDiveMaxSpeed)
             {
-                case var keys when keys.Contains(Keys.A):
-                    MoveLeft(entity, maxSpeed, accelerationRate);
-                    break;
-                case var keys when keys.Contains(Keys.D):
-                    MoveRight(entity, maxSpeed, accelerationRate);
-                    break;
-                default:
-                    Decelerate(entity);
-                    break;
+                entity.Velocity = new Vector2(entity.Velocity.X, Math.Min(CrouchDiveMaxSpeed, entity.Velocity.Y + CrouchDiveAccelerationRate));
             }
         }
 
+        /// <summary>
+        /// Handles horizontal movement based on the current keyboard state.
+        /// </summary>
+        /// <param name="state">The current keyboard state.</param>
+        /// <param name="entity">The entity to control.</param>
+        /// <param name="maxSpeed">The maximum speed the entity can achieve.</param>
+        /// <param name="accelerationRate">The rate at which the entity accelerates.</param>
+        private void HandleHorizontalMovement(KeyboardState state, IEntity entity, float maxSpeed, float accelerationRate)
+        {
+            if (state.IsKeyDown(Keys.A))
+            {
+                MoveLeft(entity, maxSpeed, accelerationRate);
+            }
+            else if (state.IsKeyDown(Keys.D))
+            {
+                MoveRight(entity, maxSpeed, accelerationRate);
+            }
+            else
+            {
+                Decelerate(entity);
+            }
+        }
+
+        /// <summary>
+        /// Moves the entity to the left.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
+        /// <param name="maxSpeed">The maximum speed the entity can achieve.</param>
+        /// <param name="accelerationRate">The rate at which the entity accelerates.</param>
         private void MoveLeft(IEntity entity, float maxSpeed, float accelerationRate)
         {
             if (entity.Velocity.X >= -maxSpeed)
@@ -108,6 +140,12 @@ namespace ThroneGame.Controllers
             isSlideBoostFinished = false;
         }
 
+        /// <summary>
+        /// Moves the entity to the right.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
+        /// <param name="maxSpeed">The maximum speed the entity can achieve.</param>
+        /// <param name="accelerationRate">The rate at which the entity accelerates.</param>
         private void MoveRight(IEntity entity, float maxSpeed, float accelerationRate)
         {
             if (entity.Velocity.X <= maxSpeed)
@@ -118,15 +156,19 @@ namespace ThroneGame.Controllers
             isSlideBoostFinished = false;
         }
 
+        /// <summary>
+        /// Decelerates the entity when there is no input for horizontal movement.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
         private void Decelerate(IEntity entity)
         {
             if (entity.Velocity.X > 0 && entity.IsOnGround)
             {
-                entity.Velocity = new Vector2(Math.Max(0, entity.Velocity.X - slowDownRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Max(0, entity.Velocity.X - SlowDownRate), entity.Velocity.Y);
             }
             else if (entity.Velocity.X < 0 && entity.IsOnGround)
             {
-                entity.Velocity = new Vector2(Math.Min(0, entity.Velocity.X + slowDownRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Min(0, entity.Velocity.X + SlowDownRate), entity.Velocity.Y);
             }
             else if (!entity.IsOnGround)
             {
@@ -134,11 +176,15 @@ namespace ThroneGame.Controllers
             }
         }
 
+        /// <summary>
+        /// Boosts the entity's slide to the right.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
         private void BoostSlideRight(IEntity entity)
         {
-            if (entity.Velocity.X < slideBoost)
+            if (entity.Velocity.X < SlideBoost)
             {
-                entity.Velocity = new Vector2(Math.Min(slideBoost, entity.Velocity.X + slideBoostAccelerationRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Min(SlideBoost, entity.Velocity.X + SlideBoostAccelerationRate), entity.Velocity.Y);
             }
             else
             {
@@ -146,11 +192,15 @@ namespace ThroneGame.Controllers
             }
         }
 
+        /// <summary>
+        /// Boosts the entity's slide to the left.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
         private void BoostSlideLeft(IEntity entity)
         {
-            if (entity.Velocity.X > -slideBoost)
+            if (entity.Velocity.X > -SlideBoost)
             {
-                entity.Velocity = new Vector2(Math.Max(-slideBoost, entity.Velocity.X - slideBoostAccelerationRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Max(-SlideBoost, entity.Velocity.X - SlideBoostAccelerationRate), entity.Velocity.Y);
             }
             else
             {
@@ -158,9 +208,13 @@ namespace ThroneGame.Controllers
             }
         }
 
+        /// <summary>
+        /// Handles the jump action for the entity.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
         private void HandleJump(IEntity entity)
         {
-            entity.Velocity = new Vector2(entity.Velocity.X, -jumpStrength);
+            entity.Velocity = new Vector2(entity.Velocity.X, -JumpStrength);
             entity.IsOnGround = false;
         }
     }

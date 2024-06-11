@@ -66,7 +66,7 @@ namespace ThroneGame.Controllers
         /// <param name="spriteBatch">SpriteBatch used for drawing.</param>
         public void Draw(SpriteBatch spriteBatch)
         {
-            bool debug = false;
+            bool debug = true;
 
             if (debug)
             {
