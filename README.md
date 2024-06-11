@@ -1,1 +1,1 @@
-mgcb-editor Content/Content.mgcb 
+~/.dotnet/tools/mgcb-editor Content/Content.mgcb 

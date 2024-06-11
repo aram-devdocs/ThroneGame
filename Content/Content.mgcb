@@ -25,6 +25,13 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/1.png
 
+#begin Fonts/Default.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Default.spritefont
+
 #begin Maps/Nature_environment_01.png
 /importer:TextureImporter
 /processor:TextureProcessor
