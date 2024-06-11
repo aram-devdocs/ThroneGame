@@ -93,14 +93,30 @@ namespace ThroneGame.Controllers
 
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
 
+            bool isFloating = false;
+
             // Handle collisions with tiles
             Parallel.ForEach(nearbyTiles, tile =>
             {
                 if (tile.IsCollidable)
                 {
                     HandleCollision(entity, ref newPosition, tile);
+
                 }
+
+                // if the entity has tiles below its y but not within the width of its x, it is not on the ground as long as there are no tiles below its y within the width of its x, and so it is floating
+                if (entity.Bounds.Bottom == tile.Bounds.Top && entity.Bounds.Right < tile.Bounds.Left || entity.Bounds.Left > tile.Bounds.Right)
+                {
+                    isFloating = true;
+                }
+
+
             });
+
+            if (!isFloating)
+            {
+                entity.IsOnGround = false;
+            }
 
             if (!entity.IsOnGround)
             {
