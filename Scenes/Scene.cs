@@ -6,6 +6,7 @@ using ThroneGame.Controllers;
 using ThroneGame.Entities;
 using ThroneGame.Maps;
 using ThroneGame.Tiles;
+using ThroneGame.UI;
 
 namespace ThroneGame.Scenes
 {
@@ -60,6 +61,7 @@ namespace ThroneGame.Scenes
         public IMap Map { get; set; }
 
         private double _lastResetTime;
+        private FPSCounter _fpsCounter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scene"/> class with the specified game instance.
@@ -93,6 +95,10 @@ namespace ThroneGame.Scenes
 
             // Add player to physics controller
             PhysicsController.AddEntity(Player);
+
+            // Load FPS counter font
+            var font = Game.Content.Load<SpriteFont>("Fonts/Default"); // Ensure you have an appropriate SpriteFont in your content
+            _fpsCounter = new FPSCounter(font);
         }
 
         /// <summary>
@@ -104,7 +110,9 @@ namespace ThroneGame.Scenes
             PhysicsController.Update(gameTime);
             Player.Update(gameTime);
             CameraController.Update(gameTime, Player.Position);
+            _fpsCounter.Update(gameTime);
         }
+
 
         /// <summary>
         /// Draws the scene using the specified sprite batch.
@@ -149,6 +157,9 @@ namespace ThroneGame.Scenes
             // Debug physics controller
             PhysicsController.Draw(spriteBatch);
 
+            // Draw FPS counter
+            _fpsCounter.Draw(spriteBatch);
+
             spriteBatch.End();
         }
 
@@ -157,15 +168,20 @@ namespace ThroneGame.Scenes
         /// </summary>
         /// <param name="game1">The game instance.</param>
         /// <param name="gameTime">The game time information.</param>
-        public virtual void Reset(Game1 game1, GameTime gameTime)
+        public virtual void Reset(Game1 game1, GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Load the content again if the last reset was more than 1 second ago
-            if (gameTime.TotalGameTime.TotalMilliseconds - _lastResetTime > 1000)
-            {
-                LoadContent();
-                game1.ResetElapsedTime();
-                _lastResetTime = gameTime.TotalGameTime.TotalMilliseconds;
-            }
+            // TODO _ Fix this code as resetting just loads the content again and slows down the game
+            // if (gameTime.TotalGameTime.TotalMilliseconds - _lastResetTime > 1000)
+            // {
+
+            //     // Clear all content
+            //     spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            //     LoadContent();
+            //     game1.ResetElapsedTime();
+            //     _lastResetTime = gameTime.TotalGameTime.TotalMilliseconds;
+            // }
         }
 
         /// <summary>

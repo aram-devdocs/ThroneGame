@@ -66,9 +66,10 @@ namespace ThroneGame.Scenes
         /// </summary>
         /// <param name="game1">The game instance.</param>
         /// <param name="gameTime">The game time information.</param>
-        public void ResetCurrentScene(Game1 game1, GameTime gameTime)
+        /// <param name="spriteBatch">The sprite batch used for drawing.</param>
+        public void ResetCurrentScene(Game1 game1, GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _currentScene?.Reset(game1, gameTime);
+            _currentScene?.Reset(game1, gameTime, spriteBatch);
         }
     }
 }

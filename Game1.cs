@@ -50,7 +50,7 @@ namespace ThroneGame
 
             if (Keyboard.GetState().IsKeyDown(Keys.R))
             {
-                _sceneManager.ResetCurrentScene(this, gameTime);
+                _sceneManager.ResetCurrentScene(this, gameTime, _spriteBatch);
             }
             _sceneManager.Update(gameTime);
 
