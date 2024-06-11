@@ -18,11 +18,6 @@ namespace ThroneGame.Entities
             AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
             AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
             AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
-
-
-            // this.Bounds should be reduced by 10% on horizontal axis, and 20% on vertical axis, using current Bounds values as reference
-            HorizontalBoundsPadding = -80f;
-
         }
 
 

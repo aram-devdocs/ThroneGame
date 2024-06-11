@@ -15,10 +15,10 @@ namespace ThroneGame
 
         Rectangle Bounds { get; set; }
 
-        float HorizontalBoundsPadding { get; set; }
-        float VerticalBoundsPadding { get; set; }
-
         Vector2 Position { get; set; }
+
+        Vector2 Velocity { get; set; }
+        float Mass { get; set; } // New property to represent the mass of the object
 
 
     }
