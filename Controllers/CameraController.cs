@@ -12,6 +12,8 @@ namespace ThroneGame.Controllers
         private Vector2 _position;
         private readonly float _padding;
 
+        public bool IsDirty { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraController"/> class.
         /// </summary>
@@ -27,6 +29,7 @@ namespace ThroneGame.Controllers
             _viewport = viewport;
             _position = Vector2.Zero;
             _padding = padding;
+            IsDirty = false;
         }
 
         /// <summary>
@@ -45,6 +48,9 @@ namespace ThroneGame.Controllers
         /// <param name="playerPosition">The current position of the player.</param>
         public void Update(GameTime gameTime, Vector2 playerPosition)
         {
+
+            System.Console.WriteLine("CameraController Update:" + IsDirty);
+            IsDirty = false;
             UpdateHorizontalPosition(playerPosition);
             UpdateVerticalPosition(playerPosition);
         }
@@ -61,10 +67,12 @@ namespace ThroneGame.Controllers
             if (playerPosition.X < leftBound)
             {
                 _position.X = playerPosition.X - _viewport.Width * _padding;
+                IsDirty = true;
             }
             else if (playerPosition.X > rightBound)
             {
                 _position.X = playerPosition.X - _viewport.Width * (1 - _padding);
+                IsDirty = true;
             }
         }
 
@@ -80,10 +88,14 @@ namespace ThroneGame.Controllers
             if (playerPosition.Y < topBound)
             {
                 _position.Y = playerPosition.Y - _viewport.Height * _padding;
+                IsDirty = true;
+
             }
             else if (playerPosition.Y > bottomBound)
             {
                 _position.Y = playerPosition.Y - _viewport.Height * (1 - _padding);
+                IsDirty = true;
+
             }
         }
 

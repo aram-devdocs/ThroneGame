@@ -43,6 +43,12 @@ namespace ThroneGame.Scenes
         /// </summary>
         public Texture2D BackgroundImage { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the list of tiles in the scene.
+        /// </summary>
+        public List<ITile> VisibleTiles { get; set; }
+
         /// <summary>
         /// Gets or sets the list of entities in the scene.
         /// </summary>
@@ -65,6 +71,7 @@ namespace ThroneGame.Scenes
             CameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
             PhysicsController = new PhysicsController();
             Entities = new List<IEntity>();
+            VisibleTiles = new List<ITile>();
         }
 
         /// <summary>
@@ -121,10 +128,17 @@ namespace ThroneGame.Scenes
 
 
             // Get tiles in the visible area
-            var visibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(CameraController.GetVisibleArea()));
+            // var visibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(CameraController.GetVisibleArea()));
+            // set visible tiles to the tiles in the scene
 
+
+
+            if (CameraController.IsDirty)
+            {
+                UpdateVisibleTiles();
+            }
             // Draw the tiles in the visible area
-            foreach (var tile in visibleTiles)
+            foreach (var tile in VisibleTiles)
             {
                 tile.Draw(spriteBatch);
             }
@@ -184,6 +198,12 @@ namespace ThroneGame.Scenes
                 spriteBatch.End();
             }
             Game.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        private void UpdateVisibleTiles()
+        {
+            var visibleArea = CameraController.GetVisibleArea();
+            VisibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(visibleArea)).ToList();
         }
     }
 }

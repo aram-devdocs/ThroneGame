@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Controllers;
 using ThroneGame.Entities;
 using ThroneGame.Maps;
+using ThroneGame.Tiles;
 
 namespace ThroneGame.Scenes
 {
@@ -41,6 +42,13 @@ namespace ThroneGame.Scenes
         /// Gets or sets the map of the scene.
         /// </summary>
         IMap Map { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the list of tiles in the scene.
+        /// </summary>
+        List<ITile> VisibleTiles { get; set; }
+
 
         /// <summary>
         /// Gets or sets the list of entities in the scene.
