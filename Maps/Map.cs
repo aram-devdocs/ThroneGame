@@ -10,11 +10,12 @@ namespace ThroneGame.Maps
 {
     public abstract class Map : IMap
     {
-        public List<ITile> Tiles;
-        protected Texture2D TilesetTexture;
+        public List<ITile> Tiles { get; set; }
+        public Texture2D TilesetTexture { get; set; }
         protected int TileWidth;
         protected int TileHeight;
         protected int TilesetColumns;
+        public string _jsonFilePath { get; set; }
 
         public Map()
         {
@@ -23,11 +24,9 @@ namespace ThroneGame.Maps
 
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content, string jsonFilePath)
         {
-            LoadTilesetTexture(content);
             LoadTilesFromJson(graphicsDevice, jsonFilePath);
         }
 
-        protected abstract void LoadTilesetTexture(ContentManager content);
 
         protected void LoadTilesFromJson(GraphicsDevice graphicsDevice, string jsonFilePath)
         {
@@ -89,5 +88,13 @@ namespace ThroneGame.Maps
             public int Width { get; set; }
             public int Height { get; set; }
         }
+
+        public void LoadContent(GraphicsDevice graphicsDevice, ContentManager content)
+        {
+            LoadContent(graphicsDevice, content, _jsonFilePath);
+        }
+
+
+      
     }
 }
