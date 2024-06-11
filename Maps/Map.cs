@@ -47,20 +47,9 @@ namespace ThroneGame.Maps
         /// <param name="contentManager">The content manager used for loading resources.</param>
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager contentManager)
         {
-            LoadContent(graphicsDevice, contentManager, JsonFilePath);
+            LoadTilesFromJson(graphicsDevice, JsonFilePath);
         }
 
-        /// <summary>
-        /// Loads the content for the map from a JSON file.
-        /// </summary>
-        /// <param name="graphicsDevice">The graphics device used for rendering.</param>
-        /// <param name="contentManager">The content manager used for loading resources.</param>
-        /// <param name="jsonFilePath">The file path to the JSON file containing the map data.</param>
-        public void LoadContent(GraphicsDevice graphicsDevice, ContentManager contentManager, string jsonFilePath)
-        {
-            JsonFilePath = jsonFilePath;
-            LoadTilesFromJson(graphicsDevice, jsonFilePath);
-        }
 
         /// <summary>
         /// Draws the map using the specified sprite batch.

@@ -33,11 +33,6 @@ namespace ThroneGame.Scenes
         PhysicsController PhysicsController { get; set; }
 
         /// <summary>
-        /// Gets or sets the render target for the map.
-        /// </summary>
-        RenderTarget2D MapRenderTarget { get; set; }
-
-        /// <summary>
         /// Gets or sets the background image for the scene.
         /// </summary>
         Texture2D BackgroundImage { get; set; }

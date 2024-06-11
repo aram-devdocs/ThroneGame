@@ -46,23 +46,7 @@ namespace ThroneGame.Tiles
         private readonly Texture2D _texture;
         private readonly Rectangle _sourceRectangle;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Tile"/> class with the specified parameters.
-        /// </summary>
-        /// <param name="texture">The texture of the tile.</param>
-        /// <param name="isCollidable">Whether the tile is collidable.</param>
-        /// <param name="position">The position of the tile.</param>
-        /// <param name="width">The width of the tile.</param>
-        /// <param name="height">The height of the tile.</param>
-        public Tile(Texture2D texture, bool isCollidable, Vector2 position, int width = 64, int height = 64)
-        {
-            _texture = texture;
-            IsCollidable = isCollidable;
-            Position = position;
-            Width = width;
-            Height = height;
-            _sourceRectangle = new Rectangle(0, 0, width, height);
-        }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tile"/> class with the specified parameters.

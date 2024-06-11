@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Controllers;
 using ThroneGame.Entities;
 using ThroneGame.Maps;
+using ThroneGame.Tiles;
 
 namespace ThroneGame.Scenes
 {
@@ -35,7 +37,6 @@ namespace ThroneGame.Scenes
         /// <summary>
         /// Gets or sets the render target for the map.
         /// </summary>
-        public RenderTarget2D MapRenderTarget { get; set; }
 
         /// <summary>
         /// Gets or sets the background image for the scene.
@@ -71,8 +72,6 @@ namespace ThroneGame.Scenes
         /// </summary>
         public virtual void LoadContent()
         {
-            // Initialize render target
-            MapRenderTarget = new RenderTarget2D(Game.GraphicsDevice, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height);
 
             // Load map content
             Map.LoadContent(Game.GraphicsDevice, Game.Content);
@@ -115,7 +114,24 @@ namespace ThroneGame.Scenes
 
             // Draw tiles and player with camera transformation
             spriteBatch.Begin(transformMatrix: CameraController.GetViewMatrix());
-            spriteBatch.Draw(MapRenderTarget, Vector2.Zero, Color.White);
+            // spriteBatch.Draw(MapRenderTarget, Vector2.Zero, Color.White);
+
+            // Draw all the tiles in the map instead of the render target
+            // Map.Tiles.ForEach(tile => tile.Draw(spriteBatch));
+
+
+            // Get tiles in the visible area
+            var visibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(CameraController.GetVisibleArea()));
+
+            // Draw the tiles in the visible area
+            foreach (var tile in visibleTiles)
+            {
+                tile.Draw(spriteBatch);
+            }
+
+
+
+
             Player.Draw(spriteBatch);
 
             // Debug physics controller
@@ -159,7 +175,6 @@ namespace ThroneGame.Scenes
         /// </summary>
         private void UpdateTiles()
         {
-            Game.GraphicsDevice.SetRenderTarget(MapRenderTarget);
             Game.GraphicsDevice.Clear(Color.Transparent);
             using (var spriteBatch = new SpriteBatch(Game.GraphicsDevice))
             {
