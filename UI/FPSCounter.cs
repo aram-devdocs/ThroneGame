@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using ThroneGame.Utils;
 
 namespace ThroneGame.UI
 {
@@ -29,7 +30,7 @@ namespace ThroneGame.UI
         /// <param name="gameTime">The game time information.</param>
         public void Update(GameTime gameTime)
         {
-            _elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+            _elapsedTime += GameUtils.GetDeltaTime(gameTime);
             _frameCount++;
 
             if (_elapsedTime >= 1)

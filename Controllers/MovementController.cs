@@ -12,9 +12,9 @@ namespace ThroneGame.Controllers
     /// </summary>
     public class MovementController
     {
-        public float Speed { get; set; } = 100f;
-        public float SpeedUpRate { get; set; } = 9f;
-        public float SlowDownRate { get; set; } = 12f;
+        public float Speed { get; set; } = 150;
+        public float SpeedUpRate { get; set; } = 50f;
+        public float SlowDownRate { get; set; } = 200f;
         public float SprintAccelerationRate { get; set; } = 2f;
         public float SprintMultiplier { get; set; } = 2f;
         public float JumpStrength { get; set; } = 300f;
@@ -51,7 +51,6 @@ namespace ThroneGame.Controllers
             pathPoints = new Queue<Vector2>();
         }
 
-
         /// <summary>
         /// Handles the movement of the given entity based on keyboard input and game state.
         /// </summary>
@@ -80,16 +79,17 @@ namespace ThroneGame.Controllers
             bool sprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
             float maxSpeed = sprinting ? Speed * SprintMultiplier : Speed;
             float accelerationRate = SpeedUpRate * (sprinting ? SprintAccelerationRate : 1f);
+            float deltaTime = GameUtils.GetDeltaTime(gameTime);
 
             try
             {
                 if (state.IsKeyDown(Keys.S))
                 {
-                    HandleCrouch(entity, state);
+                    HandleCrouch(entity, state, deltaTime);
                 }
                 else
                 {
-                    HandleHorizontalMovement(state, entity, maxSpeed, accelerationRate);
+                    HandleHorizontalMovement(state, entity, maxSpeed, accelerationRate, deltaTime);
                 }
 
                 if (state.IsKeyDown(Keys.Space) && entity.IsOnGround && !state.IsKeyDown(Keys.S))
@@ -127,8 +127,6 @@ namespace ThroneGame.Controllers
                 }
 
                 pathPoints.Enqueue(endPosition);
-
-
             }
         }
 
@@ -145,12 +143,13 @@ namespace ThroneGame.Controllers
                 return;
             }
 
+            float deltaTime = GameUtils.GetDeltaTime(gameTime);
             Vector2 currentTarget = pathPoints.Peek();
             Vector2 direction = Vector2.Normalize(currentTarget - entity.Position);
-            entity.Velocity = direction * Speed;
+            entity.Velocity = direction * (Speed * deltaTime);
 
             // Check if entity has reached the current target point
-            if (Vector2.Distance(entity.Position, currentTarget) < Speed * GameUtils.GetDeltaTime(gameTime))
+            if (Vector2.Distance(entity.Position, currentTarget) < Speed * deltaTime)
             {
                 entity.Position = currentTarget;
                 pathPoints.Dequeue();
@@ -163,11 +162,11 @@ namespace ThroneGame.Controllers
         }
 
         // Existing methods for crouching, jumping, etc.
-        private void HandleCrouch(IEntity entity, KeyboardState state)
+        private void HandleCrouch(IEntity entity, KeyboardState state, float deltaTime)
         {
             if (!entity.IsOnGround)
             {
-                HandleCrouchDive(entity);
+                HandleCrouchDive(entity, deltaTime);
             }
 
             bool isSprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
@@ -175,72 +174,72 @@ namespace ThroneGame.Controllers
             {
                 if (entity.IsFacingRight)
                 {
-                    BoostSlideRight(entity);
+                    BoostSlideRight(entity, deltaTime);
                 }
                 else
                 {
-                    BoostSlideLeft(entity);
+                    BoostSlideLeft(entity, deltaTime);
                 }
             }
             else
             {
-                Decelerate(entity);
+                Decelerate(entity, deltaTime);
             }
         }
 
-        private void HandleCrouchDive(IEntity entity)
+        private void HandleCrouchDive(IEntity entity, float deltaTime)
         {
             if (entity.Velocity.Y < CrouchDiveMaxSpeed)
             {
-                entity.Velocity = new Vector2(entity.Velocity.X, Math.Min(CrouchDiveMaxSpeed, entity.Velocity.Y + CrouchDiveAccelerationRate));
+                entity.Velocity = new Vector2(entity.Velocity.X, Math.Min(CrouchDiveMaxSpeed, entity.Velocity.Y + CrouchDiveAccelerationRate * deltaTime));
             }
         }
 
-        private void HandleHorizontalMovement(KeyboardState state, IEntity entity, float maxSpeed, float accelerationRate)
+        private void HandleHorizontalMovement(KeyboardState state, IEntity entity, float maxSpeed, float accelerationRate, float deltaTime)
         {
             if (state.IsKeyDown(Keys.A))
             {
-                MoveLeft(entity, maxSpeed, accelerationRate);
+                MoveLeft(entity, maxSpeed, accelerationRate, deltaTime);
             }
             else if (state.IsKeyDown(Keys.D))
             {
-                MoveRight(entity, maxSpeed, accelerationRate);
+                MoveRight(entity, maxSpeed, accelerationRate, deltaTime);
             }
             else
             {
-                Decelerate(entity);
+                Decelerate(entity, deltaTime);
             }
         }
 
-        private void MoveLeft(IEntity entity, float maxSpeed, float accelerationRate)
+        private void MoveLeft(IEntity entity, float maxSpeed, float accelerationRate, float deltaTime)
         {
             if (entity.Velocity.X >= -maxSpeed)
             {
-                entity.Velocity = new Vector2(entity.Velocity.X - accelerationRate, entity.Velocity.Y);
+                entity.Velocity = new Vector2(entity.Velocity.X - (accelerationRate * deltaTime), entity.Velocity.Y);
             }
             entity.IsFacingRight = false;
             isSlideBoostFinished = false;
         }
 
-        private void MoveRight(IEntity entity, float maxSpeed, float accelerationRate)
+        private void MoveRight(IEntity entity, float maxSpeed, float accelerationRate, float deltaTime)
         {
             if (entity.Velocity.X <= maxSpeed)
             {
-                entity.Velocity = new Vector2(entity.Velocity.X + accelerationRate, entity.Velocity.Y);
+                entity.Velocity = new Vector2(entity.Velocity.X + (accelerationRate * deltaTime), entity.Velocity.Y);
             }
             entity.IsFacingRight = true;
             isSlideBoostFinished = false;
         }
 
-        private void Decelerate(IEntity entity)
+        private void Decelerate(IEntity entity, float deltaTime)
         {
             if (entity.Velocity.X > 0 && entity.IsOnGround)
             {
-                entity.Velocity = new Vector2(Math.Max(0, entity.Velocity.X - SlowDownRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Max(0, entity.Velocity.X - (SlowDownRate * deltaTime)), entity.Velocity.Y);
             }
             else if (entity.Velocity.X < 0 && entity.IsOnGround)
             {
-                entity.Velocity = new Vector2(Math.Min(0, entity.Velocity.X + SlowDownRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Min(0, entity.Velocity.X + (SlowDownRate * deltaTime)), entity.Velocity.Y);
             }
             else if (!entity.IsOnGround)
             {
@@ -248,11 +247,11 @@ namespace ThroneGame.Controllers
             }
         }
 
-        private void BoostSlideRight(IEntity entity)
+        private void BoostSlideRight(IEntity entity, float deltaTime)
         {
             if (entity.Velocity.X < SlideBoost)
             {
-                entity.Velocity = new Vector2(Math.Min(SlideBoost, entity.Velocity.X + SlideBoostAccelerationRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Min(SlideBoost, entity.Velocity.X + (SlideBoostAccelerationRate * deltaTime)), entity.Velocity.Y);
             }
             else
             {
@@ -260,18 +259,17 @@ namespace ThroneGame.Controllers
             }
         }
 
-        private void BoostSlideLeft(IEntity entity)
+        private void BoostSlideLeft(IEntity entity, float deltaTime)
         {
             if (entity.Velocity.X > -SlideBoost)
             {
-                entity.Velocity = new Vector2(Math.Max(-SlideBoost, entity.Velocity.X - SlideBoostAccelerationRate), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Max(-SlideBoost, entity.Velocity.X - (SlideBoostAccelerationRate * deltaTime)), entity.Velocity.Y);
             }
             else
             {
                 isSlideBoostFinished = true;
             }
         }
-
         private void HandleJump(IEntity entity)
         {
             entity.Velocity = new Vector2(entity.Velocity.X, -JumpStrength);

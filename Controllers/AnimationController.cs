@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Controllers
 {
@@ -125,7 +126,7 @@ namespace ThroneGame.Controllers
             if (_currentState == null) return;
 
             var animation = _animations[_currentState];
-            _timeCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            _timeCounter += GameUtils.GetDeltaTime(gameTime);
 
             if (_timeCounter >= animation.FrameDuration)
             {

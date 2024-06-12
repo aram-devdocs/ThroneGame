@@ -25,7 +25,7 @@ namespace ThroneGame.Entities
                 SprintAccelerationRate = 4f,
                 SprintMultiplier = 2.5f,
                 SpeedUpRate = 12f,
-                SlowDownRate = 20f,
+                // SlowDownRate = 20f,
             };
             this.MovementController.TargetPosition = new Vector2(position.X + 100, position.Y);
         }

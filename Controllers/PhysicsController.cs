@@ -29,17 +29,7 @@ namespace ThroneGame.Controllers
 
         private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
         {
-            // if (entity.Vertices != null && entity.Vertices.Length > 0)
-            // {
-            //     // Collision detection using vertices
-            //     if (IsPolygonColliding(entity.Vertices, tile.Bounds))
-            //     {
-            //         // Handle collision response (adjust newPosition and stop velocity)
-            //         StopVelocityOnCollision(entity, ref newPosition, tile.Bounds);
-            //     }
-            // }
-            // else
-            // {
+
             // Collision detection using bounds
             Rectangle entityBounds = entity.Bounds;
             Rectangle tileBounds = tile.Bounds;
@@ -48,7 +38,7 @@ namespace ThroneGame.Controllers
             {
                 StopVelocityOnCollision(entity, ref newPosition, tileBounds);
             }
-            // }
+
         }
 
         /// <summary>
@@ -285,7 +275,7 @@ namespace ThroneGame.Controllers
         private void ApplyPhysics(IEntity entity, GameTime gameTime)
         {
 
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaTime = GameUtils.GetDeltaTime(gameTime);
             Vector2 newPosition = entity.Position + entity.Velocity * deltaTime;
 
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
