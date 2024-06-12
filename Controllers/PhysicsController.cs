@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThroneGame.Entities;
@@ -25,6 +26,147 @@ namespace ThroneGame.Controllers
             _tileGrid = new Dictionary<Point, List<ITile>>();
         }
 
+
+        private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
+        {
+            if (entity.Vertices != null && entity.Vertices.Length > 0)
+            {
+                // Collision detection using vertices
+                if (IsPolygonColliding(entity.Vertices, tile.Bounds))
+                {
+                    // Handle collision response (adjust newPosition and stop velocity)
+                    StopVelocityOnCollision(entity, ref newPosition, tile.Bounds);
+                }
+            }
+            else
+            {
+                // Collision detection using bounds
+                Rectangle entityBounds = entity.Bounds;
+                Rectangle tileBounds = tile.Bounds;
+
+                if (IsColliding(entityBounds, tileBounds))
+                {
+                    StopVelocityOnCollision(entity, ref newPosition, tileBounds);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if a polygon is colliding with a rectangle.
+        /// </summary>
+        /// <param name="polygonVertices">The vertices of the polygon.</param>
+        /// <param name="rectangle">The rectangle to check collision against.</param>
+        /// <returns>True if there is a collision, false otherwise.</returns>
+        private bool IsPolygonColliding(Vector2[] polygonVertices, Rectangle rectangle)
+        {
+            List<Vector2> rectVertices = new List<Vector2>
+    {
+        new Vector2(rectangle.Left, rectangle.Top),
+        new Vector2(rectangle.Right, rectangle.Top),
+        new Vector2(rectangle.Right, rectangle.Bottom),
+        new Vector2(rectangle.Left, rectangle.Bottom)
+    };
+
+            return IsPolygonIntersecting(polygonVertices, rectVertices.ToArray());
+        }
+
+        /// <summary>
+        /// Checks if two polygons are intersecting.
+        /// </summary>
+        /// <param name="polygonA">The vertices of the first polygon.</param>
+        /// <param name="polygonB">The vertices of the second polygon.</param>
+        /// <returns>True if the polygons are intersecting, false otherwise.</returns>
+        private bool IsPolygonIntersecting(Vector2[] polygonA, Vector2[] polygonB)
+        {
+            // Check for separating axis for both polygons
+            return !IsSeparatingAxis(polygonA, polygonB) && !IsSeparatingAxis(polygonB, polygonA);
+        }
+
+        /// <summary>
+        /// Checks if there is a separating axis between two polygons.
+        /// </summary>
+        /// <param name="polygonA">The vertices of the first polygon.</param>
+        /// <param name="polygonB">The vertices of the second polygon.</param>
+        /// <returns>True if there is a separating axis, false otherwise.</returns>
+        private bool IsSeparatingAxis(Vector2[] polygonA, Vector2[] polygonB)
+        {
+            for (int i = 0; i < polygonA.Length; i++)
+            {
+                Vector2 edge = polygonA[(i + 1) % polygonA.Length] - polygonA[i];
+                Vector2 axis = new Vector2(-edge.Y, edge.X);
+
+                float minA = float.MaxValue, maxA = float.MinValue;
+                foreach (var vertex in polygonA)
+                {
+                    float projection = Vector2.Dot(vertex, axis);
+                    minA = Math.Min(minA, projection);
+                    maxA = Math.Max(maxA, projection);
+                }
+
+                float minB = float.MaxValue, maxB = float.MinValue;
+                foreach (var vertex in polygonB)
+                {
+                    float projection = Vector2.Dot(vertex, axis);
+                    minB = Math.Min(minB, projection);
+                    maxB = Math.Max(maxB, projection);
+                }
+
+                if (maxA < minB || maxB < minA)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Stops the velocity of an entity based on collision with a rectangle.
+        /// </summary>
+        /// <param name="entity">The entity to adjust.</param>
+        /// <param name="newPosition">The new position of the entity.</param>
+        /// <param name="rectangle">The rectangle that the entity collided with.</param>
+        private void StopVelocityOnCollision(IEntity entity, ref Vector2 newPosition, Rectangle rectangle)
+        {
+            Rectangle entityBounds = entity.Bounds;
+            Rectangle tileBounds = rectangle;
+
+            if (IsColliding(entityBounds, tileBounds))
+            {
+                Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
+
+                if (intersection.Width < intersection.Height)
+                {
+                    // Collision on left or right
+                    if (entityBounds.Center.X < tileBounds.Center.X)
+                    {
+                        // Collision on the left
+                        newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
+                    }
+                    else
+                    {
+                        // Collision on the right
+                        newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
+                    }
+                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                }
+                else
+                {
+                    // Collision on top or bottom
+                    if (entityBounds.Center.Y < tileBounds.Center.Y)
+                    {
+                        // Collision on top
+                        newPosition.Y = tileBounds.Top - entityBounds.Height;
+                        entity.IsOnGround = true;
+                    }
+                    else
+                    {
+                        // Collision on the bottom
+                        // newPosition.Y = tileBounds.Bottom;
+                    }
+                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                }
+            }
+        }
         /// <summary>
         /// Adds an entity to be managed by the physics controller.
         /// </summary>
@@ -73,6 +215,19 @@ namespace ThroneGame.Controllers
                 foreach (var entity in _entities)
                 {
                     TextureUtils.DebugBorder(spriteBatch, entity.Bounds.X, entity.Bounds.Y, entity.Bounds.Width, entity.Bounds.Height);
+
+                    // Debug Vertices of entity
+                    if (entity.Vertices != null && entity.Vertices.Length > 0)
+                    {
+                        for (int i = 0; i < entity.Vertices.Length; i++)
+                        {
+                            Vector2 vertexA = entity.Vertices[i];
+                            Vector2 vertexB = entity.Vertices[(i + 1) % entity.Vertices.Length];
+                            TextureUtils.DebugLine(spriteBatch, vertexA, vertexB);
+                        }
+                    }
+
+
                     List<ITile> nearbyTiles = GetNearbyTiles(entity);
                     foreach (var tile in nearbyTiles)
                     {
@@ -142,49 +297,49 @@ namespace ThroneGame.Controllers
         /// </summary>
         /// <param name="entity">The entity to adjust.</param>
         /// <param name="newPosition">The new position of the entity.</param>
-        /// <param name="tile">The tile that the entity collided with.</param>
-        private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
-        {
-            Rectangle entityBounds = entity.Bounds;
-            Rectangle tileBounds = tile.Bounds;
+        // /// <param name="tile">The tile that the entity collided with.</param>
+        // private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
+        // {
+        //     Rectangle entityBounds = entity.Bounds;
+        //     Rectangle tileBounds = tile.Bounds;
 
-            if (IsColliding(entityBounds, tileBounds))
-            {
-                Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
+        //     if (IsColliding(entityBounds, tileBounds))
+        //     {
+        //         Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
 
-                if (intersection.Width < intersection.Height)
-                {
-                    // Collision on left or right
-                    if (entityBounds.Center.X < tileBounds.Center.X)
-                    {
-                        // Collision on the left
-                        newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
-                    }
-                    else
-                    {
-                        // Collision on the right
-                        newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
-                    }
-                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
-                }
-                else
-                {
-                    // Collision on top or bottom
-                    if (entityBounds.Center.Y < tileBounds.Center.Y)
-                    {
-                        // Collision on top
-                        newPosition.Y = tileBounds.Top - entityBounds.Height;
-                        entity.IsOnGround = true;
-                    }
-                    else
-                    {
-                        // Collision on the bottom
-                        newPosition.Y = tileBounds.Bottom;
-                    }
-                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
-                }
-            }
-        }
+        //         if (intersection.Width < intersection.Height)
+        //         {
+        //             // Collision on left or right
+        //             if (entityBounds.Center.X < tileBounds.Center.X)
+        //             {
+        //                 // Collision on the left
+        //                 newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
+        //             }
+        //             else
+        //             {
+        //                 // Collision on the right
+        //                 newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
+        //             }
+        //             entity.Velocity = new Vector2(0, entity.Velocity.Y);
+        //         }
+        //         else
+        //         {
+        //             // Collision on top or bottom
+        //             if (entityBounds.Center.Y < tileBounds.Center.Y)
+        //             {
+        //                 // Collision on top
+        //                 newPosition.Y = tileBounds.Top - entityBounds.Height;
+        //                 entity.IsOnGround = true;
+        //             }
+        //             else
+        //             {
+        //                 // Collision on the bottom
+        //                 newPosition.Y = tileBounds.Bottom;
+        //             }
+        //             entity.Velocity = new Vector2(entity.Velocity.X, 0);
+        //         }
+        //     }
+        // }
 
         /// <summary>
         /// Converts a position to a cell coordinate in the spatial grid.

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -36,6 +37,18 @@ namespace ThroneGame.Utils
             whiteDot.SetData(new Color[] { Color.White });
             spriteBatch.Draw(whiteDot, new Rectangle(x, y, 1, 1), Color.White);
             DebugBorder(spriteBatch, x, y, 1, 1);
+            whiteDot.Dispose();
+        }
+
+        public static void DebugLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end)
+        {
+            // Draw a line from start to end
+            Texture2D whiteDot = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            whiteDot.SetData(new Color[] { Color.White });
+            Vector2 direction = end - start;
+            float distance = direction.Length();
+            float angle = (float)Math.Atan2(direction.Y, direction.X);
+            spriteBatch.Draw(whiteDot, new Rectangle((int)start.X, (int)start.Y, (int)distance, 1), null, Color.White, angle, Vector2.Zero, SpriteEffects.None, 0);
             whiteDot.Dispose();
         }
     }

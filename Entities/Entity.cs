@@ -84,6 +84,11 @@ namespace ThroneGame.Entities
         }
 
         /// <summary>
+        /// Gets or sets the vertices of the game object.
+        /// </summary>
+        public Vector2[] Vertices { get; set; }
+
+        /// <summary>
         /// Updates the entity's state, including handling movement and updating the animation.
         /// </summary>
         /// <param name="gameTime">The game time information.</param>
@@ -93,6 +98,7 @@ namespace ThroneGame.Entities
             UpdateAnimation(gameTime);
             UpdatePosition(gameTime);
             UpdateBounds();
+            UpdateVertices();
         }
 
         /// <summary>
@@ -146,5 +152,29 @@ namespace ThroneGame.Entities
         {
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
         }
+
+        /// <summary>
+        /// Updates the vertices of the entity.
+        /// </summary>
+        private void UpdateVertices()
+        {
+            // TODO: Implement vertices for entity to be inherited by derived classes
+            float width = Bounds.Width * 0.6f;
+            float height = Bounds.Height * 0.5f;
+            float leftOffset = (Bounds.Width - width) / 2;
+            float topOffset = (Bounds.Height - height) / 2;
+
+            Vertices = new Vector2[]
+            {
+                new Vector2(Bounds.Left + leftOffset, Bounds.Top + topOffset),
+                new Vector2(Bounds.Right - leftOffset, Bounds.Top + topOffset),
+                new Vector2(Bounds.Right - leftOffset, Bounds.Bottom - topOffset),
+                new Vector2(Bounds.Left + leftOffset, Bounds.Bottom - topOffset)
+            };
+        }
+
+
+
+
     }
 }
