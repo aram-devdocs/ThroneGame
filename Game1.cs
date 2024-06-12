@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ThroneGame.Scenes;
@@ -26,8 +27,11 @@ namespace ThroneGame
             // Initialize the screen size here
             _graphics.PreferredBackBufferWidth = 1280; // Set the desired width
             _graphics.PreferredBackBufferHeight = 720; // Set the desired height
+            _graphics.SynchronizeWithVerticalRetrace = false; // Disable VSync to achieve 120 FPS
             _graphics.ApplyChanges();
 
+            // Set the desired frame rate to 120 FPS
+            TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 120.0);
 
             base.Initialize();
         }
@@ -47,7 +51,6 @@ namespace ThroneGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
             if (Keyboard.GetState().IsKeyDown(Keys.R))
             {
                 _sceneManager.ResetCurrentScene(this, gameTime, _spriteBatch);
@@ -62,7 +65,6 @@ namespace ThroneGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _sceneManager.Draw(_spriteBatch);
-
 
             base.Draw(gameTime);
         }

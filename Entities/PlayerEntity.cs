@@ -22,16 +22,16 @@ namespace ThroneGame.Entities
             LoadAnimations(content);
             MovementController = new MovementController(position)
             {
-                SprintAccelerationRate = 4f,
-                SprintMultiplier = 2.5f,
-                SpeedUpRate = 12f,
-                SlowDownRate = 20f,
-                Speed = 150f,
-                CrouchDiveAccelerationRate = 20f,
-                CrouchDiveMaxSpeed = 200f,
-                SlideBoost = 800f,
-                SlideBoostAccelerationRate = 80.2f,
-                MinimumSlideBoostStartSpeed = 90f,
+                // SprintAccelerationRate = 4f,
+                // SprintMultiplier = 2.5f,
+                // SpeedUpRate = 12f,
+                // SlowDownRate = 20f,
+                // Speed = 150f,
+                // CrouchDiveAccelerationRate = 20f,
+                // CrouchDiveMaxSpeed = 200f,
+                // SlideBoost = 800f,
+                // SlideBoostAccelerationRate = 80.2f,
+                // MinimumSlideBoostStartSpeed = 90f,
                 // TargetPosition = new Vector2(position.X + 1000, position.Y)
             };
 
