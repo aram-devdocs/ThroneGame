@@ -127,45 +127,51 @@ namespace ThroneGame.Controllers
         /// <param name="rectangle">The rectangle that the entity collided with.</param>
         private void StopVelocityOnCollision(IEntity entity, ref Vector2 newPosition, Rectangle rectangle)
         {
+
+            // bool hasVertices = entity.Vertices != null && entity.Vertices.Length > 0;
+            // Rectangle entityBounds = hasVertices ? GetBoundsFromVertices(entity.Vertices) : entity.Bounds;
             Rectangle entityBounds = entity.Bounds;
             Rectangle tileBounds = rectangle;
 
-            if (IsColliding(entityBounds, tileBounds))
-            {
-                Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
 
-                if (intersection.Width < intersection.Height)
+
+
+
+
+            Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
+
+            if (intersection.Width < intersection.Height)
+            {
+                // Collision on left or right
+                if (entityBounds.Center.X < tileBounds.Center.X)
                 {
-                    // Collision on left or right
-                    if (entityBounds.Center.X < tileBounds.Center.X)
-                    {
-                        // Collision on the left
-                        newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
-                    }
-                    else
-                    {
-                        // Collision on the right
-                        newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
-                    }
-                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                    // Collision on the left
+                    newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
                 }
                 else
                 {
-                    // Collision on top or bottom
-                    if (entityBounds.Center.Y < tileBounds.Center.Y)
-                    {
-                        // Collision on top
-                        newPosition.Y = tileBounds.Top - entityBounds.Height;
-                        entity.IsOnGround = true;
-                    }
-                    else
-                    {
-                        // Collision on the bottom
-                        // newPosition.Y = tileBounds.Bottom;
-                    }
-                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                    // Collision on the right
+                    newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
                 }
+                entity.Velocity = new Vector2(0, entity.Velocity.Y);
             }
+            else
+            {
+                // Collision on top or bottom
+                if (entityBounds.Center.Y < tileBounds.Center.Y)
+                {
+                    // Collision on top
+                    newPosition.Y = tileBounds.Top - entityBounds.Height;
+                    entity.IsOnGround = true;
+                }
+                else
+                {
+                    // Collision on the bottom
+                    newPosition.Y = tileBounds.Bottom;
+                }
+                entity.Velocity = new Vector2(entity.Velocity.X, 0);
+            }
+
         }
         /// <summary>
         /// Adds an entity to be managed by the physics controller.
@@ -217,16 +223,25 @@ namespace ThroneGame.Controllers
                     TextureUtils.DebugBorder(spriteBatch, entity.Bounds.X, entity.Bounds.Y, entity.Bounds.Width, entity.Bounds.Height);
 
                     // Debug Vertices of entity
+                    // if (entity.Vertices != null && entity.Vertices.Length > 0)
+                    // {
+                    //     for (int i = 0; i < entity.Vertices.Length; i++)
+                    //     {
+                    //         Vector2 vertexA = entity.Vertices[i];
+                    //         Vector2 vertexB = entity.Vertices[(i + 1) % entity.Vertices.Length];
+                    //         TextureUtils.DebugLine(spriteBatch, vertexA, vertexB);
+                    //     }
+                    // }
+
+
+                    //  Turn the vertices into a rectangle and draw it
                     if (entity.Vertices != null && entity.Vertices.Length > 0)
                     {
-                        for (int i = 0; i < entity.Vertices.Length; i++)
-                        {
-                            Vector2 vertexA = entity.Vertices[i];
-                            Vector2 vertexB = entity.Vertices[(i + 1) % entity.Vertices.Length];
-                            TextureUtils.DebugLine(spriteBatch, vertexA, vertexB);
-                        }
-                    }
 
+
+                        Rectangle bounds = GetBoundsFromVertices(entity.Vertices);
+                        TextureUtils.DebugBorder(spriteBatch, bounds.X, bounds.Y, bounds.Width, bounds.Height);
+                    }
 
                     List<ITile> nearbyTiles = GetNearbyTiles(entity);
                     foreach (var tile in nearbyTiles)
@@ -235,6 +250,36 @@ namespace ThroneGame.Controllers
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Create a rectangle from the vertices of an entity.
+        /// </summary>
+        /// <param name="vertices">The vertices of the entity.</param>
+        /// <returns>A rectangle that bounds the entity.</returns>
+        /// <error>Vertices must be able to be converted to a rectangle.</error>
+        private Rectangle GetBoundsFromVertices(Vector2[] vertices)
+        {
+
+            if (vertices.Length == 0)
+            {
+                throw new Exception("Vertices must be able to be converted to a rectangle.");
+            }
+
+            float minX = vertices[0].X;
+            float minY = vertices[0].Y;
+            float maxX = vertices[0].X;
+            float maxY = vertices[0].Y;
+
+            for (int i = 1; i < vertices.Length; i++)
+            {
+                minX = Math.Min(minX, vertices[i].X);
+                minY = Math.Min(minY, vertices[i].Y);
+                maxX = Math.Max(maxX, vertices[i].X);
+                maxY = Math.Max(maxY, vertices[i].Y);
+            }
+
+            return new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY));
         }
 
         /// <summary>
