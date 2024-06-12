@@ -171,17 +171,15 @@ namespace ThroneGame.Scenes
         public virtual void Reset(Game1 game1, GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Load the content again if the last reset was more than 1 second ago
-            // TODO _ Fix this code as resetting just loads the content again and slows down the game
-            // if (gameTime.TotalGameTime.TotalMilliseconds - _lastResetTime > 1000)
-            // {
+            if (gameTime.TotalGameTime.TotalMilliseconds - _lastResetTime > 1000)
+            {
 
-            //     // Clear all content
-            //     spriteBatch.GraphicsDevice.Clear(Color.CornflowerBlue);
+                Player.Position = new Vector2(100, 300);
 
-            //     LoadContent();
-            //     game1.ResetElapsedTime();
-            //     _lastResetTime = gameTime.TotalGameTime.TotalMilliseconds;
-            // }
+                game1.ResetElapsedTime();
+                _lastResetTime = gameTime.TotalGameTime.TotalMilliseconds;
+            }
+
         }
 
         /// <summary>
