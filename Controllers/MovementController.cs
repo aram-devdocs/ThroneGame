@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ThroneGame.Entities;
@@ -11,7 +11,6 @@ namespace ThroneGame.Controllers
     /// </summary>
     public class MovementController
     {
-
         public float Speed { get; set; } = 100f;
         public float SpeedUpRate { get; set; } = 9f;
         public float SlowDownRate { get; set; } = 12f;
@@ -24,8 +23,33 @@ namespace ThroneGame.Controllers
         public float CrouchDiveMaxSpeed { get; set; } = 200f;
         public float CrouchDiveAccelerationRate { get; set; } = 20f;
 
-
         private bool isSlideBoostFinished;
+        private Queue<Vector2> pathPoints;
+        private Vector2? targetPosition;
+        private Vector2? startPosition;
+
+        /// <summary>
+        /// Gets or sets the target position for pathfinding.
+        /// </summary>
+        public Vector2? TargetPosition
+        {
+            get => targetPosition;
+            set
+            {
+                targetPosition = value;
+                if (targetPosition.HasValue)
+                {
+                    CalculatePathToTarget();
+                }
+            }
+        }
+
+        public MovementController(Vector2? startPosition = null)
+        {
+            this.startPosition = startPosition;
+            pathPoints = new Queue<Vector2>();
+        }
+
 
         /// <summary>
         /// Handles the movement of the given entity based on keyboard input and game state.
@@ -33,6 +57,23 @@ namespace ThroneGame.Controllers
         /// <param name="entity">The entity to control.</param>
         /// <param name="gameTime">The game time information.</param>
         public void HandleMovement(IEntity entity, GameTime gameTime)
+        {
+            if (TargetPosition.HasValue && pathPoints.Count > 0)
+            {
+                FollowPath(entity, gameTime);
+            }
+            else
+            {
+                HandleUserInput(entity, gameTime);
+            }
+        }
+
+        /// <summary>
+        /// Handles the movement of the entity based on the user input.
+        /// </summary>
+        /// <param name="entity">The entity to control.</param>
+        /// <param name="gameTime">The game time information.</param>
+        private void HandleUserInput(IEntity entity, GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
             bool sprinting = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
@@ -63,10 +104,64 @@ namespace ThroneGame.Controllers
         }
 
         /// <summary>
-        /// Handles crouching and related actions such as slide boosts and crouch dives.
+        /// Calculates the path to the target position and queues up the points to navigate to.
+        /// </summary>
+        private void CalculatePathToTarget()
+        {
+            // Placeholder for the pathfinding algorithm
+            pathPoints = new Queue<Vector2>();
+            if (TargetPosition.HasValue)
+            {
+                // Simplified pathfinding: direct line (you may replace this with a proper pathfinding algorithm)
+                Vector2 startPosition = this.startPosition ?? Vector2.Zero;
+                Vector2 endPosition = TargetPosition.Value;
+
+                Vector2 direction = Vector2.Normalize(endPosition - startPosition);
+                float distance = Vector2.Distance(startPosition, endPosition);
+                int steps = (int)Math.Ceiling(distance / Speed);
+
+                for (int i = 1; i <= steps; i++)
+                {
+                    pathPoints.Enqueue(startPosition + direction * Speed * i);
+                }
+
+                pathPoints.Enqueue(endPosition);
+
+
+            }
+        }
+
+        /// <summary>
+        /// Follows the calculated path towards the target position.
         /// </summary>
         /// <param name="entity">The entity to control.</param>
-        /// <param name="state">The current keyboard state.</param>
+        /// <param name="gameTime">The game time information.</param>
+        private void FollowPath(IEntity entity, GameTime gameTime)
+        {
+            if (pathPoints.Count == 0)
+            {
+                TargetPosition = null;
+                return;
+            }
+
+            Vector2 currentTarget = pathPoints.Peek();
+            Vector2 direction = Vector2.Normalize(currentTarget - entity.Position);
+            entity.Velocity = direction * Speed;
+
+            // Check if entity has reached the current target point
+            if (Vector2.Distance(entity.Position, currentTarget) < Speed * (float)gameTime.ElapsedGameTime.TotalSeconds)
+            {
+                entity.Position = currentTarget;
+                pathPoints.Dequeue();
+            }
+        }
+
+        public void SetTargetPosition(Vector2 target)
+        {
+            TargetPosition = target;
+        }
+
+        // Existing methods for crouching, jumping, etc.
         private void HandleCrouch(IEntity entity, KeyboardState state)
         {
             if (!entity.IsOnGround)
@@ -92,10 +187,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Handles the crouch dive action.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
         private void HandleCrouchDive(IEntity entity)
         {
             if (entity.Velocity.Y < CrouchDiveMaxSpeed)
@@ -104,13 +195,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Handles horizontal movement based on the current keyboard state.
-        /// </summary>
-        /// <param name="state">The current keyboard state.</param>
-        /// <param name="entity">The entity to control.</param>
-        /// <param name="maxSpeed">The maximum speed the entity can achieve.</param>
-        /// <param name="accelerationRate">The rate at which the entity accelerates.</param>
         private void HandleHorizontalMovement(KeyboardState state, IEntity entity, float maxSpeed, float accelerationRate)
         {
             if (state.IsKeyDown(Keys.A))
@@ -127,12 +211,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Moves the entity to the left.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
-        /// <param name="maxSpeed">The maximum speed the entity can achieve.</param>
-        /// <param name="accelerationRate">The rate at which the entity accelerates.</param>
         private void MoveLeft(IEntity entity, float maxSpeed, float accelerationRate)
         {
             if (entity.Velocity.X >= -maxSpeed)
@@ -143,12 +221,6 @@ namespace ThroneGame.Controllers
             isSlideBoostFinished = false;
         }
 
-        /// <summary>
-        /// Moves the entity to the right.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
-        /// <param name="maxSpeed">The maximum speed the entity can achieve.</param>
-        /// <param name="accelerationRate">The rate at which the entity accelerates.</param>
         private void MoveRight(IEntity entity, float maxSpeed, float accelerationRate)
         {
             if (entity.Velocity.X <= maxSpeed)
@@ -159,10 +231,6 @@ namespace ThroneGame.Controllers
             isSlideBoostFinished = false;
         }
 
-        /// <summary>
-        /// Decelerates the entity when there is no input for horizontal movement.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
         private void Decelerate(IEntity entity)
         {
             if (entity.Velocity.X > 0 && entity.IsOnGround)
@@ -179,10 +247,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Boosts the entity's slide to the right.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
         private void BoostSlideRight(IEntity entity)
         {
             if (entity.Velocity.X < SlideBoost)
@@ -195,10 +259,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Boosts the entity's slide to the left.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
         private void BoostSlideLeft(IEntity entity)
         {
             if (entity.Velocity.X > -SlideBoost)
@@ -211,10 +271,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Handles the jump action for the entity.
-        /// </summary>
-        /// <param name="entity">The entity to control.</param>
         private void HandleJump(IEntity entity)
         {
             entity.Velocity = new Vector2(entity.Velocity.X, -JumpStrength);

@@ -9,26 +9,25 @@ namespace ThroneGame.Entities
     /// <summary>
     /// Represents the player entity in the game.
     /// </summary>
-    public class PlayerEntity : Entity
+    public class EnemyEntity : Entity
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlayerEntity"/> class with the specified position and content manager.
+        /// Initializes a new instance of the <see cref="EnemyEntity"/> class with the specified position and content manager.
         /// </summary>
         /// <param name="position">The initial position of the player.</param>
         /// <param name="content">The content manager used for loading textures.</param>
-        public PlayerEntity(Vector2 position, ContentManager content)
+        public EnemyEntity(Vector2 position, ContentManager content)
             : base(position)
         {
             LoadAnimations(content);
-            MovementController = new MovementController(position)
+            this.MovementController = new MovementController(position)
             {
                 SprintAccelerationRate = 4f,
                 SprintMultiplier = 2.5f,
                 SpeedUpRate = 12f,
                 SlowDownRate = 20f,
-                // TargetPosition = new Vector2(position.X + 1000, position.Y)
             };
-
+            this.MovementController.TargetPosition = new Vector2(position.X + 100, position.Y);
         }
 
         /// <summary>
