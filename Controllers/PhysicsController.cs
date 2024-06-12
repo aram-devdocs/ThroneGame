@@ -292,54 +292,7 @@ namespace ThroneGame.Controllers
             return entityBounds.Intersects(tileBounds);
         }
 
-        /// <summary>
-        /// Adjusts an entity's position and velocity based on collision with a tile.
-        /// </summary>
-        /// <param name="entity">The entity to adjust.</param>
-        /// <param name="newPosition">The new position of the entity.</param>
-        // /// <param name="tile">The tile that the entity collided with.</param>
-        // private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
-        // {
-        //     Rectangle entityBounds = entity.Bounds;
-        //     Rectangle tileBounds = tile.Bounds;
 
-        //     if (IsColliding(entityBounds, tileBounds))
-        //     {
-        //         Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
-
-        //         if (intersection.Width < intersection.Height)
-        //         {
-        //             // Collision on left or right
-        //             if (entityBounds.Center.X < tileBounds.Center.X)
-        //             {
-        //                 // Collision on the left
-        //                 newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
-        //             }
-        //             else
-        //             {
-        //                 // Collision on the right
-        //                 newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
-        //             }
-        //             entity.Velocity = new Vector2(0, entity.Velocity.Y);
-        //         }
-        //         else
-        //         {
-        //             // Collision on top or bottom
-        //             if (entityBounds.Center.Y < tileBounds.Center.Y)
-        //             {
-        //                 // Collision on top
-        //                 newPosition.Y = tileBounds.Top - entityBounds.Height;
-        //                 entity.IsOnGround = true;
-        //             }
-        //             else
-        //             {
-        //                 // Collision on the bottom
-        //                 newPosition.Y = tileBounds.Bottom;
-        //             }
-        //             entity.Velocity = new Vector2(entity.Velocity.X, 0);
-        //         }
-        //     }
-        // }
 
         /// <summary>
         /// Converts a position to a cell coordinate in the spatial grid.
