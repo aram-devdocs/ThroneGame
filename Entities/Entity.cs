@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Controllers;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Entities
 {
@@ -142,7 +143,7 @@ namespace ThroneGame.Entities
         /// <param name="gameTime">The game time information.</param>
         private void UpdatePosition(GameTime gameTime)
         {
-            Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Position += Velocity * GameUtils.GetDeltaTime(gameTime);
         }
 
         /// <summary>

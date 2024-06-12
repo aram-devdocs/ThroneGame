@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ThroneGame.Entities;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Controllers
 {
@@ -149,7 +150,7 @@ namespace ThroneGame.Controllers
             entity.Velocity = direction * Speed;
 
             // Check if entity has reached the current target point
-            if (Vector2.Distance(entity.Position, currentTarget) < Speed * (float)gameTime.ElapsedGameTime.TotalSeconds)
+            if (Vector2.Distance(entity.Position, currentTarget) < Speed * GameUtils.GetDeltaTime(gameTime))
             {
                 entity.Position = currentTarget;
                 pathPoints.Dequeue();

@@ -284,7 +284,9 @@ namespace ThroneGame.Controllers
         /// <param name="gameTime">Time elapsed since the last update.</param>
         private void ApplyPhysics(IEntity entity, GameTime gameTime)
         {
-            Vector2 newPosition = entity.Position + entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 newPosition = entity.Position + entity.Velocity * deltaTime;
 
             List<ITile> nearbyTiles = GetNearbyTiles(entity);
 
@@ -315,7 +317,7 @@ namespace ThroneGame.Controllers
 
             if (!entity.IsOnGround)
             {
-                entity.Velocity += new Vector2(0, Gravity) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                entity.Velocity += new Vector2(0, Gravity) * deltaTime;
             }
 
             entity.Position = newPosition;

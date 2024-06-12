@@ -127,16 +127,6 @@ namespace ThroneGame.Scenes
 
             // Draw tiles and player with camera transformation
             spriteBatch.Begin(transformMatrix: CameraController.GetViewMatrix());
-            // spriteBatch.Draw(MapRenderTarget, Vector2.Zero, Color.White);
-
-            // Draw all the tiles in the map instead of the render target
-            // Map.Tiles.ForEach(tile => tile.Draw(spriteBatch));
-
-
-            // Get tiles in the visible area
-            // var visibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(CameraController.GetVisibleArea()));
-            // set visible tiles to the tiles in the scene
-
 
 
             if (CameraController.IsDirty)
