@@ -29,26 +29,26 @@ namespace ThroneGame.Controllers
 
         private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
         {
-            if (entity.Vertices != null && entity.Vertices.Length > 0)
-            {
-                // Collision detection using vertices
-                if (IsPolygonColliding(entity.Vertices, tile.Bounds))
-                {
-                    // Handle collision response (adjust newPosition and stop velocity)
-                    StopVelocityOnCollision(entity, ref newPosition, tile.Bounds);
-                }
-            }
-            else
-            {
-                // Collision detection using bounds
-                Rectangle entityBounds = entity.Bounds;
-                Rectangle tileBounds = tile.Bounds;
+            // if (entity.Vertices != null && entity.Vertices.Length > 0)
+            // {
+            //     // Collision detection using vertices
+            //     if (IsPolygonColliding(entity.Vertices, tile.Bounds))
+            //     {
+            //         // Handle collision response (adjust newPosition and stop velocity)
+            //         StopVelocityOnCollision(entity, ref newPosition, tile.Bounds);
+            //     }
+            // }
+            // else
+            // {
+            // Collision detection using bounds
+            Rectangle entityBounds = entity.Bounds;
+            Rectangle tileBounds = tile.Bounds;
 
-                if (IsColliding(entityBounds, tileBounds))
-                {
-                    StopVelocityOnCollision(entity, ref newPosition, tileBounds);
-                }
+            if (IsColliding(entityBounds, tileBounds))
+            {
+                StopVelocityOnCollision(entity, ref newPosition, tileBounds);
             }
+            // }
         }
 
         /// <summary>
@@ -132,11 +132,6 @@ namespace ThroneGame.Controllers
             // Rectangle entityBounds = hasVertices ? GetBoundsFromVertices(entity.Vertices) : entity.Bounds;
             Rectangle entityBounds = entity.Bounds;
             Rectangle tileBounds = rectangle;
-
-
-
-
-
 
             Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
 
