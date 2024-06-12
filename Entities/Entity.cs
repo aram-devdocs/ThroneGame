@@ -80,7 +80,6 @@ namespace ThroneGame.Entities
             IsOnGround = false;
             Mass = 1f;
 
-            MovementController = new MovementController();
             AnimationController = new AnimationController();
         }
 

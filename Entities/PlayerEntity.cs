@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ThroneGame.Controllers;
 
 namespace ThroneGame.Entities
 {
@@ -19,6 +20,13 @@ namespace ThroneGame.Entities
             : base(position)
         {
             LoadAnimations(content);
+            this.MovementController = new MovementController
+            {
+                SprintAccelerationRate = 4f,
+                SprintMultiplier = 2.5f,
+                SpeedUpRate = 12f,
+                SlowDownRate = 20f,
+            };
         }
 
         /// <summary>

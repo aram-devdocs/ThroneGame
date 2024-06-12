@@ -11,17 +11,20 @@ namespace ThroneGame.Controllers
     /// </summary>
     public class MovementController
     {
-        private const float Speed = 100f;
-        private const float SpeedUpRate = 9f;
-        private const float SlowDownRate = 12f;
-        private const float SprintAccelerationRate = 2f;
-        private const float SprintMultiplier = 2f;
-        private const float JumpStrength = 300f;
-        private const float SlideBoost = 400f;
-        private const float MinimumSlideBoostStartSpeed = 90f;
-        private const float SlideBoostAccelerationRate = 40.2f;
-        private const float CrouchDiveMaxSpeed = 200f;
-        private const float CrouchDiveAccelerationRate = 20f;
+
+        public float Speed { get; set; } = 100f;
+        public float SpeedUpRate { get; set; } = 9f;
+        public float SlowDownRate { get; set; } = 12f;
+        public float SprintAccelerationRate { get; set; } = 2f;
+        public float SprintMultiplier { get; set; } = 2f;
+        public float JumpStrength { get; set; } = 300f;
+        public float SlideBoost { get; set; } = 400f;
+        public float MinimumSlideBoostStartSpeed { get; set; } = 90f;
+        public float SlideBoostAccelerationRate { get; set; } = 40.2f;
+        public float CrouchDiveMaxSpeed { get; set; } = 200f;
+        public float CrouchDiveAccelerationRate { get; set; } = 20f;
+
+
         private bool isSlideBoostFinished;
 
         /// <summary>
