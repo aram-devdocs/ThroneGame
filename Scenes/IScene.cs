@@ -83,8 +83,8 @@ namespace ThroneGame.Scenes
 
 
         /// <summary>
-        /// Updates the list of visible tiles in the scene.
+        /// Deprecated: Updates the list of visible tiles in the scene. This method is no longer used as we are using a RenderTarget2D to draw the map. If we run into performance issues, we can consider using this method again.
         /// </summary>
-        void UpdateVisibleTiles();
+        void DeprecatedUpdateVisibleTiles();
     }
 }

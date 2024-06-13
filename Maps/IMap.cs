@@ -38,5 +38,19 @@ namespace ThroneGame.Maps
         /// Gets or sets the texture for the tileset used in the map.
         /// </summary>
         Texture2D TilesetTexture { get; set; }
+
+        // int width and height
+
+        /// <summary>
+        /// Gets the width of the map in tiles. Should be calculated based on the size of the tiles and the map data.
+        /// </summary>
+        int MapWidth { get; }
+
+        /// <summary>
+        /// Gets the height of the map in tiles. Should be calculated based on the size of the tiles and the map data.
+        /// </summary>
+        int MapHeight { get; }
+        int TileWidth { get; }
+        int TileHeight { get; }
     }
 }

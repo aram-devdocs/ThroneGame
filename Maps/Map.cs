@@ -28,9 +28,12 @@ namespace ThroneGame.Maps
         /// </summary>
         public string JsonFilePath { get; set; }
 
-        protected int TileWidth;
-        protected int TileHeight;
-        protected int TilesetColumns;
+        public int TileWidth { get; set; }
+        public int TileHeight { get; set; }
+        public int TilesetColumns { get; set; }
+
+        public int MapWidth { get; set; }
+        public int MapHeight { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Map"/> class.
@@ -85,6 +88,18 @@ namespace ThroneGame.Maps
             TileHeight = mapData.TileHeight;
             TilesetColumns = TilesetTexture.Width / TileWidth;
 
+            MapWidth = mapData.Width;
+            MapHeight = mapData.Height;
+
+            // Debug all the values
+            System.Console.WriteLine($"MapWidth: {MapWidth}");
+            System.Console.WriteLine($"MapHeight: {MapHeight}");
+            System.Console.WriteLine($"TileWidth: {TileWidth}");
+            System.Console.WriteLine($"TileHeight: {TileHeight}");
+            System.Console.WriteLine($"TilesetColumns: {TilesetColumns}");
+            
+
+
             var layer = mapData.Layers[0]; // Assuming a single layer for simplicity
             for (int y = 0; y < layer.Height; y++)
             {
@@ -122,6 +137,9 @@ namespace ThroneGame.Maps
         {
             public int TileWidth { get; set; }
             public int TileHeight { get; set; }
+
+            public int Width { get; set; }
+            public int Height { get; set; }
             public List<LayerData> Layers { get; set; }
         }
 

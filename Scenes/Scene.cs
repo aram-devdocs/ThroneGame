@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -60,6 +61,9 @@ namespace ThroneGame.Scenes
         /// </summary>
         public IMap Map { get; set; }
 
+
+        private RenderTarget2D _mapRenderTarget;
+
         private double _lastResetTime;
         private FPSCounter _fpsCounter;
 
@@ -74,6 +78,7 @@ namespace ThroneGame.Scenes
             PhysicsController = new PhysicsController();
             Entities = new List<IEntity>();
             VisibleTiles = new List<ITile>();
+            _mapRenderTarget = new RenderTarget2D(game.GraphicsDevice, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
         }
 
         /// <summary>
@@ -82,16 +87,29 @@ namespace ThroneGame.Scenes
         public virtual void LoadContent()
         {
 
-            // Load map content
             Map.LoadContent(Game.GraphicsDevice, Game.Content);
 
-            // Draw tiles to the render target
+            // Initialize the render target with a size that can fit the entire map
+            int mapWidth = Map.MapWidth * Map.TileWidth;
+            int mapHeight = Map.MapHeight * Map.TileHeight;
 
-            // Add map tiles to physics controller
+
+            _mapRenderTarget = new RenderTarget2D(Game.GraphicsDevice, mapWidth, mapHeight);
+
+            // Load map content
+
+            // Draw tiles to the render target
+            Game.GraphicsDevice.SetRenderTarget(_mapRenderTarget);
+            Game.GraphicsDevice.Clear(Color.Transparent);
+            var spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            spriteBatch.Begin();
             foreach (var tile in Map.Tiles)
             {
+                tile.Draw(spriteBatch);
                 PhysicsController.AddTile(tile);
             }
+            spriteBatch.End();
+            Game.GraphicsDevice.SetRenderTarget(null);
 
             // Add player to physics controller
             PhysicsController.AddEntity(Player);
@@ -129,15 +147,9 @@ namespace ThroneGame.Scenes
             spriteBatch.Begin(transformMatrix: CameraController.GetViewMatrix());
 
 
-            if (CameraController.IsDirty)
-            {
-                UpdateVisibleTiles();
-            }
-            // Draw the tiles in the visible area
-            foreach (var tile in VisibleTiles)
-            {
-                tile.Draw(spriteBatch);
-            }
+
+            // Draw the map render target
+            spriteBatch.Draw(_mapRenderTarget, Vector2.Zero, Color.White);
 
 
 
@@ -188,9 +200,9 @@ namespace ThroneGame.Scenes
 
 
         /// <summary>
-        /// Updates the list of visible tiles in the scene.
+        /// Deprecated: Updates the list of visible tiles in the scene. This method is no longer used as we are using a RenderTarget2D to draw the map. If we run into performance issues, we can consider using this method again.
         /// </summary>
-        public void UpdateVisibleTiles()
+        public void DeprecatedUpdateVisibleTiles()
         {
             var visibleArea = CameraController.GetVisibleArea();
             VisibleTiles = Map.Tiles.Where(tile => tile.Bounds.Intersects(visibleArea)).ToList();
