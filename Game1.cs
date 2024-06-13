@@ -31,7 +31,7 @@ namespace ThroneGame
             _graphics.ApplyChanges();
 
             // Set the desired frame rate to 120 FPS
-            TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 120.0);
+            TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);
 
             base.Initialize();
         }

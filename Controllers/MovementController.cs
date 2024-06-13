@@ -14,12 +14,12 @@ namespace ThroneGame.Controllers
     {
         public float Speed { get; set; } = 115;
         public float SpeedUpRate { get; set; } = 80f;
-        public float SlowDownRate { get; set; } = 450f;
+        public float SlowDownRate { get; set; } = 550f;
         public float SprintAccelerationRate { get; set; } = 1.8f;
         public float SprintMultiplier { get; set; } = 2.14f;
         public float JumpStrength { get; set; } = 220f;
-        public float SlideBoost { get; set; } = 120f;
-        public float MinimumSlideBoostStartSpeed { get; set; } = 90f;
+        public float SlideBoost { get; set; } = 280f;
+        public float MinimumSlideBoostStartSpeed { get; set; } = 40f;
         public float SlideBoostAccelerationRate { get; set; } = 80.2f;
         public float CrouchDiveMaxSpeed { get; set; } = 200f;
         public float CrouchDiveAccelerationRate { get; set; } = 20f;
