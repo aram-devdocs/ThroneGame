@@ -43,10 +43,6 @@ namespace ThroneGame.Tiles
         /// </summary>
         public float Mass { get; set; }
 
-        /// <summary>
-        /// NOTE: Verticies not implemented in physics system for Tiles. Gets or sets the vertices of the game object.
-        /// </summary>
-        public Vector2[] Vertices { get; set; }
 
         private readonly Texture2D _texture;
         private readonly Rectangle _sourceRectangle;

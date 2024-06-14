@@ -50,9 +50,6 @@ namespace ThroneGame
         /// </summary>
         float Mass { get; set; }
 
-        /// <summary>
-        /// Gets or sets the vertices of the game object.
-        /// </summary>
-        Vector2[] Vertices { get; set; }
+
     }
 }

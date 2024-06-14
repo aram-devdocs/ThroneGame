@@ -41,73 +41,8 @@ namespace ThroneGame.Controllers
 
         }
 
-        /// <summary>
-        /// Checks if a polygon is colliding with a rectangle.
-        /// </summary>
-        /// <param name="polygonVertices">The vertices of the polygon.</param>
-        /// <param name="rectangle">The rectangle to check collision against.</param>
-        /// <returns>True if there is a collision, false otherwise.</returns>
-        private bool IsPolygonColliding(Vector2[] polygonVertices, Rectangle rectangle)
-        {
-            List<Vector2> rectVertices = new List<Vector2>
-    {
-        new Vector2(rectangle.Left, rectangle.Top),
-        new Vector2(rectangle.Right, rectangle.Top),
-        new Vector2(rectangle.Right, rectangle.Bottom),
-        new Vector2(rectangle.Left, rectangle.Bottom)
-    };
 
-            return IsPolygonIntersecting(polygonVertices, rectVertices.ToArray());
-        }
 
-        /// <summary>
-        /// Checks if two polygons are intersecting.
-        /// </summary>
-        /// <param name="polygonA">The vertices of the first polygon.</param>
-        /// <param name="polygonB">The vertices of the second polygon.</param>
-        /// <returns>True if the polygons are intersecting, false otherwise.</returns>
-        private bool IsPolygonIntersecting(Vector2[] polygonA, Vector2[] polygonB)
-        {
-            // Check for separating axis for both polygons
-            return !IsSeparatingAxis(polygonA, polygonB) && !IsSeparatingAxis(polygonB, polygonA);
-        }
-
-        /// <summary>
-        /// Checks if there is a separating axis between two polygons.
-        /// </summary>
-        /// <param name="polygonA">The vertices of the first polygon.</param>
-        /// <param name="polygonB">The vertices of the second polygon.</param>
-        /// <returns>True if there is a separating axis, false otherwise.</returns>
-        private bool IsSeparatingAxis(Vector2[] polygonA, Vector2[] polygonB)
-        {
-            for (int i = 0; i < polygonA.Length; i++)
-            {
-                Vector2 edge = polygonA[(i + 1) % polygonA.Length] - polygonA[i];
-                Vector2 axis = new Vector2(-edge.Y, edge.X);
-
-                float minA = float.MaxValue, maxA = float.MinValue;
-                foreach (var vertex in polygonA)
-                {
-                    float projection = Vector2.Dot(vertex, axis);
-                    minA = Math.Min(minA, projection);
-                    maxA = Math.Max(maxA, projection);
-                }
-
-                float minB = float.MaxValue, maxB = float.MinValue;
-                foreach (var vertex in polygonB)
-                {
-                    float projection = Vector2.Dot(vertex, axis);
-                    minB = Math.Min(minB, projection);
-                    maxB = Math.Max(maxB, projection);
-                }
-
-                if (maxA < minB || maxB < minA)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         /// <summary>
         /// Stops the velocity of an entity based on collision with a rectangle.
@@ -118,8 +53,6 @@ namespace ThroneGame.Controllers
         private void StopVelocityOnCollision(IEntity entity, ref Vector2 newPosition, Rectangle rectangle)
         {
 
-            // bool hasVertices = entity.Vertices != null && entity.Vertices.Length > 0;
-            // Rectangle entityBounds = hasVertices ? GetBoundsFromVertices(entity.Vertices) : entity.Bounds;
             Rectangle entityBounds = entity.Bounds;
             Rectangle tileBounds = rectangle;
 
@@ -207,27 +140,6 @@ namespace ThroneGame.Controllers
                 {
                     TextureUtils.DebugBorder(spriteBatch, entity.Bounds.X, entity.Bounds.Y, entity.Bounds.Width, entity.Bounds.Height);
 
-                    // Debug Vertices of entity
-                    // if (entity.Vertices != null && entity.Vertices.Length > 0)
-                    // {
-                    //     for (int i = 0; i < entity.Vertices.Length; i++)
-                    //     {
-                    //         Vector2 vertexA = entity.Vertices[i];
-                    //         Vector2 vertexB = entity.Vertices[(i + 1) % entity.Vertices.Length];
-                    //         TextureUtils.DebugLine(spriteBatch, vertexA, vertexB);
-                    //     }
-                    // }
-
-
-                    //  Turn the vertices into a rectangle and draw it
-                    if (entity.Vertices != null && entity.Vertices.Length > 0)
-                    {
-
-
-                        Rectangle bounds = GetBoundsFromVertices(entity.Vertices);
-                        TextureUtils.DebugBorder(spriteBatch, bounds.X, bounds.Y, bounds.Width, bounds.Height);
-                    }
-
                     List<ITile> nearbyTiles = GetNearbyTiles(entity);
                     foreach (var tile in nearbyTiles)
                     {
@@ -237,35 +149,6 @@ namespace ThroneGame.Controllers
             }
         }
 
-        /// <summary>
-        /// Create a rectangle from the vertices of an entity.
-        /// </summary>
-        /// <param name="vertices">The vertices of the entity.</param>
-        /// <returns>A rectangle that bounds the entity.</returns>
-        /// <error>Vertices must be able to be converted to a rectangle.</error>
-        private Rectangle GetBoundsFromVertices(Vector2[] vertices)
-        {
-
-            if (vertices.Length == 0)
-            {
-                throw new Exception("Vertices must be able to be converted to a rectangle.");
-            }
-
-            float minX = vertices[0].X;
-            float minY = vertices[0].Y;
-            float maxX = vertices[0].X;
-            float maxY = vertices[0].Y;
-
-            for (int i = 1; i < vertices.Length; i++)
-            {
-                minX = Math.Min(minX, vertices[i].X);
-                minY = Math.Min(minY, vertices[i].Y);
-                maxX = Math.Max(maxX, vertices[i].X);
-                maxY = Math.Max(maxY, vertices[i].Y);
-            }
-
-            return new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY));
-        }
 
         /// <summary>
         /// Applies physics to a single entity, including gravity and collision detection.
