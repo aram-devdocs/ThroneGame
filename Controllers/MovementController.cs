@@ -15,12 +15,14 @@ namespace ThroneGame.Controllers
         public float Speed { get; set; } = 115;
         public float SpeedUpRate { get; set; } = 80f;
         public float SlowDownRate { get; set; } = 550f;
+
+        public float PivotSpeed { get; set; } = 400f;
         public float SprintAccelerationRate { get; set; } = 1.8f;
         public float SprintMultiplier { get; set; } = 2.14f;
         public float JumpStrength { get; set; } = 220f;
         public float SlideBoost { get; set; } = 280f;
         public float MinimumSlideBoostStartSpeed { get; set; } = 40f;
-        public float SlideBoostAccelerationRate { get; set; } = 80.2f;
+        public float SlideBoostAccelerationRate { get; set; } = 100.2f;
         public float CrouchDiveMaxSpeed { get; set; } = 200f;
         public float CrouchDiveAccelerationRate { get; set; } = 20f;
 
@@ -197,11 +199,26 @@ namespace ThroneGame.Controllers
 
         private void HandleHorizontalMovement(KeyboardState state, IEntity entity, float maxSpeed, float accelerationRate, float deltaTime)
         {
-            if (state.IsKeyDown(Keys.A))
+            bool isMoveLeftPressed = state.IsKeyDown(Keys.A);
+            bool isMoveRightPressed = state.IsKeyDown(Keys.D);
+
+            //   Handle if both A and D are pressed, use the most recently pressed key
+            if (isMoveLeftPressed && isMoveRightPressed)
+            {
+                if (entity.IsFacingRight)
+                {
+                    MoveRight(entity, maxSpeed, accelerationRate, deltaTime);
+                }
+                else
+                {
+                    MoveLeft(entity, maxSpeed, accelerationRate, deltaTime);
+                }
+            }
+            else if (isMoveLeftPressed)
             {
                 MoveLeft(entity, maxSpeed, accelerationRate, deltaTime);
             }
-            else if (state.IsKeyDown(Keys.D))
+            else if (isMoveRightPressed)
             {
                 MoveRight(entity, maxSpeed, accelerationRate, deltaTime);
             }
@@ -210,20 +227,35 @@ namespace ThroneGame.Controllers
                 Decelerate(entity, deltaTime);
             }
         }
-
         private void MoveLeft(IEntity entity, float maxSpeed, float accelerationRate, float deltaTime)
+
         {
-            if (entity.Velocity.X >= -maxSpeed)
+            if (entity.Velocity.X > 0)
+            {
+                // If going right, apply pivot speed to turn around
+                System.Console.WriteLine("Pivot Left");
+                entity.Velocity = new Vector2(entity.Velocity.X - (PivotSpeed * deltaTime), entity.Velocity.Y);
+            }
+
+            else if (entity.Velocity.X >= -maxSpeed)
             {
                 entity.Velocity = new Vector2(entity.Velocity.X - (accelerationRate * deltaTime), entity.Velocity.Y);
             }
+
             entity.IsFacingRight = false;
             isSlideBoostFinished = false;
         }
 
         private void MoveRight(IEntity entity, float maxSpeed, float accelerationRate, float deltaTime)
         {
-            if (entity.Velocity.X <= maxSpeed)
+
+            if (entity.Velocity.X < 0)
+            {
+                // If going left, apply pivot speed to turn aroun
+                System.Console.WriteLine("Pivot Right");
+                entity.Velocity = new Vector2(entity.Velocity.X + (PivotSpeed * deltaTime), entity.Velocity.Y);
+            }
+            else if (entity.Velocity.X <= maxSpeed)
             {
                 entity.Velocity = new Vector2(entity.Velocity.X + (accelerationRate * deltaTime), entity.Velocity.Y);
             }
