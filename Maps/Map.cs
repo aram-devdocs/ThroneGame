@@ -8,72 +8,66 @@ using ThroneGame.Tiles;
 
 namespace ThroneGame.Maps
 {
-    /// <summary>
-    /// Represents a game map composed of tiles.
-    /// </summary>
     public abstract class Map : IMap
     {
-        /// <summary>
-        /// Gets or sets the list of tiles that make up the map.
-        /// </summary>
         public List<ITile> Tiles { get; set; }
-
-        /// <summary>
-        /// Gets or sets the texture for the tileset used in the map.
-        /// </summary>
         public Texture2D TilesetTexture { get; set; }
-
-        /// <summary>
-        /// Gets or sets the file path to the JSON file containing the map data.
-        /// </summary>
         public string JsonFilePath { get; set; }
-
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
         public int TilesetColumns { get; set; }
-
         public int MapWidth { get; set; }
         public int MapHeight { get; set; }
+        public Texture2D BackgroundImage { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Map"/> class.
-        /// </summary>
+
+
+
+        // [y][x]
+        private ITile[][] CollisionTileArray { get; set; }
+
+        private RenderTarget2D _mapRenderTarget;
+
         public Map()
         {
             Tiles = new List<ITile>();
         }
 
-        /// <summary>
-        /// Loads the content for the map, including tileset textures and other resources.
-        /// </summary>
-        /// <param name="graphicsDevice">The graphics device used for rendering.</param>
-        /// <param name="contentManager">The content manager used for loading resources.</param>
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager contentManager)
         {
             LoadTilesFromJson(graphicsDevice, JsonFilePath);
         }
 
-
-        /// <summary>
-        /// Draws the map using the specified sprite batch.
-        /// </summary>
-        /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        public void Draw(SpriteBatch spriteBatch, Rectangle visibleArea)
+        public void DrawTileMap(SpriteBatch spriteBatch)
         {
-            foreach (var tile in Tiles)
-            {
-                if (tile.Bounds.Intersects(visibleArea))
-                {
-                    tile.Draw(spriteBatch);
-                }
-            }
+            spriteBatch.Draw(GetMapRenderTarget(), Vector2.Zero, Color.White);
         }
 
-        /// <summary>
-        /// Loads tiles from a JSON file.
-        /// </summary>
-        /// <param name="graphicsDevice">The graphics device used for rendering.</param>
-        /// <param name="jsonFilePath">The file path to the JSON file containing the map data.</param>
+        public void DrawToRenderTarget(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        {
+            int mapWidth = MapWidth * TileWidth;
+            int mapHeight = MapHeight * TileHeight;
+
+            _mapRenderTarget = new RenderTarget2D(graphicsDevice, mapWidth, mapHeight);
+
+            graphicsDevice.SetRenderTarget(_mapRenderTarget);
+            graphicsDevice.Clear(Color.Transparent);
+
+            spriteBatch.Begin();
+            foreach (var tile in Tiles)
+            {
+                tile.Draw(spriteBatch);
+            }
+            spriteBatch.End();
+
+            graphicsDevice.SetRenderTarget(null);
+        }
+
+        public RenderTarget2D GetMapRenderTarget()
+        {
+            return _mapRenderTarget;
+        }
+
         protected void LoadTilesFromJson(GraphicsDevice graphicsDevice, string jsonFilePath)
         {
             var jsonContent = File.ReadAllText(jsonFilePath);
@@ -88,69 +82,102 @@ namespace ThroneGame.Maps
             TileHeight = mapData.TileHeight;
             TilesetColumns = TilesetTexture.Width / TileWidth;
 
+
             MapWidth = mapData.Width;
             MapHeight = mapData.Height;
 
-            // Debug all the values
-            System.Console.WriteLine($"MapWidth: {MapWidth}");
-            System.Console.WriteLine($"MapHeight: {MapHeight}");
-            System.Console.WriteLine($"TileWidth: {TileWidth}");
-            System.Console.WriteLine($"TileHeight: {TileHeight}");
-            System.Console.WriteLine($"TilesetColumns: {TilesetColumns}");
-            
+            CollisionTileArray = new ITile[MapHeight][];
 
-
-            var layer = mapData.Layers[0]; // Assuming a single layer for simplicity
+            var layer = mapData.Layers[0];
             for (int y = 0; y < layer.Height; y++)
             {
+                CollisionTileArray[y] = new ITile[layer.Width];
                 for (int x = 0; x < layer.Width; x++)
                 {
                     int tileId = layer.Data[y * layer.Width + x];
-                    if (tileId > 0) // Assuming 0 means no tile
+                    if (tileId > 0)
                     {
                         var position = new Vector2(x * TileWidth, y * TileHeight);
                         var tileSourceRectangle = GetTileSourceRectangle(tileId);
                         var tile = new Tile(TilesetTexture, tileSourceRectangle, true, position, TileWidth, TileHeight);
                         Tiles.Add(tile);
+
+
+                    }
+
+                    // if the tile is collidable, add it to the collision tile array, otherwise set it to null
+                    if (tileId > 0)
+                    {
+                        CollisionTileArray[y][x] = new Tile(TilesetTexture, GetTileSourceRectangle(tileId), true, new Vector2(x * TileWidth, y * TileHeight), TileWidth, TileHeight);
+                    }
+                    else
+                    {
+                        CollisionTileArray[y][x] = null;
                     }
                 }
             }
+
+
+
         }
 
-        /// <summary>
-        /// Gets the source rectangle for a tile based on its ID.
-        /// </summary>
-        /// <param name="tileId">The ID of the tile.</param>
-        /// <returns>The source rectangle for the tile.</returns>
         private Rectangle GetTileSourceRectangle(int tileId)
         {
-            int tileIndex = tileId - 1; // Assuming tile IDs start from 1
+            int tileIndex = tileId - 1;
             int tileX = tileIndex % TilesetColumns * TileWidth;
             int tileY = tileIndex / TilesetColumns * TileHeight;
             return new Rectangle(tileX, tileY, TileWidth, TileHeight);
         }
 
-        /// <summary>
-        /// Represents the data structure of the map read from the JSON file.
-        /// </summary>
         private class MapData
         {
             public int TileWidth { get; set; }
             public int TileHeight { get; set; }
-
             public int Width { get; set; }
             public int Height { get; set; }
             public List<LayerData> Layers { get; set; }
         }
 
-        /// <summary>
-        /// Represents the data structure of a layer in the map.
-        /// </summary>
         private class LayerData
         {
             public int[] Data { get; set; }
             public int Width { get; set; }
             public int Height { get; set; }
+        }
+
+        public void DrawBackground(SpriteBatch spriteBatch)
+        {
+            if (BackgroundImage != null)
+            {
+                var viewport = spriteBatch.GraphicsDevice.Viewport;
+                spriteBatch.Begin();
+                spriteBatch.Draw(BackgroundImage, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White);
+                spriteBatch.End();
+            }
+        }
+
+        public ITile GetTileAtPosition(Vector2 position)
+        {
+            int x = (int)(position.X / TileWidth);
+            int y = (int)(position.Y / TileHeight);
+
+
+            try
+            {
+                return CollisionTileArray[y][x] ?? null;
+
+            }
+            catch (System.Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public bool IsTileCollidable(Vector2 position)
+        {
+            var tile = GetTileAtPosition(position);
+            return tile?.IsCollidable ?? false;
         }
     }
 }

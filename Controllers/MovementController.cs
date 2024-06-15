@@ -233,7 +233,6 @@ namespace ThroneGame.Controllers
             if (entity.Velocity.X > 0)
             {
                 // If going right, apply pivot speed to turn around
-                System.Console.WriteLine("Pivot Left");
                 entity.Velocity = new Vector2(entity.Velocity.X - (PivotSpeed * deltaTime), entity.Velocity.Y);
             }
 
@@ -252,7 +251,6 @@ namespace ThroneGame.Controllers
             if (entity.Velocity.X < 0)
             {
                 // If going left, apply pivot speed to turn aroun
-                System.Console.WriteLine("Pivot Right");
                 entity.Velocity = new Vector2(entity.Velocity.X + (PivotSpeed * deltaTime), entity.Velocity.Y);
             }
             else if (entity.Velocity.X <= maxSpeed)

@@ -145,28 +145,25 @@ namespace ThroneGame.Entities
         /// <summary>
         /// Updates the bounds of the entity.
         /// </summary>
+
         private void UpdateBounds()
         {
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
+
+
+            // TODO - Inherit from IEntity and implement this method in PlayerEntity
+            float topOffsetInPixels = 40f;
+            float bottomOffsetInPixels = 0f;
+            float leftOffsetInPixels = 30f;
+            float rightOffsetInPixels = 30f;
+
+
+            Bounds = new Rectangle(
+                (int)Position.X + (int)leftOffsetInPixels,
+                (int)Position.Y + (int)topOffsetInPixels,
+                FrameWidth - (int)rightOffsetInPixels - (int)leftOffsetInPixels,
+                FrameHeight - (int)bottomOffsetInPixels - (int)topOffsetInPixels
+            );
         }
-
-        //    private void UpdateBounds()
-        // {
-
-        //     float topOffsetInPixels =40f;
-        //     float bottomOffsetInPixels = 0f;
-        //     float leftOffsetInPixels = 30f;
-        //     float rightOffsetInPixels = 30f;
-
-        //     // Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
-
-        //     Bounds = new Rectangle(
-        //         (int)Position.X + (int)leftOffsetInPixels,
-        //         (int)Position.Y + (int)topOffsetInPixels,
-        //         FrameWidth - (int)rightOffsetInPixels - (int)leftOffsetInPixels,
-        //         FrameHeight - (int)bottomOffsetInPixels - (int)topOffsetInPixels
-        //     );
-        // }
 
 
 

@@ -16,34 +16,9 @@ namespace ThroneGame.Scenes
         /// <param name="game">The game instance associated with this scene.</param>
         public DemoScene(Game1 game) : base(game)
         {
-            LoadBackgroundImage();
-            CreateDemoMap();
-            CreatePlayer();
-        }
-
-        /// <summary>
-        /// Loads the background image for the demo scene.
-        /// </summary>
-        private void LoadBackgroundImage()
-        {
-            BackgroundImage = Game.Content.Load<Texture2D>("Backgrounds/1");
-        }
-
-        /// <summary>
-        /// Creates and loads the demo map for the scene.
-        /// </summary>
-        private void CreateDemoMap()
-        {
             Map = new DemoMap(Game.Content);
+            Player = new PlayerEntity(new Vector2(200, 300), Game.Content);
         }
 
-        /// <summary>
-        /// Creates the player entity for the demo scene.
-        /// </summary>
-        private void CreatePlayer()
-        {
-            Player = new PlayerEntity(new Vector2(200,  300), Game.Content);
-            
-        }
     }
 }

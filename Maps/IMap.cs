@@ -21,8 +21,18 @@ namespace ThroneGame.Maps
         /// <summary>
         /// Draws the map using the specified sprite batch.
         /// </summary>
-        /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        void Draw(SpriteBatch spriteBatch, Rectangle visibleArea);
+        void DrawTileMap(SpriteBatch spriteBatch);
+        void DrawToRenderTarget(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch);
+
+
+        void DrawBackground(SpriteBatch spriteBatch);
+        RenderTarget2D GetMapRenderTarget();
+
+        Texture2D BackgroundImage { get; set; }
+
+
+
+
 
         /// <summary>
         /// Gets or sets the file path to the JSON file containing the map data.
@@ -52,5 +62,16 @@ namespace ThroneGame.Maps
         int MapHeight { get; }
         int TileWidth { get; }
         int TileHeight { get; }
+
+
+
+
+        ITile GetTileAtPosition(Vector2 position);
+
+
+        bool IsTileCollidable(Vector2 position);
+
+
+
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThroneGame.Entities;
+using ThroneGame.Maps;
 using ThroneGame.Tiles;
 using ThroneGame.Utils;
 
@@ -15,104 +16,36 @@ namespace ThroneGame.Controllers
     public class PhysicsController
     {
         private const float Gravity = 500f;
-        private const int CellSize = 32; // Size of each cell in the grid for spatial partitioning
+
+
 
         private readonly List<IEntity> _entities;
-        private readonly Dictionary<Point, List<ITile>> _tileGrid;
+        private IMap _map;
 
         public PhysicsController()
         {
             _entities = new List<IEntity>();
-            _tileGrid = new Dictionary<Point, List<ITile>>();
+
         }
 
 
-        private void HandleCollision(IEntity entity, ref Vector2 newPosition, ITile tile)
+
+        public void LoadMap(IMap map)
         {
-
-            // Collision detection using bounds
-            Rectangle entityBounds = entity.Bounds;
-            Rectangle tileBounds = tile.Bounds;
-
-            if (IsColliding(entityBounds, tileBounds))
-            {
-                StopVelocityOnCollision(entity, ref newPosition, tileBounds);
-            }
-
+            _map = map;
         }
 
-
-
-
-        /// <summary>
-        /// Stops the velocity of an entity based on collision with a rectangle.
-        /// </summary>
-        /// <param name="entity">The entity to adjust.</param>
-        /// <param name="newPosition">The new position of the entity.</param>
-        /// <param name="rectangle">The rectangle that the entity collided with.</param>
-        private void StopVelocityOnCollision(IEntity entity, ref Vector2 newPosition, Rectangle rectangle)
-        {
-
-            Rectangle entityBounds = entity.Bounds;
-            Rectangle tileBounds = rectangle;
-
-            Rectangle intersection = Rectangle.Intersect(entityBounds, tileBounds);
-
-            if (intersection.Width < intersection.Height)
-            {
-                // Collision on left or right
-                if (entityBounds.Center.X < tileBounds.Center.X)
-                {
-                    // Collision on the left
-                    newPosition.X = tileBounds.Left - entityBounds.Width - 1; // Add buffer of 1 pixel
-                }
-                else
-                {
-                    // Collision on the right
-                    newPosition.X = tileBounds.Right + 1; // Add buffer of 1 pixel
-                }
-                entity.Velocity = new Vector2(0, entity.Velocity.Y);
-            }
-            else
-            {
-                // Collision on top or bottom
-                if (entityBounds.Center.Y < tileBounds.Center.Y)
-                {
-                    // Collision on top
-                    newPosition.Y = tileBounds.Top - entityBounds.Height;
-                    entity.IsOnGround = true;
-                }
-                else
-                {
-                    // Collision on the bottom
-                    newPosition.Y = tileBounds.Bottom;
-                }
-                entity.Velocity = new Vector2(entity.Velocity.X, 0);
-            }
-
-        }
-        /// <summary>
-        /// Adds an entity to be managed by the physics controller.
-        /// </summary>
-        /// <param name="entity">The entity to add.</param>
         public void AddEntity(IEntity entity)
         {
             _entities.Add(entity);
         }
 
-        /// <summary>
-        /// Adds a tile to the spatial grid for collision detection.
-        /// </summary>
-        /// <param name="tile">The tile to add.</param>
-        public void AddTile(ITile tile)
-        {
-            Point cell = GetCell(tile.Position);
-            if (!_tileGrid.ContainsKey(cell))
-            {
-                _tileGrid[cell] = new List<ITile>();
-            }
-            _tileGrid[cell].Add(tile);
-        }
+
+
+
+
+
+
 
         /// <summary>
         /// Updates the physics for all entities.
@@ -120,11 +53,70 @@ namespace ThroneGame.Controllers
         /// <param name="gameTime">Time elapsed since the last update.</param>
         public void Update(GameTime gameTime)
         {
+
+            float deltaTime = GameUtils.GetDeltaTime(gameTime);
             Parallel.ForEach(_entities, entity =>
             {
-                ApplyPhysics(entity, gameTime);
+
+
+                if (!entity.IsOnGround)
+                {
+                    // Apply gravity
+
+                    entity.Velocity = new Vector2(entity.Velocity.X, entity.Velocity.Y + Gravity * deltaTime);
+                }
+
+
+
+
+                Vector2 bottomCenter = new Vector2(entity.Bounds.X + entity.Bounds.Width / 2, entity.Bounds.Bottom);
+                Vector2 topCenter = new Vector2(entity.Bounds.X + entity.Bounds.Width / 2, entity.Bounds.Top);
+                Vector2 leftCenter = new Vector2(entity.Bounds.Left, entity.Bounds.Y + entity.Bounds.Height / 2);
+                Vector2 rightCenter = new Vector2(entity.Bounds.Right, entity.Bounds.Y + entity.Bounds.Height / 2);
+
+                ITile BottomTile = _map.GetTileAtPosition(bottomCenter);
+                ITile TopTile = _map.GetTileAtPosition(topCenter);
+                ITile LeftTile = _map.GetTileAtPosition(leftCenter);
+                ITile RightTile = _map.GetTileAtPosition(rightCenter);
+
+
+                if (BottomTile != null && BottomTile.IsCollidable)
+                {
+                    System.Console.WriteLine("BottomTile");
+                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                    entity.IsOnGround = true;
+                }
+                else
+                {
+                    entity.IsOnGround = false;
+                }
+
+                if (TopTile != null && TopTile.IsCollidable)
+                {
+                    System.Console.WriteLine("TopTile");
+                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                }
+
+                if (LeftTile != null && LeftTile.IsCollidable)
+                {
+                    System.Console.WriteLine("LeftTile");
+                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                    // move entity to the right by 1 pixel
+                    entity.Position = new Vector2(entity.Position.X + 1, entity.Position.Y);
+                }
+
+                if (RightTile != null && RightTile.IsCollidable)
+                {
+                    System.Console.WriteLine("RightTile");
+                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                    // move entity to the left by 1 pixel
+                    entity.Position = new Vector2(entity.Position.X - 1, entity.Position.Y);
+                }
+
+                // Additional collision handling logic for TopTile, LeftTile, RightTile can be added here
             });
         }
+
 
         /// <summary>
         /// Draws debug borders around entities and nearby tiles if debug mode is enabled.
@@ -140,114 +132,10 @@ namespace ThroneGame.Controllers
                 {
                     TextureUtils.DebugBorder(spriteBatch, entity.Bounds.X, entity.Bounds.Y, entity.Bounds.Width, entity.Bounds.Height);
 
-                    List<ITile> nearbyTiles = GetNearbyTiles(entity);
-                    foreach (var tile in nearbyTiles)
-                    {
-                        TextureUtils.DebugBorder(spriteBatch, tile.Bounds.X, tile.Bounds.Y, tile.Bounds.Width, tile.Bounds.Height);
-                    }
                 }
             }
         }
 
 
-        /// <summary>
-        /// Applies physics to a single entity, including gravity and collision detection.
-        /// </summary>
-        /// <param name="entity">The entity to update.</param>
-        /// <param name="gameTime">Time elapsed since the last update.</param>
-        private void ApplyPhysics(IEntity entity, GameTime gameTime)
-        {
-
-            float deltaTime = GameUtils.GetDeltaTime(gameTime);
-            Vector2 newPosition = entity.Position + entity.Velocity * deltaTime;
-
-            List<ITile> nearbyTiles = GetNearbyTiles(entity);
-
-            bool isFloating = false;
-
-            // Handle collisions with tiles
-            Parallel.ForEach(nearbyTiles, tile =>
-            {
-                if (tile.IsCollidable)
-                {
-                    HandleCollision(entity, ref newPosition, tile);
-
-                }
-
-                // if the entity has tiles below its y but not within the width of its x, it is not on the ground as long as there are no tiles below its y within the width of its x, and so it is floating
-                if (entity.Bounds.Bottom == tile.Bounds.Top && entity.Bounds.Right < tile.Bounds.Left || entity.Bounds.Left > tile.Bounds.Right)
-                {
-                    isFloating = true;
-                }
-
-
-            });
-
-            if (!isFloating)
-            {
-                entity.IsOnGround = false;
-            }
-
-            if (!entity.IsOnGround)
-            {
-                entity.Velocity += new Vector2(0, Gravity) * deltaTime;
-            }
-
-            entity.Position = newPosition;
-        }
-
-        /// <summary>
-        /// Checks if an entity is colliding with a tile.
-        /// </summary>
-        /// <param name="entityBounds">The bounds of the entity.</param>
-        /// <param name="tileBounds">The bounds of the tile.</param>
-        /// <returns>True if there is a collision, false otherwise.</returns>
-        private bool IsColliding(Rectangle entityBounds, Rectangle tileBounds)
-        {
-            return entityBounds.Intersects(tileBounds);
-        }
-
-
-
-        /// <summary>
-        /// Converts a position to a cell coordinate in the spatial grid.
-        /// </summary>
-        /// <param name="position">The position to convert.</param>
-        /// <returns>The cell coordinate.</returns>
-        private Point GetCell(Vector2 position)
-        {
-            int cellX = (int)(position.X / CellSize);
-            int cellY = (int)(position.Y / CellSize);
-            return new Point(cellX, cellY);
-        }
-
-        /// <summary>
-        /// Gets the tiles near an entity for collision detection.
-        /// </summary>
-        /// <param name="entity">The entity to find nearby tiles for.</param>
-        /// <returns>A list of nearby tiles.</returns>
-        private List<ITile> GetNearbyTiles(IEntity entity)
-        {
-            List<ITile> nearbyTiles = new List<ITile>();
-            Point topLeftCell = GetCell(entity.Position);
-            Point bottomRightCell = GetCell(entity.Position + new Vector2(entity.FrameWidth, entity.FrameHeight));
-
-            Parallel.For(topLeftCell.X - 1, bottomRightCell.X + 2, x =>
-            {
-                for (int y = topLeftCell.Y - 1; y <= bottomRightCell.Y + 1; y++)
-                {
-                    Point cell = new Point(x, y);
-                    if (_tileGrid.ContainsKey(cell))
-                    {
-                        lock (nearbyTiles)
-                        {
-                            nearbyTiles.AddRange(_tileGrid[cell]);
-                        }
-                    }
-                }
-            });
-
-            return nearbyTiles;
-        }
     }
 }

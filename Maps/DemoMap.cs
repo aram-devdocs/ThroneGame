@@ -14,17 +14,11 @@ namespace ThroneGame.Maps
         /// <param name="content">The content manager used for loading textures.</param>
         public DemoMap(ContentManager content)
         {
-            LoadTilesetTexture(content);
+            TilesetTexture = content.Load<Texture2D>("Maps/Nature_environment_01");
             JsonFilePath = "Content/Maps/DemoMapWide.json";
+            BackgroundImage = content.Load<Texture2D>("Backgrounds/1");
         }
 
-        /// <summary>
-        /// Loads the tileset texture for the demo map.
-        /// </summary>
-        /// <param name="content">The content manager used for loading the texture.</param>
-        private void LoadTilesetTexture(ContentManager content)
-        {
-            TilesetTexture = content.Load<Texture2D>("Maps/Nature_environment_01");
-        }
+
     }
 }

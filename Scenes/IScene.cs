@@ -34,11 +34,6 @@ namespace ThroneGame.Scenes
         PhysicsController PhysicsController { get; set; }
 
         /// <summary>
-        /// Gets or sets the background image for the scene.
-        /// </summary>
-        Texture2D BackgroundImage { get; set; }
-
-        /// <summary>
         /// Gets or sets the map of the scene.
         /// </summary>
         IMap Map { get; set; }
@@ -82,9 +77,6 @@ namespace ThroneGame.Scenes
 
 
 
-        /// <summary>
-        /// Deprecated: Updates the list of visible tiles in the scene. This method is no longer used as we are using a RenderTarget2D to draw the map. If we run into performance issues, we can consider using this method again.
-        /// </summary>
-        void DeprecatedUpdateVisibleTiles();
+
     }
 }
