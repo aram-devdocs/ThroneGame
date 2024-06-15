@@ -100,7 +100,6 @@ namespace ThroneGame.Maps
 
                 var layer = mapData.Layers[layerIndex];
                 bool collidable = layer.Properties.Find(p => p.Name == "IsCollidable")?.Value == "true"; // Set custom property in Tiled layer
-                System.Console.WriteLine("Layer Index: " + layerIndex + " Collidable: " + collidable);
                 for (int y = 0; y < layer.Height; y++)
                 {
                     CollisionTileArray[y] = new ITile[layer.Width];

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ThroneGame.Entities;
 using ThroneGame.Maps;
+using ThroneGame.UI;
 
 namespace ThroneGame.Scenes
 {
@@ -18,6 +19,11 @@ namespace ThroneGame.Scenes
         {
             Map = new DemoMap(Game.Content);
             Player = new PlayerEntity(new Vector2(200, 300), Game.Content);
+            UIManagerProps uiManagerProps = new UIManagerProps
+            {
+                ShowFPS = true
+            };
+            UIManager = new UIManager(game, uiManagerProps);
         }
 
     }

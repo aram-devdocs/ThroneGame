@@ -16,13 +16,14 @@ namespace ThroneGame.Scenes
         public Game1 Game { get; set; }
         public PlayerEntity Player { get; set; }
         public CameraController CameraController { get; set; }
+
+        public UIManager UIManager;
         public PhysicsController PhysicsController { get; set; }
         public List<ITile> VisibleTiles { get; set; }
         public List<IEntity> Entities { get; set; }
         public IMap Map { get; set; }
 
         private double _lastResetTime;
-        private FPSCounter _fpsCounter;
 
         public Scene(Game1 game)
         {
@@ -31,6 +32,11 @@ namespace ThroneGame.Scenes
             PhysicsController = new PhysicsController();
             Entities = new List<IEntity>();
             VisibleTiles = new List<ITile>();
+            UIManagerProps uiManagerProps = new UIManagerProps
+            {
+                ShowFPS = true
+            };
+            UIManager = new UIManager(game, uiManagerProps);
         }
 
         public virtual void LoadContent()
@@ -39,8 +45,7 @@ namespace ThroneGame.Scenes
             PhysicsController.AddEntity(Player);
             Map.LoadContent(Game.GraphicsDevice, Game.Content);
             Map.DrawToRenderTarget(Game.GraphicsDevice, new SpriteBatch(Game.GraphicsDevice));
-            var font = Game.Content.Load<SpriteFont>("Fonts/Default");
-            _fpsCounter = new FPSCounter(font);
+
         }
 
         public virtual void Update(GameTime gameTime)
@@ -51,7 +56,7 @@ namespace ThroneGame.Scenes
             // TODO- should physics controller be called last?
             PhysicsController.Update(gameTime);
             CameraController.Update(gameTime, Player.Position);
-            _fpsCounter.Update(gameTime);
+            UIManager.Update(gameTime);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -66,9 +71,14 @@ namespace ThroneGame.Scenes
             Player.Draw(spriteBatch);
             PhysicsController.Draw(spriteBatch);
 
-            _fpsCounter.Draw(spriteBatch);
 
             spriteBatch.End();
+
+            UIManager.Draw(spriteBatch);
+
+
+
+
         }
 
         public virtual void Reset(Game1 game1, GameTime gameTime, SpriteBatch spriteBatch)

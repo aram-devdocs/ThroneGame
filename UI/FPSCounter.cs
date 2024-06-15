@@ -48,7 +48,7 @@ namespace ThroneGame.UI
         public void Draw(SpriteBatch spriteBatch)
         {
             string fpsText = $"FPS: {_fps:0.00}";
-            spriteBatch.DrawString(_font, fpsText, new Vector2(100, 200), Color.Black);
+            spriteBatch.DrawString(_font, fpsText, new Vector2(50, 50), Color.Black);
         }
     }
 }

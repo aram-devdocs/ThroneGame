@@ -20,9 +20,9 @@ namespace ThroneGame.Controllers
         public float SprintAccelerationRate { get; set; } = 1.8f;
         public float SprintMultiplier { get; set; } = 2.14f;
         public float JumpStrength { get; set; } = 220f;
-        public float SlideBoost { get; set; } = 280f;
-        public float MinimumSlideBoostStartSpeed { get; set; } = 40f;
-        public float SlideBoostAccelerationRate { get; set; } = 100.2f;
+        public float SlideBoostMaxSpeed { get; set; } = 500f;
+        public float MinimumSlideBoostStartSpeed { get; set; } = 80f;
+        public float SlideBoostAccelerationRate { get; set; } = 800.2f;
         public float CrouchDiveMaxSpeed { get; set; } = 200f;
         public float CrouchDiveAccelerationRate { get; set; } = 20f;
 
@@ -279,9 +279,9 @@ namespace ThroneGame.Controllers
 
         private void BoostSlideRight(IEntity entity, float deltaTime)
         {
-            if (entity.Velocity.X < SlideBoost)
+            if (entity.Velocity.X < SlideBoostMaxSpeed)
             {
-                entity.Velocity = new Vector2(Math.Min(SlideBoost, entity.Velocity.X + (SlideBoostAccelerationRate * deltaTime)), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Min(SlideBoostMaxSpeed, entity.Velocity.X + (SlideBoostAccelerationRate * deltaTime)), entity.Velocity.Y);
             }
             else
             {
@@ -291,9 +291,9 @@ namespace ThroneGame.Controllers
 
         private void BoostSlideLeft(IEntity entity, float deltaTime)
         {
-            if (entity.Velocity.X > -SlideBoost)
+            if (entity.Velocity.X > -SlideBoostMaxSpeed)
             {
-                entity.Velocity = new Vector2(Math.Max(-SlideBoost, entity.Velocity.X - (SlideBoostAccelerationRate * deltaTime)), entity.Velocity.Y);
+                entity.Velocity = new Vector2(Math.Max(-SlideBoostMaxSpeed, entity.Velocity.X - (SlideBoostAccelerationRate * deltaTime)), entity.Velocity.Y);
             }
             else
             {
