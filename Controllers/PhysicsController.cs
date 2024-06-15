@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ThroneGame.Entities;
@@ -16,23 +16,22 @@ namespace ThroneGame.Controllers
     public class PhysicsController
     {
         private const float Gravity = 500f;
-
-
-
         private readonly List<IEntity> _entities;
         private IMap _map;
+
+        // Concurrent dictionary for thread-safe caching of tile positions
+        private readonly ConcurrentDictionary<Vector2, ITile> _tileCache;
 
         public PhysicsController()
         {
             _entities = new List<IEntity>();
-
+            _tileCache = new ConcurrentDictionary<Vector2, ITile>();
         }
-
-
 
         public void LoadMap(IMap map)
         {
             _map = map;
+            _tileCache.Clear(); // Clear the cache when a new map is loaded
         }
 
         public void AddEntity(IEntity entity)
@@ -40,83 +39,101 @@ namespace ThroneGame.Controllers
             _entities.Add(entity);
         }
 
-
-
-
-
-
-
-
         /// <summary>
         /// Updates the physics for all entities.
         /// </summary>
         /// <param name="gameTime">Time elapsed since the last update.</param>
         public void Update(GameTime gameTime)
         {
-
             float deltaTime = GameUtils.GetDeltaTime(gameTime);
+
             Parallel.ForEach(_entities, entity =>
             {
-
-
                 if (!entity.IsOnGround)
                 {
                     // Apply gravity
-
                     entity.Velocity = new Vector2(entity.Velocity.X, entity.Velocity.Y + Gravity * deltaTime);
                 }
 
 
-
-
+                // TODO - Inherit collision points from IEntity and implement this method in PlayerEntity
+                // Define positions to check for collisions
                 Vector2 bottomCenter = new Vector2(entity.Bounds.X + entity.Bounds.Width / 2, entity.Bounds.Bottom);
                 Vector2 topCenter = new Vector2(entity.Bounds.X + entity.Bounds.Width / 2, entity.Bounds.Top);
                 Vector2 leftCenter = new Vector2(entity.Bounds.Left, entity.Bounds.Y + entity.Bounds.Height / 2);
                 Vector2 rightCenter = new Vector2(entity.Bounds.Right, entity.Bounds.Y + entity.Bounds.Height / 2);
 
-                ITile BottomTile = _map.GetTileAtPosition(bottomCenter);
-                ITile TopTile = _map.GetTileAtPosition(topCenter);
-                ITile LeftTile = _map.GetTileAtPosition(leftCenter);
-                ITile RightTile = _map.GetTileAtPosition(rightCenter);
+                // Create a list to store the tasks
+                List<Task> tasks = new List<Task>();
 
+                // TODO - Use inheritied collision points to programatically assign tasks and handle collisions
+                // Create tasks to get tiles from cache or map
+                Task<ITile> bottomTileTask = Task.Run(() => GetTileFromCacheOrMap(bottomCenter));
+                Task<ITile> topTileTask = Task.Run(() => GetTileFromCacheOrMap(topCenter));
+                Task<ITile> leftTileTask = Task.Run(() => GetTileFromCacheOrMap(leftCenter));
+                Task<ITile> rightTileTask = Task.Run(() => GetTileFromCacheOrMap(rightCenter));
 
-                if (BottomTile != null && BottomTile.IsCollidable)
-                {
-                    System.Console.WriteLine("BottomTile");
-                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
-                    entity.IsOnGround = true;
-                }
-                else
-                {
-                    entity.IsOnGround = false;
-                }
+                // Add tasks to the list
+                tasks.Add(bottomTileTask);
+                tasks.Add(topTileTask);
+                tasks.Add(leftTileTask);
+                tasks.Add(rightTileTask);
 
-                if (TopTile != null && TopTile.IsCollidable)
-                {
-                    System.Console.WriteLine("TopTile");
-                    entity.Velocity = new Vector2(entity.Velocity.X, 0);
-                }
+                // Wait for all tasks to complete
+                Task.WaitAll(tasks.ToArray());
 
-                if (LeftTile != null && LeftTile.IsCollidable)
-                {
-                    System.Console.WriteLine("LeftTile");
-                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
-                    // move entity to the right by 1 pixel
-                    entity.Position = new Vector2(entity.Position.X + 1, entity.Position.Y);
-                }
+                // Get the results from the tasks
+                ITile bottomTile = bottomTileTask.Result;
+                ITile topTile = topTileTask.Result;
+                ITile leftTile = leftTileTask.Result;
+                ITile rightTile = rightTileTask.Result;
 
-                if (RightTile != null && RightTile.IsCollidable)
-                {
-                    System.Console.WriteLine("RightTile");
-                    entity.Velocity = new Vector2(0, entity.Velocity.Y);
-                    // move entity to the left by 1 pixel
-                    entity.Position = new Vector2(entity.Position.X - 1, entity.Position.Y);
-                }
-
-                // Additional collision handling logic for TopTile, LeftTile, RightTile can be added here
+                // Handle collisions
+                HandleCollisions(entity, bottomTile, topTile, leftTile, rightTile);
             });
         }
 
+        private ITile GetTileFromCacheOrMap(Vector2 position)
+        {
+            if (!_tileCache.TryGetValue(position, out ITile tile))
+            {
+                tile = _map.GetTileAtPosition(position);
+                _tileCache[position] = tile;
+            }
+            return tile;
+        }
+
+        private void HandleCollisions(IEntity entity, ITile bottomTile, ITile topTile, ITile leftTile, ITile rightTile)
+        {
+            if (bottomTile != null && bottomTile.IsCollidable)
+            {
+                entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                entity.IsOnGround = true;
+            }
+            else
+            {
+                entity.IsOnGround = false;
+            }
+
+            if (topTile != null && topTile.IsCollidable)
+            {
+                entity.Velocity = new Vector2(entity.Velocity.X, 0);
+            }
+
+            if (leftTile != null && leftTile.IsCollidable)
+            {
+                entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                // move entity to the right by 1 pixel
+                entity.Position = new Vector2(entity.Position.X + 1, entity.Position.Y);
+            }
+
+            if (rightTile != null && rightTile.IsCollidable)
+            {
+                entity.Velocity = new Vector2(0, entity.Velocity.Y);
+                // move entity to the left by 1 pixel
+                entity.Position = new Vector2(entity.Position.X - 1, entity.Position.Y);
+            }
+        }
 
         /// <summary>
         /// Draws debug borders around entities and nearby tiles if debug mode is enabled.
@@ -131,11 +148,8 @@ namespace ThroneGame.Controllers
                 foreach (var entity in _entities)
                 {
                     TextureUtils.DebugBorder(spriteBatch, entity.Bounds.X, entity.Bounds.Y, entity.Bounds.Width, entity.Bounds.Height);
-
                 }
             }
         }
-
-
     }
 }

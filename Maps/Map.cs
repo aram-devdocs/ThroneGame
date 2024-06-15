@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -20,17 +21,17 @@ namespace ThroneGame.Maps
         public int MapHeight { get; set; }
         public Texture2D BackgroundImage { get; set; }
 
-
-
-
         // [y][x]
         private ITile[][] CollisionTileArray { get; set; }
-
         private RenderTarget2D _mapRenderTarget;
+
+        // Concurrent dictionary for thread-safe caching of tiles
+        private readonly ConcurrentDictionary<Vector2, ITile> _tileCache;
 
         public Map()
         {
             Tiles = new List<ITile>();
+            _tileCache = new ConcurrentDictionary<Vector2, ITile>();
         }
 
         public void LoadContent(GraphicsDevice graphicsDevice, ContentManager contentManager)
@@ -81,8 +82,6 @@ namespace ThroneGame.Maps
             TileWidth = mapData.TileWidth;
             TileHeight = mapData.TileHeight;
             TilesetColumns = TilesetTexture.Width / TileWidth;
-
-
             MapWidth = mapData.Width;
             MapHeight = mapData.Height;
 
@@ -102,13 +101,8 @@ namespace ThroneGame.Maps
                         var tile = new Tile(TilesetTexture, tileSourceRectangle, true, position, TileWidth, TileHeight);
                         Tiles.Add(tile);
 
-
-                    }
-
-                    // if the tile is collidable, add it to the collision tile array, otherwise set it to null
-                    if (tileId > 0)
-                    {
-                        CollisionTileArray[y][x] = new Tile(TilesetTexture, GetTileSourceRectangle(tileId), true, new Vector2(x * TileWidth, y * TileHeight), TileWidth, TileHeight);
+                        // Add the tile to the collision tile array
+                        CollisionTileArray[y][x] = tile;
                     }
                     else
                     {
@@ -116,9 +110,6 @@ namespace ThroneGame.Maps
                     }
                 }
             }
-
-
-
         }
 
         private Rectangle GetTileSourceRectangle(int tileId)
@@ -158,20 +149,27 @@ namespace ThroneGame.Maps
 
         public ITile GetTileAtPosition(Vector2 position)
         {
+            // First, try to get the tile from the cache
+            if (_tileCache.TryGetValue(position, out ITile cachedTile))
+            {
+                return cachedTile;
+            }
+
+            // Calculate the tile coordinates
             int x = (int)(position.X / TileWidth);
             int y = (int)(position.Y / TileHeight);
 
-
-            try
+            // Check if the coordinates are within bounds
+            if (x >= 0 && x < MapWidth && y >= 0 && y < MapHeight)
             {
-                return CollisionTileArray[y][x] ?? null;
-
+                var tile = CollisionTileArray[y][x];
+                // Cache the tile for future requests
+                _tileCache[position] = tile;
+                return tile;
             }
-            catch (System.Exception)
-            {
 
-                return null;
-            }
+            // Return null if the position is out of bounds
+            return null;
         }
 
         public bool IsTileCollidable(Vector2 position)
