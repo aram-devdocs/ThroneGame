@@ -17,8 +17,6 @@ namespace ThroneGame.Maps
         public string JsonFilePath { get; set; }
 
 
-        // Index of layers that should be used for collision detection
-        public int[] CollisionLayerIndex { get; set; }
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
         public int TilesetColumns { get; set; }
@@ -96,7 +94,13 @@ namespace ThroneGame.Maps
             for (int layerIndex = 0; layerIndex < mapData.Layers.Count; layerIndex++)
             {
 
+
+
+
+
                 var layer = mapData.Layers[layerIndex];
+                bool collidable = layer.Properties.Find(p => p.Name == "IsCollidable")?.Value == "true"; // Set custom property in Tiled layer
+                System.Console.WriteLine("Layer Index: " + layerIndex + " Collidable: " + collidable);
                 for (int y = 0; y < layer.Height; y++)
                 {
                     CollisionTileArray[y] = new ITile[layer.Width];
@@ -107,7 +111,7 @@ namespace ThroneGame.Maps
                         {
                             var position = new Vector2(x * TileWidth, y * TileHeight);
                             var tileSourceRectangle = GetTileSourceRectangle(tileId);
-                            bool collidable = CollisionLayerIndex.Contains(layerIndex);
+
                             var tile = new Tile(TilesetTexture, tileSourceRectangle, collidable, position, TileWidth, TileHeight);
                             Tiles.Add(tile);
 
@@ -145,6 +149,15 @@ namespace ThroneGame.Maps
             public int[] Data { get; set; }
             public int Width { get; set; }
             public int Height { get; set; }
+
+            public List<PropertyData> Properties { get; set; }
+        }
+
+        private class PropertyData
+        {
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Value { get; set; }
         }
 
         public void DrawBackground(SpriteBatch spriteBatch)
