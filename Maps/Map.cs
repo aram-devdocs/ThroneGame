@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,10 @@ namespace ThroneGame.Maps
         public List<ITile> Tiles { get; set; }
         public Texture2D TilesetTexture { get; set; }
         public string JsonFilePath { get; set; }
+
+
+        // Index of layers that should be used for collision detection
+        public int[] CollisionLayerIndex { get; set; }
         public int TileWidth { get; set; }
         public int TileHeight { get; set; }
         public int TilesetColumns { get; set; }
@@ -87,26 +92,32 @@ namespace ThroneGame.Maps
 
             CollisionTileArray = new ITile[MapHeight][];
 
-            var layer = mapData.Layers[0];
-            for (int y = 0; y < layer.Height; y++)
+            // var layer = mapData.Layers[0];
+            for (int layerIndex = 0; layerIndex < mapData.Layers.Count; layerIndex++)
             {
-                CollisionTileArray[y] = new ITile[layer.Width];
-                for (int x = 0; x < layer.Width; x++)
-                {
-                    int tileId = layer.Data[y * layer.Width + x];
-                    if (tileId > 0)
-                    {
-                        var position = new Vector2(x * TileWidth, y * TileHeight);
-                        var tileSourceRectangle = GetTileSourceRectangle(tileId);
-                        var tile = new Tile(TilesetTexture, tileSourceRectangle, true, position, TileWidth, TileHeight);
-                        Tiles.Add(tile);
 
-                        // Add the tile to the collision tile array
-                        CollisionTileArray[y][x] = tile;
-                    }
-                    else
+                var layer = mapData.Layers[layerIndex];
+                for (int y = 0; y < layer.Height; y++)
+                {
+                    CollisionTileArray[y] = new ITile[layer.Width];
+                    for (int x = 0; x < layer.Width; x++)
                     {
-                        CollisionTileArray[y][x] = null;
+                        int tileId = layer.Data[y * layer.Width + x];
+                        if (tileId > 0)
+                        {
+                            var position = new Vector2(x * TileWidth, y * TileHeight);
+                            var tileSourceRectangle = GetTileSourceRectangle(tileId);
+                            bool collidable = CollisionLayerIndex.Contains(layerIndex);
+                            var tile = new Tile(TilesetTexture, tileSourceRectangle, collidable, position, TileWidth, TileHeight);
+                            Tiles.Add(tile);
+
+                            // Add the tile to the collision tile array
+                            CollisionTileArray[y][x] = tile;
+                        }
+                        else
+                        {
+                            CollisionTileArray[y][x] = null;
+                        }
                     }
                 }
             }

@@ -16,6 +16,7 @@ namespace ThroneGame.Maps
         {
             TilesetTexture = content.Load<Texture2D>("Maps/Nature_environment_01");
             JsonFilePath = "Content/Maps/DemoMapWide.json";
+            CollisionLayerIndex = new int[] { 0, 1 };
             BackgroundImage = content.Load<Texture2D>("Backgrounds/1");
         }
 
