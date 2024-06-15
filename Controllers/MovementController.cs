@@ -12,8 +12,8 @@ namespace ThroneGame.Controllers
     /// </summary>
     public class MovementController
     {
-        public float Speed { get; set; } = 115;
-        public float SpeedUpRate { get; set; } = 80f;
+        public float Speed { get; set; } = 175;
+        public float SpeedUpRate { get; set; } = 120f;
         public float SlowDownRate { get; set; } = 550f;
 
         public float PivotSpeed { get; set; } = 400f;
