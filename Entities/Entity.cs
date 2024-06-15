@@ -150,6 +150,25 @@ namespace ThroneGame.Entities
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
         }
 
+        //    private void UpdateBounds()
+        // {
+
+        //     float topOffsetInPixels =40f;
+        //     float bottomOffsetInPixels = 0f;
+        //     float leftOffsetInPixels = 30f;
+        //     float rightOffsetInPixels = 30f;
+
+        //     // Bounds = new Rectangle((int)Position.X, (int)Position.Y, FrameWidth, FrameHeight);
+
+        //     Bounds = new Rectangle(
+        //         (int)Position.X + (int)leftOffsetInPixels,
+        //         (int)Position.Y + (int)topOffsetInPixels,
+        //         FrameWidth - (int)rightOffsetInPixels - (int)leftOffsetInPixels,
+        //         FrameHeight - (int)bottomOffsetInPixels - (int)topOffsetInPixels
+        //     );
+        // }
+
+
 
     }
 }

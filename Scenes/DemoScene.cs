@@ -42,7 +42,7 @@ namespace ThroneGame.Scenes
         /// </summary>
         private void CreatePlayer()
         {
-            Player = new PlayerEntity(new Vector2(100,  300), Game.Content);
+            Player = new PlayerEntity(new Vector2(200,  300), Game.Content);
             
         }
     }
