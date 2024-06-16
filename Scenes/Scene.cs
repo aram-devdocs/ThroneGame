@@ -23,6 +23,8 @@ namespace ThroneGame.Scenes
         public List<IEntity> Entities { get; set; }
         public IMap Map { get; set; }
 
+        private SpriteFont defaultFont;
+
         private double _lastResetTime;
 
         public Scene(Game1 game)
@@ -37,6 +39,8 @@ namespace ThroneGame.Scenes
                 ShowFPS = true
             };
             UIManager = new UIManager(game, uiManagerProps);
+
+            defaultFont = game.Content.Load<SpriteFont>("Fonts/Default");
         }
 
         public virtual void LoadContent()
@@ -69,8 +73,8 @@ namespace ThroneGame.Scenes
             spriteBatch.Begin(transformMatrix: CameraController.GetViewMatrix());
 
             Map.DrawTileMap(spriteBatch);
-            Entities.ForEach(entity => entity.Draw(spriteBatch));
-            Player.Draw(spriteBatch);
+            Entities.ForEach(entity => entity.Draw(spriteBatch, defaultFont));
+            Player.Draw(spriteBatch, defaultFont);
             PhysicsController.Draw(spriteBatch);
 
 

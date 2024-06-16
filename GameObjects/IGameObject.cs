@@ -18,7 +18,7 @@ namespace ThroneGame
         /// Draws the game object using the specified sprite batch.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch, SpriteFont font = null);
 
         /// <summary>
         /// Destroys the game object.

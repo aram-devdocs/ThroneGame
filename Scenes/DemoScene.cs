@@ -26,6 +26,11 @@ namespace ThroneGame.Scenes
             UIManager = new UIManager(game, uiManagerProps);
 
             Entities.Add(new EnemyEntity(new Vector2(400, 300), Game.Content, game));
+            Entities.Add(new EnemyEntity(new Vector2(600, 300), Game.Content, game));
+            Entities.Add(new EnemyEntity(new Vector2(800, 300), Game.Content, game));
+            Entities.Add(new EnemyEntity(new Vector2(1000, 300), Game.Content, game));
+            Entities.Add(new EnemyEntity(new Vector2(1200, 300), Game.Content, game));
+            
         }
 
     }

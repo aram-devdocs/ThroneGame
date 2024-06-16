@@ -169,10 +169,13 @@ namespace ThroneGame.Entities
         /// Draws the entity using the specified sprite batch.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             AnimationController.Draw(spriteBatch, Position);
             CombatController.Draw(spriteBatch);
+
+            spriteBatch.DrawString(font, Name, new Vector2(Position.X, Position.Y - 20), Color.Black);
+            spriteBatch.DrawString(font, Health.ToString(), new Vector2(Position.X, Position.Y - 40), Color.Black);
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ namespace ThroneGame.Tiles
         /// Draws the tile using the specified sprite batch.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch used for drawing.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font = null)
         {
             spriteBatch.Draw(_texture, Position, _sourceRectangle, Color.White);
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
