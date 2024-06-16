@@ -19,7 +19,6 @@ namespace ThroneGame.Scenes
 
         public UIManager UIManager;
         public PhysicsController PhysicsController { get; set; }
-        public List<ITile> VisibleTiles { get; set; }
         public List<IEntity> Entities { get; set; }
         public IMap Map { get; set; }
 
@@ -33,7 +32,6 @@ namespace ThroneGame.Scenes
             CameraController = new CameraController(game.GraphicsDevice.Viewport, 0.49f);
             PhysicsController = new PhysicsController();
             Entities = new List<IEntity>();
-            VisibleTiles = new List<ITile>();
             UIManagerProps uiManagerProps = new UIManagerProps
             {
                 ShowFPS = true

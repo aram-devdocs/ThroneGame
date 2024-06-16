@@ -109,6 +109,12 @@ namespace ThroneGame.Controllers
             {
                 entity.Velocity = new Vector2(entity.Velocity.X, 0);
                 entity.IsOnGround = true;
+                int entityBottomY = entity.Bounds.Bottom;
+
+                if (entityBottomY > bottomTile.Bounds.Top)
+                {
+                    entity.Position = new Vector2(entity.Position.X, entity.Position.Y - (entityBottomY - bottomTile.Bounds.Top));
+                }
             }
             else
             {
@@ -118,20 +124,33 @@ namespace ThroneGame.Controllers
             if (topTile != null && topTile.IsCollidable)
             {
                 entity.Velocity = new Vector2(entity.Velocity.X, 0);
+                int entityTopY = entity.Bounds.Top;
+                if (entityTopY < topTile.Bounds.Bottom)
+                {
+                    entity.Position = new Vector2(entity.Position.X, entity.Position.Y + (topTile.Bounds.Bottom - entityTopY));
+                }
             }
 
             if (leftTile != null && leftTile.IsCollidable)
             {
                 entity.Velocity = new Vector2(0, entity.Velocity.Y);
                 // move entity to the right by 1 pixel
-                entity.Position = new Vector2(entity.Position.X + 1, entity.Position.Y);
+                int entityLeftX = entity.Bounds.Left;
+                if (entityLeftX < leftTile.Bounds.Right)
+                {
+                    entity.Position = new Vector2(entity.Position.X + (leftTile.Bounds.Right - entityLeftX), entity.Position.Y);
+                }
             }
 
             if (rightTile != null && rightTile.IsCollidable)
             {
                 entity.Velocity = new Vector2(0, entity.Velocity.Y);
                 // move entity to the left by 1 pixel
-                entity.Position = new Vector2(entity.Position.X - 1, entity.Position.Y);
+                int entityRightX = entity.Bounds.Right;
+                if (entityRightX > rightTile.Bounds.Left)
+                {
+                    entity.Position = new Vector2(entity.Position.X - (entityRightX - rightTile.Bounds.Left), entity.Position.Y);
+                }
             }
         }
 

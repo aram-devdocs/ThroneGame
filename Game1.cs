@@ -44,7 +44,9 @@ namespace ThroneGame
 
             _sceneManager = new SceneManager();
             var demoScene = new DemoScene(this); // Pass only the Game1 instance
+            var homeScene = new HomeScene(this);
             _sceneManager.AddScene("DemoScene", demoScene);
+            _sceneManager.AddScene("HomeScene", homeScene);
             _sceneManager.SetCurrentScene("DemoScene");
         }
 

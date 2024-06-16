@@ -39,11 +39,6 @@ namespace ThroneGame.Scenes
         IMap Map { get; set; }
 
 
-        /// <summary>
-        /// Gets or sets the list of tiles in the scene.
-        /// </summary>
-        List<ITile> VisibleTiles { get; set; }
-
 
         /// <summary>
         /// Gets or sets the list of entities in the scene.
