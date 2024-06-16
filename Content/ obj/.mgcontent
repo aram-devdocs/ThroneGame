@@ -6,6 +6,7 @@
   <SourceFiles>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Backgrounds/1.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Fonts/Default.spritefont</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Maps/home_tileset_compact.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Maps/Nature_environment_01.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_attack1.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_attack2.png</File>
@@ -48,6 +49,7 @@
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Tiles/1.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -18,7 +18,7 @@ namespace ThroneGame.Scenes
         public DemoScene(Game1 game) : base(game)
         {
             Map = new DemoMap(Game.Content);
-            Player = new PlayerEntity(new Vector2(200, 300), Game.Content, game);
+            Player = new PlayerEntity(new Vector2(200, 200), Game.Content, game);
             UIManagerProps uiManagerProps = new UIManagerProps
             {
                 ShowFPS = true
@@ -30,7 +30,7 @@ namespace ThroneGame.Scenes
             Entities.Add(new EnemyEntity(new Vector2(800, 300), Game.Content, game));
             Entities.Add(new EnemyEntity(new Vector2(1000, 300), Game.Content, game));
             Entities.Add(new EnemyEntity(new Vector2(1200, 300), Game.Content, game));
-            
+
         }
 
     }

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Tiles
 {
@@ -85,6 +86,8 @@ namespace ThroneGame.Tiles
         {
             spriteBatch.Draw(_texture, Position, _sourceRectangle, Color.White);
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+
+            if (this.IsCollidable) TextureUtils.DebugBorder(spriteBatch, Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
         }
 
         /// <summary>
