@@ -16,6 +16,17 @@ namespace ThroneGame.Entities
         /// </summary>
         public string Name { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the health of the entity.
+        /// </summary>
+        public int Health { get; set; }
+
+        /// <summary>
+        /// Is the entity dead.
+        /// </summary>
+        public bool IsDead { get; set; }
+
         /// <summary>
         /// Gets or sets the position of the entity.
         /// </summary>
@@ -121,7 +132,7 @@ namespace ThroneGame.Entities
             IsCollidable = true;
             IsOnGround = false;
             Mass = 1f;
-
+            Health = 100;
             AnimationController = new AnimationController();
             CombatController = new CombatController(this, Game);
             Name = name;
@@ -136,6 +147,12 @@ namespace ThroneGame.Entities
         /// <param name="gameTime">The game time information.</param>
         public virtual void Update(GameTime gameTime)
         {
+
+            if (!IsDead && Health <= 0)
+            {
+                IsDead = true;
+            }
+
             HandleMovement(gameTime);
             UpdateAnimation(gameTime);
             UpdatePosition(gameTime);
@@ -145,7 +162,6 @@ namespace ThroneGame.Entities
             if (IsBeingAttacked && gameTime.TotalGameTime.TotalSeconds > StunEndTime)
             {
                 IsBeingAttacked = false;
-                AnimationController.SetState("idle");
             }
         }
 

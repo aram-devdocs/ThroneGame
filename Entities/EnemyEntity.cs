@@ -56,6 +56,13 @@ namespace ThroneGame.Entities
         private void UpdateAnimationState(GameTime gameTime)
         {
 
+
+
+            if (IsDead)
+            {
+                AnimationController.SetState("dead");
+                return;
+            }
             if (IsBeingAttacked)
             {
                 AnimationController.SetState("hurt");

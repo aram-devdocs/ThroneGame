@@ -13,7 +13,19 @@ namespace ThroneGame.Entities
         /// <summary>
         /// Gets or sets the name of the entity.
         /// </summary>
-        public string Name { get; set; }
+        string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the health of the entity.
+        /// </summary>
+        int Health { get; set; }
+
+
+        /// <summary>
+        /// Is the entity dead.
+        /// </summary>
+        bool IsDead { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the entity is on the ground.
         /// </summary>

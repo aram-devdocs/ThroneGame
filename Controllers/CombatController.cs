@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,8 @@ namespace ThroneGame.Controllers
         private float upwardsKnockbackSpeed = 100f;
 
         private double stunDuration = 1f;
+
+        private float damage = 10f;
 
 
         /// <summary>
@@ -75,7 +78,7 @@ namespace ThroneGame.Controllers
                 foreach (var entity in entitiesInRange)
                 {
                     System.Console.WriteLine(entity.Name);
-                    entity.CombatController.IsAttacked(_entity, gameTime);
+                    entity.CombatController.IsAttacked(_entity, gameTime, damage);
                 }
 
 
@@ -177,7 +180,7 @@ namespace ThroneGame.Controllers
         }
 
 
-        public void IsAttacked(IEntity attacker, GameTime gameTime)
+        public void IsAttacked(IEntity attacker, GameTime gameTime, float damage)
         {
             // System.Console.WriteLine("Attacked");
             // using the attackers position, knock back this entity
@@ -198,6 +201,7 @@ namespace ThroneGame.Controllers
             _entity.IsOnGround = false;
             _entity.IsBeingAttacked = true;
             _entity.StunEndTime = gameTime.TotalGameTime.TotalSeconds + stunDuration;
+            _entity.Health -= (int)Math.Ceiling(damage);
 
         }
 
