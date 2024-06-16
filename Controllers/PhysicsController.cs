@@ -49,14 +49,19 @@ namespace ThroneGame.Controllers
 
             Parallel.ForEach(_entities, entity =>
             {
-                if (!entity.IsOnGround)
+                if (IsEntityWithinBounds(entity))
                 {
-                    // Apply gravity
-                    entity.Velocity = new Vector2(entity.Velocity.X, entity.Velocity.Y + Gravity * deltaTime);
+                    if (!entity.IsOnGround)
+                    {
+                        // Apply gravity
+                        entity.Velocity = new Vector2(entity.Velocity.X, entity.Velocity.Y + Gravity * deltaTime);
+                    }
+                }
+                else
+                {
+                    entity.Velocity = Vector2.Zero; // Stop movement if out of bounds
                 }
 
-
-                // TODO - Inherit collision points from IEntity and implement this method in PlayerEntity
                 // Define positions to check for collisions
                 Vector2 bottomCenter = new Vector2(entity.Bounds.X + entity.Bounds.Width / 2, entity.Bounds.Bottom);
                 Vector2 topCenter = new Vector2(entity.Bounds.X + entity.Bounds.Width / 2, entity.Bounds.Top);
@@ -66,7 +71,6 @@ namespace ThroneGame.Controllers
                 // Create a list to store the tasks
                 List<Task> tasks = new List<Task>();
 
-                // TODO - Use inheritied collision points to programatically assign tasks and handle collisions
                 // Create tasks to get tiles from cache or map
                 Task<ITile> bottomTileTask = Task.Run(() => GetTileFromCacheOrMap(bottomCenter));
                 Task<ITile> topTileTask = Task.Run(() => GetTileFromCacheOrMap(topCenter));
@@ -90,6 +94,9 @@ namespace ThroneGame.Controllers
 
                 // Handle collisions
                 HandleCollisions(entity, bottomTile, topTile, leftTile, rightTile);
+
+                // Prevent entity from moving outside the map bounds
+                ClampEntityPosition(entity);
             });
         }
 
@@ -152,6 +159,31 @@ namespace ThroneGame.Controllers
                     entity.Position = new Vector2(entity.Position.X - (entityRightX - rightTile.Bounds.Left), entity.Position.Y);
                 }
             }
+        }
+
+        private void ClampEntityPosition(IEntity entity)
+        {
+            float entityWidth = entity.Bounds.Width;
+            float entityHeight = entity.Bounds.Height;
+            float mapWidthInPixels = _map.MapWidth * _map.TileWidth;
+            float mapHeightInPixels = _map.MapHeight * _map.TileHeight;
+
+            // Clamp the entity's position within the map bounds
+            float clampedX = MathHelper.Clamp(entity.Position.X, 0, mapWidthInPixels - entityWidth);
+            float clampedY = MathHelper.Clamp(entity.Position.Y, 0, mapHeightInPixels - entityHeight);
+
+            entity.Position = new Vector2(clampedX, clampedY);
+        }
+
+        private bool IsEntityWithinBounds(IEntity entity)
+        {
+            float entityWidth = entity.Bounds.Width;
+            float entityHeight = entity.Bounds.Height;
+            float mapWidthInPixels = _map.MapWidth * _map.TileWidth;
+            float mapHeightInPixels = _map.MapHeight * _map.TileHeight;
+
+            return entity.Position.X >= 0 && entity.Position.X + entityWidth <= mapWidthInPixels
+                && entity.Position.Y >= 0 && entity.Position.Y + entityHeight <= mapHeightInPixels;
         }
 
         /// <summary>
