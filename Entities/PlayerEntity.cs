@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ThroneGame.Controllers;
+using ThroneGame.Utils;
 
 namespace ThroneGame.Entities
 {
@@ -51,6 +52,8 @@ namespace ThroneGame.Entities
             AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
             AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/Shinobi/Attack_1"), 5, 0.1, false);
 
+            AnimationController.SetDefaultAnimationString("idle");
+
         }
 
         /// <summary>
@@ -74,16 +77,20 @@ namespace ThroneGame.Entities
 
 
 
-            // if (AnimationController.IsAttacking) return;
+            if (this.IsAttacking)
+                return;
 
             // Handle combat
             // Right or left key is pressed
             if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.Left))
             {
                 AnimationController.SetState("attack1");
-                AnimationController.IsAttacking = true;
-                // AnimationController.AttackEndTime = takes 1 second
-                AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + 1;
+                this.IsAttacking = true;
+                var attackDuration = 0.1;
+                var frames = 5;
+                AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + attackDuration * frames;
+                this.IsFacingRight = keyboardState.IsKeyDown(Keys.Right) ? true : false;
+                return;
             }
 
 

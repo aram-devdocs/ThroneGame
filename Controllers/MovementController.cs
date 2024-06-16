@@ -241,7 +241,7 @@ namespace ThroneGame.Controllers
                 entity.Velocity = new Vector2(entity.Velocity.X - (accelerationRate * deltaTime), entity.Velocity.Y);
             }
 
-            entity.IsFacingRight = false;
+            if (!entity.IsAttacking) entity.IsFacingRight = false;
             isSlideBoostFinished = false;
         }
 
@@ -257,7 +257,7 @@ namespace ThroneGame.Controllers
             {
                 entity.Velocity = new Vector2(entity.Velocity.X + (accelerationRate * deltaTime), entity.Velocity.Y);
             }
-            entity.IsFacingRight = true;
+            if (!entity.IsAttacking) entity.IsFacingRight = true;
             isSlideBoostFinished = false;
         }
 

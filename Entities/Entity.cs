@@ -65,6 +65,14 @@ namespace ThroneGame.Entities
         }
 
         /// <summary>
+        /// Is the  entity attacking.
+        /// </summary>
+        public bool IsAttacking
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Gets or sets the movement controller for the entity.
         /// </summary>
         public MovementController MovementController { get; set; }
@@ -101,7 +109,7 @@ namespace ThroneGame.Entities
         /// <summary>
         /// Draws the entity using the specified sprite batch.
         /// </summary>
-        /// <param name="spriteBatch">The sprite batch used for drawing.</param>
+    /// <param name="spriteBatch">The sprite batch used for drawing.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             AnimationController.Draw(spriteBatch, Position);
@@ -130,7 +138,7 @@ namespace ThroneGame.Entities
         /// <param name="gameTime">The game time information.</param>
         private void UpdateAnimation(GameTime gameTime)
         {
-            AnimationController.Update(gameTime);
+            AnimationController.Update(gameTime, this);
         }
 
         /// <summary>

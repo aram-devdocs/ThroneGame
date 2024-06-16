@@ -74,7 +74,7 @@ namespace ThroneGame.Entities
             if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.Left))
             {
                 AnimationController.SetState("attack1");
-                AnimationController.IsAttacking = true;
+                // AnimationController.IsAttacking = true;
                 // AnimationController.AttackEndTime = takes 1 second
                 AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + 1;
             }

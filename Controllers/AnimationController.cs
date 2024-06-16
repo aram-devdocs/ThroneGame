@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ThroneGame.Entities;
 using ThroneGame.Utils;
 
 namespace ThroneGame.Controllers
@@ -50,6 +51,7 @@ namespace ThroneGame.Controllers
         private double _timeCounter;
         private Rectangle _sourceRectangle;
 
+        public string DefaultAnimationString { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the entity is facing right.
         /// </summary>
@@ -66,7 +68,6 @@ namespace ThroneGame.Controllers
         public int FrameHeight => _animations.ContainsKey(_currentState) ? _animations[_currentState].FrameHeight : 0;
 
 
-        public bool IsAttacking { get; set; }
         public double AttackEndTime { get; set; }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace ThroneGame.Controllers
         /// Updates the animation frame based on the elapsed game time.
         /// </summary>
         /// <param name="gameTime">The game time information.</param>
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, IEntity entity)
         {
             if (_currentState == null) return;
 
@@ -142,11 +143,14 @@ namespace ThroneGame.Controllers
                 _timeCounter -= animation.FrameDuration;
             }
 
-            if (IsAttacking && _timeCounter >= AttackEndTime)
+
+            if (entity.IsAttacking && gameTime.TotalGameTime.TotalSeconds >= AttackEndTime)
             {
                 //  Set is attacking to false
-                IsAttacking = false;
+                entity.IsAttacking = false;
+                SetState(DefaultAnimationString);
             }
+
         }
 
         /// <summary>
@@ -172,5 +176,16 @@ namespace ThroneGame.Controllers
             var animation = _animations[_currentState];
             _sourceRectangle = new Rectangle(_currentFrame * animation.FrameWidth, 0, animation.FrameWidth, animation.FrameHeight);
         }
+
+        /// <summary>
+        /// Sets the default animation state.
+        /// </summary>
+        /// <param name="state">The name of the default animation state.</param>
+        public void SetDefaultAnimationString(string state)
+        {
+            DefaultAnimationString = state;
+
+        }
+
     }
 }

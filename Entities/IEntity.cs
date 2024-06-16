@@ -26,5 +26,10 @@ namespace ThroneGame.Entities
         /// Gets or sets a value indicating whether the entity is facing right.
         /// </summary>
         bool IsFacingRight { get; set; }
+
+        /// <summary>
+        /// Is the  entity attacking.
+        /// </summary>
+        bool IsAttacking { get; set; }
     }
 }
