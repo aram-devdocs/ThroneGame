@@ -44,13 +44,13 @@ namespace ThroneGame.Entities
         /// <param name="content">The content manager used for loading textures.</param>
         private void LoadAnimations(ContentManager content)
         {
-            AnimationController.AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"), 6, 0.1);
-            AnimationController.AddAnimation("run", content.Load<Texture2D>("PlayerSprites/Shinobi/Run"), 8, 0.1);
-            AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Shinobi/Jump"), 12, 0.1, false);
-            AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
-            AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
-            AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
-            AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/Shinobi/Attack_1"), 5, 0.1, false);
+            AnimationController.AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_idle"), 4, 0.13);
+            AnimationController.AddAnimation("run", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_run"), 6, 0.1);
+            AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_jump"), 6, 0.1, false);
+            AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_walk"), 6, 0.13);
+            AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_death"), 6, 0.13, false);
+            AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_crouch"), 1, 0.13);
+            AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_attack1"), 6, 0.09, false);
 
             AnimationController.SetDefaultAnimationString("idle");
 
@@ -86,8 +86,8 @@ namespace ThroneGame.Entities
             {
                 AnimationController.SetState("attack1");
                 this.IsAttacking = true;
-                var attackDuration = 0.1;
-                var frames = 5;
+                var attackDuration = 0.09;
+                var frames = 6;
                 AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + attackDuration * frames;
                 this.IsFacingRight = keyboardState.IsKeyDown(Keys.Right) ? true : false;
                 return;

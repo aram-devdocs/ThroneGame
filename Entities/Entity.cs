@@ -159,10 +159,10 @@ namespace ThroneGame.Entities
 
 
             // TODO - Inherit from IEntity and implement this method in PlayerEntity
-            float topOffsetInPixels = 40f;
+            float topOffsetInPixels = 10f;
             float bottomOffsetInPixels = 0f;
-            float leftOffsetInPixels = 30f;
-            float rightOffsetInPixels = 30f;
+            float leftOffsetInPixels = 0f;
+            float rightOffsetInPixels = 0f;
 
 
             Bounds = new Rectangle(

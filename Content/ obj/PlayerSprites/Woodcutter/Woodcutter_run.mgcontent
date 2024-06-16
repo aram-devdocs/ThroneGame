@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Shield.png</SourceFile>
-  <SourceTime>2023-09-04T20:23:20-06:00</SourceTime>
-  <DestFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/ ../bin/Debug/net6.0/Content/PlayerSprites/Shinobi/Shield.xnb</DestFile>
-  <DestTime>2024-06-15T19:24:02.7423851-06:00</DestTime>
+  <SourceFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_run.png</SourceFile>
+  <SourceTime>2020-01-09T11:23:32-07:00</SourceTime>
+  <DestFile>/Users/aramhammoudeh/dev/game/ThroneGame/Content/ ../bin/Debug/net6.0/Content/PlayerSprites/Woodcutter/Woodcutter_run.xnb</DestFile>
+  <DestTime>2024-06-15T19:25:07.4372754-06:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T05:44:56-06:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -5,6 +5,7 @@
   <Config />
   <SourceFiles>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Backgrounds/1.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Fonts/Default.spritefont</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Maps/Nature_environment_01.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_1.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_2.png</File>
@@ -17,9 +18,36 @@
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Run.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Shield.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Walk.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_attack1.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_attack2.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_attack3.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_climb.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_craft.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_death.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_hurt.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_idle.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_jump.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_push.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_run.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_walk.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Tiles/1.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
