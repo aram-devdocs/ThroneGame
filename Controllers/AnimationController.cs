@@ -68,7 +68,6 @@ namespace ThroneGame.Controllers
         public int FrameHeight => _animations.ContainsKey(_currentState) ? _animations[_currentState].FrameHeight : 0;
 
 
-        public double AttackEndTime { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationController"/> class.
@@ -144,7 +143,7 @@ namespace ThroneGame.Controllers
             }
 
 
-            if (entity.IsAttacking && gameTime.TotalGameTime.TotalSeconds >= AttackEndTime)
+            if (entity.IsAttacking && gameTime.TotalGameTime.TotalSeconds >= entity.AttackEndTime)
             {
                 //  Set is attacking to false
                 entity.IsAttacking = false;

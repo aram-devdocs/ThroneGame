@@ -14,6 +14,8 @@ namespace ThroneGame
 
         public static GraphicsDeviceManager Graphics;
 
+        public IScene currentScene => _sceneManager._currentScene;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);

@@ -10,7 +10,7 @@ namespace ThroneGame.Scenes
     public class SceneManager
     {
         private readonly Dictionary<string, IScene> _scenes;
-        private IScene _currentScene;
+        public IScene _currentScene;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneManager"/> class.

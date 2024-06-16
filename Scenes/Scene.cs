@@ -43,6 +43,7 @@ namespace ThroneGame.Scenes
         {
             PhysicsController.LoadMap(Map);
             PhysicsController.AddEntity(Player);
+            Entities.ForEach(entity => PhysicsController.AddEntity(entity));
             Map.LoadContent(Game.GraphicsDevice, Game.Content);
             Map.DrawToRenderTarget(Game.GraphicsDevice, new SpriteBatch(Game.GraphicsDevice));
 
@@ -53,7 +54,7 @@ namespace ThroneGame.Scenes
 
 
             Player.Update(gameTime);
-            // TODO- should physics controller be called last?
+            Entities.ForEach(entity => entity.Update(gameTime));
             PhysicsController.Update(gameTime);
             CameraController.Update(gameTime, Player.Position);
             UIManager.Update(gameTime);
@@ -68,6 +69,7 @@ namespace ThroneGame.Scenes
             spriteBatch.Begin(transformMatrix: CameraController.GetViewMatrix());
 
             Map.DrawTileMap(spriteBatch);
+            Entities.ForEach(entity => entity.Draw(spriteBatch));
             Player.Draw(spriteBatch);
             PhysicsController.Draw(spriteBatch);
 

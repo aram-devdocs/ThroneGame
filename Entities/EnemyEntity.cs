@@ -16,18 +16,10 @@ namespace ThroneGame.Entities
         /// </summary>
         /// <param name="position">The initial position of the player.</param>
         /// <param name="content">The content manager used for loading textures.</param>
-        public EnemyEntity(Vector2 position, ContentManager content)
-            : base(position)
+        public EnemyEntity(Vector2 position, ContentManager content, Game1 game, string name = "Enemy Entity")
+            : base(name, position, game)
         {
             LoadAnimations(content);
-            this.MovementController = new MovementController(position)
-            {
-                SprintAccelerationRate = 4f,
-                SprintMultiplier = 2.5f,
-                SpeedUpRate = 12f,
-                // SlowDownRate = 20f,
-            };
-            this.MovementController.TargetPosition = new Vector2(position.X + 100, position.Y);
         }
 
         /// <summary>
@@ -61,45 +53,20 @@ namespace ThroneGame.Entities
         /// </summary>
         private void UpdateAnimationState(GameTime gameTime)
         {
-            var keyboardState = Keyboard.GetState();
 
-
-
-
-
-            // if (AnimationController.IsAttacking) return;
-
-            // Handle combat
-            // Right or left key is pressed
-            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.Left))
-            {
-                AnimationController.SetState("attack1");
-                // AnimationController.IsAttacking = true;
-                // AnimationController.AttackEndTime = takes 1 second
-                AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + 1;
-            }
-
-
-            // Handle movement
+            // Handle movement based on velocity
             if (Velocity.Y != 0)
             {
                 AnimationController.SetState("jump");
             }
             else if (Velocity.X != 0)
             {
-                AnimationController.SetState(keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift) ? "run" : "walk");
+                AnimationController.SetState("walk");
             }
             else
             {
                 AnimationController.SetState("idle");
             }
-
-            if (keyboardState.IsKeyDown(Keys.S))
-            {
-                AnimationController.SetState("crouch");
-            }
-
-
 
         }
     }

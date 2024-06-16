@@ -17,8 +17,7 @@ namespace ThroneGame.Entities
         /// </summary>
         /// <param name="position">The initial position of the player.</param>
         /// <param name="content">The content manager used for loading textures.</param>
-        public PlayerEntity(Vector2 position, ContentManager content)
-            : base(position)
+        public PlayerEntity(Vector2 position, ContentManager content, Game1 game, string name = "Player Entity") : base(name, position, game)
         {
             LoadAnimations(content);
             MovementController = new MovementController(position)
@@ -88,7 +87,7 @@ namespace ThroneGame.Entities
                 this.IsAttacking = true;
                 var attackDuration = 0.09;
                 var frames = 6;
-                AnimationController.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + attackDuration * frames;
+                this.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + attackDuration * frames;
                 this.IsFacingRight = keyboardState.IsKeyDown(Keys.Right) ? true : false;
                 return;
             }

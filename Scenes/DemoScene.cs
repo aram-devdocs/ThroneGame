@@ -18,12 +18,14 @@ namespace ThroneGame.Scenes
         public DemoScene(Game1 game) : base(game)
         {
             Map = new DemoMap(Game.Content);
-            Player = new PlayerEntity(new Vector2(200, 300), Game.Content);
+            Player = new PlayerEntity(new Vector2(200, 300), Game.Content, game);
             UIManagerProps uiManagerProps = new UIManagerProps
             {
                 ShowFPS = true
             };
             UIManager = new UIManager(game, uiManagerProps);
+
+            Entities.Add(new EnemyEntity(new Vector2(400, 300), Game.Content, game));
         }
 
     }

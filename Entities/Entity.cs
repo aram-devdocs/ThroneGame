@@ -10,6 +10,12 @@ namespace ThroneGame.Entities
     /// </summary>
     public abstract class Entity : IEntity
     {
+
+        /// <summary>
+        /// Gets or sets the name of the entity.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// Gets or sets the position of the entity.
         /// </summary>
@@ -56,6 +62,11 @@ namespace ThroneGame.Entities
         public Rectangle Bounds { get; set; }
 
         /// <summary>
+        /// Scale of the entity and its bounds
+        /// </summary>
+        public float Scale { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is facing right.
         /// </summary>
         public bool IsFacingRight
@@ -72,16 +83,25 @@ namespace ThroneGame.Entities
             get; set;
         }
 
+
+        public double AttackEndTime { get; set; }
+
         /// <summary>
         /// Gets or sets the movement controller for the entity.
         /// </summary>
         public MovementController MovementController { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the combat controller for the entity.
+        /// </summary>
+        public CombatController CombatController { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Entity"/> class with the specified position.
         /// </summary>
         /// <param name="position">The initial position of the entity.</param>
-        public Entity(Vector2 position)
+        public Entity(string name, Vector2 position, Game1 Game)
         {
             Position = position;
             Velocity = Vector2.Zero;
@@ -90,6 +110,9 @@ namespace ThroneGame.Entities
             Mass = 1f;
 
             AnimationController = new AnimationController();
+            CombatController = new CombatController(this, Game);
+            Name = name;
+
         }
 
 
@@ -104,15 +127,17 @@ namespace ThroneGame.Entities
             UpdateAnimation(gameTime);
             UpdatePosition(gameTime);
             UpdateBounds();
+            CombatController.Update(gameTime);
         }
 
         /// <summary>
         /// Draws the entity using the specified sprite batch.
         /// </summary>
-    /// <param name="spriteBatch">The sprite batch used for drawing.</param>
+        /// <param name="spriteBatch">The sprite batch used for drawing.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             AnimationController.Draw(spriteBatch, Position);
+            CombatController.Draw(spriteBatch);
         }
 
         /// <summary>
