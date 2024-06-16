@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using ThroneGame.Controllers;
 
 namespace ThroneGame.Entities
 {
@@ -44,10 +45,34 @@ namespace ThroneGame.Entities
         float Scale { get; set; }
 
 
+        /// <summary>
+        /// The animation controller for the entity.
+        /// </summary>
+        AnimationController AnimationController { get; set; }
+
+
 
         /// <summary>
         /// The time in seconds that the attack started, to ensure we only attack once per cycle
         /// </summary>
         double AttackEndTime { get; set; }
+
+
+
+        /// <summary>
+        /// The combat controller for the entity.
+        /// </summary>
+        CombatController CombatController { get; set; }
+
+        /// <summary>
+        /// Is the entity being attacked.
+        /// </summary>
+        bool IsBeingAttacked { get; set; }
+
+        /// <summary>
+        /// If the entity is attacked, they are stunned until this time
+        /// </summary>
+        double StunEndTime { get; set; }
+
     }
 }

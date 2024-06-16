@@ -22,17 +22,7 @@ namespace ThroneGame.Entities
             LoadAnimations(content);
             MovementController = new MovementController(position)
             {
-                // SprintAccelerationRate = 4f,
-                // SprintMultiplier = 2.5f,
-                // SpeedUpRate = 12f,
-                // SlowDownRate = 20f,
-                // Speed = 150f,
-                // CrouchDiveAccelerationRate = 20f,
-                // CrouchDiveMaxSpeed = 200f,
-                // SlideBoost = 800f,
-                // SlideBoostAccelerationRate = 80.2f,
-                // MinimumSlideBoostStartSpeed = 90f,
-                // TargetPosition = new Vector2(position.X + 1000, position.Y)
+                TakesInput = true
             };
 
         }
@@ -49,7 +39,9 @@ namespace ThroneGame.Entities
             AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_walk"), 6, 0.13);
             AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_death"), 6, 0.13, false);
             AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_crouch"), 1, 0.13);
+            AnimationController.AddAnimation("hurt", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_hurt"), 3, 0.13);
             AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/Woodcutter/Woodcutter_attack1"), 6, 0.09, false);
+
 
             AnimationController.SetDefaultAnimationString("idle");
 
@@ -75,18 +67,24 @@ namespace ThroneGame.Entities
 
 
 
+            if (IsBeingAttacked)
+            {
+                AnimationController.SetState("hurt");
+                return;
+            }
+
 
             if (this.IsAttacking)
                 return;
 
             // Handle combat
             // Right or left key is pressed
-            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.Left) && !this.IsAttacking)
             {
                 AnimationController.SetState("attack1");
                 this.IsAttacking = true;
-                var attackDuration = 0.09;
-                var frames = 6;
+                var attackDuration = 0.09; // TODO: Get this from the animation
+                var frames = 6; // TODO: Get this from the animation
                 this.AttackEndTime = gameTime.TotalGameTime.TotalSeconds + attackDuration * frames;
                 this.IsFacingRight = keyboardState.IsKeyDown(Keys.Right) ? true : false;
                 return;

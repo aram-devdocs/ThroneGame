@@ -20,6 +20,7 @@ namespace ThroneGame.Entities
             : base(name, position, game)
         {
             LoadAnimations(content);
+            MovementController = new MovementController();
         }
 
         /// <summary>
@@ -28,13 +29,14 @@ namespace ThroneGame.Entities
         /// <param name="content">The content manager used for loading textures.</param>
         private void LoadAnimations(ContentManager content)
         {
-            AnimationController.AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/Shinobi/Idle"), 6, 0.1);
-            AnimationController.AddAnimation("run", content.Load<Texture2D>("PlayerSprites/Shinobi/Run"), 8, 0.1);
-            AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/Shinobi/Jump"), 12, 0.1, false);
-            AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/Shinobi/Walk"), 8, 0.1);
-            AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/Shinobi/Dead"), 4, 0.27, false);
-            AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/Shinobi/Crouch"), 1, 0.1);
-            AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/Shinobi/Attack_1"), 5, 0.1, false);
+            AnimationController.AddAnimation("idle", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_idle"), 4, 0.13);
+            AnimationController.AddAnimation("run", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_run"), 6, 0.1);
+            AnimationController.AddAnimation("jump", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_jump"), 6, 0.1, false);
+            AnimationController.AddAnimation("walk", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_walk"), 6, 0.13);
+            AnimationController.AddAnimation("dead", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_death"), 6, 0.13, false);
+            // AnimationController.AddAnimation("crouch", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_crouch"), 1, 0.13);
+            AnimationController.AddAnimation("hurt", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_hurt"), 3, 0.13);
+            AnimationController.AddAnimation("attack1", content.Load<Texture2D>("PlayerSprites/GraveRobber/GraveRobber_attack1"), 6, 0.09, false);
 
         }
 
@@ -53,6 +55,12 @@ namespace ThroneGame.Entities
         /// </summary>
         private void UpdateAnimationState(GameTime gameTime)
         {
+
+            if (IsBeingAttacked)
+            {
+                AnimationController.SetState("hurt");
+                return;
+            }
 
             // Handle movement based on velocity
             if (Velocity.Y != 0)

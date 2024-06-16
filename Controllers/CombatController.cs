@@ -16,6 +16,12 @@ namespace ThroneGame.Controllers
     {
         private readonly IEntity _entity;
         private Game1 _game;
+        private float AttackBufferTime = 0.2f; // We want to attack right before the animation ends, so we buffer the attack time by 0.5 seconds
+        private float knockbackSpeed = 250f;
+        private float upwardsKnockbackSpeed = 100f;
+
+        private double stunDuration = 1f;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CombatController"/> class.
@@ -46,11 +52,18 @@ namespace ThroneGame.Controllers
         public void Update(GameTime gameTime)
         {
 
+
+            // If this entity is being attacked, return
+            if (_entity.IsBeingAttacked)
+            {
+                return;
+            }
+
+
             bool IsAttacking = _entity.IsAttacking;
             double AttackEndTime = _entity.AttackEndTime;
-
             // IF enemy is attacing and hasnt attacked this cycle, attack
-            if (IsAttacking && !attackedThisCycle)
+            if (IsAttacking && !attackedThisCycle && gameTime.TotalGameTime.TotalSeconds > AttackEndTime - AttackBufferTime)
             {
                 // Attack
                 attackedThisCycle = true;
@@ -62,7 +75,9 @@ namespace ThroneGame.Controllers
                 foreach (var entity in entitiesInRange)
                 {
                     System.Console.WriteLine(entity.Name);
+                    entity.CombatController.IsAttacked(_entity, gameTime);
                 }
+
 
             }
 
@@ -70,6 +85,8 @@ namespace ThroneGame.Controllers
             if (attackedThisCycle && gameTime.TotalGameTime.TotalSeconds > AttackEndTime)
             {
                 attackedThisCycle = false;
+                _entity.IsAttacking = false;
+
             }
 
 
@@ -157,6 +174,31 @@ namespace ThroneGame.Controllers
 
             // Create and return the bounds of the entity's attack
             return new Rectangle((int)attackPosition.X, (int)attackPosition.Y, 30, 30);
+        }
+
+
+        public void IsAttacked(IEntity attacker, GameTime gameTime)
+        {
+            // System.Console.WriteLine("Attacked");
+            // using the attackers position, knock back this entity
+
+            Vector2 attackersPosition = attacker.Position;
+
+            // set the velocity of the entity to be knocked back. we will slow down the velocity over time in the physics controller
+
+
+
+            //    normalize the vector between the attacker and the entity
+            Vector2 knockbackDirection = Vector2.Normalize(_entity.Position - attackersPosition);
+            knockbackDirection.Y = -1;
+            _entity.Velocity = knockbackDirection * knockbackSpeed;
+            // _entity.Velocity.Y = -upwardsKnockbackSpeed; // set the _entity.Velocity instead as a new vector2 with -upwardsKnockbackSpeed as the y value
+            _entity.Velocity = new Vector2(_entity.Velocity.X, -upwardsKnockbackSpeed);
+
+            _entity.IsOnGround = false;
+            _entity.IsBeingAttacked = true;
+            _entity.StunEndTime = gameTime.TotalGameTime.TotalSeconds + stunDuration;
+
         }
 
 

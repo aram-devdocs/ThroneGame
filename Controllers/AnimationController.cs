@@ -146,7 +146,6 @@ namespace ThroneGame.Controllers
             if (entity.IsAttacking && gameTime.TotalGameTime.TotalSeconds >= entity.AttackEndTime)
             {
                 //  Set is attacking to false
-                entity.IsAttacking = false;
                 SetState(DefaultAnimationString);
             }
 

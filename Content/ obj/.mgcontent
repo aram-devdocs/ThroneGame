@@ -7,6 +7,19 @@
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Backgrounds/1.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Fonts/Default.spritefont</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Maps/Nature_environment_01.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_attack1.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_attack2.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_attack3.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_climb.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_craft.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_death.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_hurt.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_idle.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_jump.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_push.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_run.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber_walk.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/GraveRobber/GraveRobber.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_1.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_2.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Shinobi/Attack_3.png</File>
@@ -23,6 +36,7 @@
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_attack3.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_climb.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_craft.png</File>
+    <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_crouch.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_death.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_hurt.png</File>
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/PlayerSprites/Woodcutter/Woodcutter_idle.png</File>
@@ -34,6 +48,20 @@
     <File>/Users/aramhammoudeh/dev/game/ThroneGame/Content/Tiles/1.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

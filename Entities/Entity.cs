@@ -46,6 +46,7 @@ namespace ThroneGame.Entities
         /// </summary>
         public AnimationController AnimationController { get; set; }
 
+
         /// <summary>
         /// Gets the width of the current animation frame.
         /// </summary>
@@ -55,6 +56,18 @@ namespace ThroneGame.Entities
         /// Gets the height of the current animation frame.
         /// </summary>
         public int FrameHeight => AnimationController.FrameHeight;
+
+        /// <summary>
+        /// Is the entity being attacked.
+        /// </summary>
+        public bool IsBeingAttacked { get; set; }
+
+        /// <summary>
+        /// If the entity is attacked, they are stunned until this time
+
+        /// </summary>
+        public double StunEndTime { get; set; }
+
 
         /// <summary>
         /// Gets or sets the bounds of the entity.
@@ -128,6 +141,12 @@ namespace ThroneGame.Entities
             UpdatePosition(gameTime);
             UpdateBounds();
             CombatController.Update(gameTime);
+
+            if (IsBeingAttacked && gameTime.TotalGameTime.TotalSeconds > StunEndTime)
+            {
+                IsBeingAttacked = false;
+                AnimationController.SetState("idle");
+            }
         }
 
         /// <summary>

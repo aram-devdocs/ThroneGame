@@ -30,6 +30,7 @@ namespace ThroneGame.Controllers
         private Queue<Vector2> pathPoints;
         private Vector2? targetPosition;
         private Vector2? startPosition;
+        public bool TakesInput = false;
 
         /// <summary>
         /// Gets or sets the target position for pathfinding.
@@ -60,13 +61,31 @@ namespace ThroneGame.Controllers
         /// <param name="gameTime">The game time information.</param>
         public void HandleMovement(IEntity entity, GameTime gameTime)
         {
-            if (TargetPosition.HasValue && pathPoints.Count > 0)
+
+
+
+
+
+            if (!entity.IsBeingAttacked)
             {
-                FollowPath(entity, gameTime);
+                if (TargetPosition.HasValue && pathPoints.Count > 0)
+                {
+                    FollowPath(entity, gameTime);
+                }
+                else if (TakesInput)
+                {
+                    HandleUserInput(entity, gameTime);
+                }
             }
-            else
+
+
+
+            var state = Keyboard.GetState();
+            float deltaTime = GameUtils.GetDeltaTime(gameTime);
+            // If no movement keys are pressed, decelerate the entity. If the entity is not taking input, decelerate it. TODO, 
+            if (entity.IsOnGround && entity.Velocity.X != 0 && (TakesInput && !state.IsKeyDown(Keys.A) && !state.IsKeyDown(Keys.D)) || !TakesInput)
             {
-                HandleUserInput(entity, gameTime);
+                Decelerate(entity, deltaTime);
             }
         }
 
@@ -98,6 +117,9 @@ namespace ThroneGame.Controllers
                 {
                     HandleJump(entity);
                 }
+
+
+
             }
             catch (Exception ex)
             {
